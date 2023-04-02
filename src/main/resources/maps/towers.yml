@@ -1,0 +1,14 @@
+displayname: Towers
+offset: 0 20 0
+icon: STONE_BRICKS
+limbo-begin: 60
+limbo-end: 50
+world-time: 6000
+spawns:
+  red:
+    - 10 64 -5
+    - 10 64 5
+  blue:
+    - -10 64 -5
+    - -10 64 5
+

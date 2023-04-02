@@ -1,0 +1,13 @@
+displayname: Oil Rig
+offset: 0 0 0
+icon: IRON_BLOCK
+limbo-begin: 69
+limbo-end: 63
+world-time: 6000
+spawns:
+  red:
+    - 10 64 -5
+    - 10 64 5
+  blue:
+    - -10 64 -5
+    - -10 64 5
