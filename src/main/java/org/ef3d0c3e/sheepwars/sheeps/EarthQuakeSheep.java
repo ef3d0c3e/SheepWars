@@ -6,7 +6,7 @@ import net.minecraft.network.chat.contents.LiteralContents;
 import net.minecraft.world.item.DyeColor;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
@@ -51,7 +51,7 @@ public class EarthQuakeSheep extends BaseSheep
 
 	protected void spawnParticles(final int time)
 	{
-		final World world = (World)level.getWorld();
+		final World world = (World)level().getWorld();
 		world.spawnParticle(Particle.DUST_COLOR_TRANSITION, getX(), getY(), getZ(), 1,
 			new Particle.DustTransition(Color.fromRGB(0x8A4B00), Color.fromRGB(0x8A4B00), 1.f));
 	}
@@ -66,12 +66,12 @@ public class EarthQuakeSheep extends BaseSheep
 
 	public void ctick()
 	{
-		if (isOnGround())
+		if (onGround())
 			++grounded;
 
 		if (grounded >= 5)
 		{
-			final World world = (World)level.getWorld();
+			final World world = (World)level().getWorld();
 			final Location center = new Location(world, getX(), getY() + 0.5, getZ());
 
 			// Particles

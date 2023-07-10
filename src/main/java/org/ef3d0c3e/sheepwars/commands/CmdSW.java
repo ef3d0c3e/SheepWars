@@ -1,19 +1,16 @@
 package org.ef3d0c3e.sheepwars.commands;
 
-import org.bouncycastle.jcajce.provider.symmetric.ARC4;
 import org.bukkit.*;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.annotation.command.Command;
 import org.bukkit.util.Vector;
-import org.checkerframework.checker.units.qual.A;
 import org.ef3d0c3e.sheepwars.CPlayer;
 import org.ef3d0c3e.sheepwars.Game;
 import org.ef3d0c3e.sheepwars.Util;
 import org.ef3d0c3e.sheepwars.level.Map;
-import org.ef3d0c3e.sheepwars.level.SWChunkGenerator;
 import org.ef3d0c3e.sheepwars.sheeps.BaseSheep;
 import org.ef3d0c3e.sheepwars.sheeps.Sheeps;
 import oshi.util.tuples.Pair;
@@ -21,22 +18,23 @@ import oshi.util.tuples.Pair;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.List;
 
-public class CmdSW extends SWCommand
+public class CmdSW extends Command
 {
 	String map = null; ///< Currently selected map
 
-	@Override
-	public String getName()
+	public CmdSW()
 	{
-		return "sheepwars";
+		super("sheepwars", "Main plugin command", "/sheepwars", Arrays.asList("sw"));
+		setPermission("sheepwars.admin");
+		setPermissionMessage("§cSheepWars§8>§7 Vous n'avez pas la permission.");
 	}
 
+
 	@Override
-	public boolean execute(final CommandSender sender, final String[] args)
+	public boolean execute(final CommandSender sender, final String label, final String[] args)
 	{
 		String category;
 		if (args.length != 0)
@@ -164,7 +162,7 @@ public class CmdSW extends SWCommand
 	}
 
 	@Override
-	public List<String> completion(final CommandSender sender, final String[] args)
+	public List<String> tabComplete(final CommandSender sender, final String label, final String[] args)
 	{
 		ArrayList<String> l = new ArrayList<>();
 		if (args.length == 1)

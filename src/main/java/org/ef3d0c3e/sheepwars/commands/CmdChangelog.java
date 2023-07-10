@@ -2,27 +2,17 @@ package org.ef3d0c3e.sheepwars.commands;
 
 import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.chat.hover.content.Text;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
-import org.ef3d0c3e.sheepwars.CPlayer;
-import org.ef3d0c3e.sheepwars.Game;
 import org.ef3d0c3e.sheepwars.Util;
-import org.ef3d0c3e.sheepwars.level.Map;
-import org.ef3d0c3e.sheepwars.sheeps.BaseSheep;
-import org.ef3d0c3e.sheepwars.sheeps.Sheeps;
-import oshi.util.tuples.Pair;
 
-import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class CmdChangelog extends SWCommand
+public class CmdChangelog extends Command
 {
 	@Override
 	public String getName()
@@ -45,10 +35,40 @@ public class CmdChangelog extends SWCommand
 			"~ Ajustement du Mouton Soigneur::↓ Range: 7.5 → 6\n↑ Régénération: I → II\n↓ Durée de vie: ∞s → 8s",
 			"* Correction du Mouton Tremblement de Terre::Il bump moins les joueurs",
 		},
+		{ // Page 3
+			"",
+			" &9 &9 &n4 avril 2023&9: &6&oSheepWars 1.2",
+			"",
+			"* Mise à jour pour la 1.19.4",
+		},
+		{ // Page 4
+			"",
+			" &9 &9 &n9 juillet 2023&9: &6&oSheepWars 1.3",
+			"",
+			"* Mise à jour pour la 1.20.1",
+			"+ Ajout des Laines Bonus",
+			"+ Ajout du Mouton Tsunami::● Il crée une grande vague",
+			"+ Buff du kit Barbare::↑ Il obtient Dolphin's Grace",
+			"~ Ajustement des dégâts de chute::↓ Régénération 65% → 55%",
+		},
+		{ // Page 5
+			"",
+			" &9 &9 &n10 juillet 2023&9: &6&oSheepWars 1.4",
+			"",
+			"~ Nouveau système de laines::● Click-droit sur un kit pour\n voir les laines",
+			"+ Ajout de la map Dirigeables",
+			"+ Ajout du Mouton Slime::● Il ralentit et tire des projectiles\nvers les ennemis",
+			"- Nerf du Mouton Sombre::↓ Aveuglement permanent → 1.5s/2s",
+		},
 	};
 
+	public CmdChangelog()
+	{
+		super("changelog", "Get changelog", "/changelog", Arrays.asList("ch"));
+	}
+
 	@Override
-	public boolean execute(final CommandSender sender, final String[] args)
+	public boolean execute(final CommandSender sender, final String label, final String[] args)
 	{
 		int page;
 		if (args.length == 0)
@@ -225,7 +245,7 @@ public class CmdChangelog extends SWCommand
 
 
 	@Override
-	public List<String> completion(final CommandSender sender, final String[] args)
+	public List<String> tabComplete(final CommandSender sender, final String label, final String[] args)
 	{
 		ArrayList<String> l = new ArrayList<>();
 		if (args.length == 1)

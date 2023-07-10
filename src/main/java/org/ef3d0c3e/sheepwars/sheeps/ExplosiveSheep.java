@@ -5,6 +5,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.contents.LiteralContents;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
 import org.bukkit.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -46,7 +47,7 @@ public class ExplosiveSheep extends BaseSheep
 
 	protected void spawnParticles(final int time)
 	{
-		final World world = (World)level.getWorld();
+		final World world = (World)level().getWorld();
 		world.spawnParticle(Particle.SMOKE_NORMAL, getX(), getY(), getZ(), 1, 0.0, 0.0, 0.0, 0.0);
 		world.spawnParticle(Particle.SMOKE_NORMAL, getX(), getY(), getZ(), 3, 0.2, 0.2, 0.2, 0.0);
 	}
@@ -61,7 +62,7 @@ public class ExplosiveSheep extends BaseSheep
 
 	public void ctick()
 	{
-		if (isOnGround())
+		if (onGround())
 			++grounded;
 
 		if (grounded >= 5)
@@ -74,8 +75,8 @@ public class ExplosiveSheep extends BaseSheep
 
 			if (fuse == 40)
 			{
-				this.remove(RemovalReason.DISCARDED);
-				this.level.explode(this, getX(), getY(), getZ(), 6, false, Explosion.BlockInteraction.DESTROY);
+				remove(RemovalReason.DISCARDED);
+				level().explode(this, getX(), getY(), getZ(), 6, false, Level.ExplosionInteraction.BLOCK);
 			}
 		}
 	}

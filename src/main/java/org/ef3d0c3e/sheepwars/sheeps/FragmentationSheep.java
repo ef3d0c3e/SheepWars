@@ -5,11 +5,13 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.contents.LiteralContents;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.Level;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -54,7 +56,7 @@ public class FragmentationSheep extends BaseSheep
 
 	protected void spawnParticles(final int time)
 	{
-		final World world = (World)level.getWorld();
+		final World world = (World)level().getWorld();
 		world.spawnParticle(Particle.EXPLOSION_NORMAL, getX(), getY(), getZ(), 1, 0.0, 0.0, 0.0, 0.0);
 	}
 
@@ -68,7 +70,7 @@ public class FragmentationSheep extends BaseSheep
 
 	public void ctick()
 	{
-		if (isOnGround())
+		if (onGround())
 			++grounded;
 
 		if (grounded >= 5)
@@ -82,9 +84,9 @@ public class FragmentationSheep extends BaseSheep
 			if (fuse == 40)
 			{
 				this.remove(RemovalReason.DISCARDED);
-				this.level.explode(this, getX(), getY(), getZ(), 5, false, Explosion.BlockInteraction.DESTROY);
+				this.level().explode(this, getX(), getY(), getZ(), 5, false, Level.ExplosionInteraction.BLOCK);
 
-				final Location loc = new Location((World)level.getWorld(), getX(), getY(), getZ());
+				final Location loc = new Location((World)level().getWorld(), getX(), getY(), getZ());
 				for (int i = 0; i < 7; ++i)
 				{
 					final Vector dir = new Vector(

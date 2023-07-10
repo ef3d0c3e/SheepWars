@@ -199,7 +199,7 @@ public class RefilledResource
 						resource.tick(tick);
 					++tick;
 				}
-			}.runTaskTimer(SheepWars.plugin, 0, 1);
+			}.runTaskTimer(SheepWars.getPlugin(), 0, 1);
 		}
 	}
 }

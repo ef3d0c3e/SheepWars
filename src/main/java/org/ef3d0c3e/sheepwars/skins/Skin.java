@@ -3,7 +3,7 @@ package org.ef3d0c3e.sheepwars.skins;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import org.bukkit.*;
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -535,8 +535,8 @@ public class Skin
 			if (p == cp.getHandle())
 				continue;
 
-			p.hidePlayer(SheepWars.plugin, cp.getHandle());
-			p.showPlayer(SheepWars.plugin, cp.getHandle());
+			p.hidePlayer(SheepWars.getPlugin(), cp.getHandle());
+			p.showPlayer(SheepWars.getPlugin(), cp.getHandle());
 		}
 
 		// Particles

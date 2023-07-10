@@ -8,7 +8,6 @@ import org.ef3d0c3e.sheepwars.CPlayer;
 import org.ef3d0c3e.sheepwars.Items;
 import oshi.util.tuples.Triplet;
 
-import java.awt.peer.CanvasPeer;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;

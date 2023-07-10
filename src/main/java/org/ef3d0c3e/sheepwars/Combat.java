@@ -1,5 +1,7 @@
 package org.ef3d0c3e.sheepwars;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.events.PacketContainer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -14,6 +16,7 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 import org.ef3d0c3e.sheepwars.events.CPlayerDamageEvent;
 import org.ef3d0c3e.sheepwars.events.CPlayerDeathEvent;
 import org.ef3d0c3e.sheepwars.events.CPlayerJoinEvent;
@@ -135,7 +138,7 @@ public class Combat
 
 					ticks += 5;
 				}
-			}.runTaskTimer(SheepWars.plugin, 0, 5);
+			}.runTaskTimer(SheepWars.getPlugin(), 0, 5);
 		}
 
 		@EventHandler
@@ -170,7 +173,9 @@ public class Combat
 			final CPlayer cp = CPlayer.getPlayer((Player)ev.getEntity());
 			if (!cp.isAlive())
 				return;
-			cp.getCombatData().regenQueue = (int)(ev.getFinalDamage() * 0.65);
+			if (ev.getDamage()+1 >= cp.getHandle().getHealth())
+				ev.setDamage(cp.getHandle().getHealth());
+			cp.getCombatData().regenQueue = (int)(ev.getFinalDamage() * 0.55);
 		}
 
 		@EventHandler(priority = EventPriority.HIGHEST)
@@ -236,6 +241,19 @@ public class Combat
 
 			Bukkit.getPluginManager().callEvent(new CPlayerDamageEvent(victim, killer, ev, true));
 			Bukkit.getPluginManager().callEvent(new CPlayerDeathEvent(victim, killer));
+		}
+
+		@EventHandler
+		public void onSnowballHit(final ProjectileHitEvent ev)
+		{
+			if (ev.getHitEntity() == null || !(ev.getHitEntity() instanceof Player) || !(ev.getEntity() instanceof Snowball))
+				return;
+
+			final Snowball sb = (Snowball)ev.getEntity();
+			final CPlayer cp = CPlayer.getPlayer((Player)ev.getHitEntity());
+
+			cp.getHandle().setVelocity(sb.getVelocity().clone().multiply(0.4).add(new Vector(0., 0.3, 0.)));
+			cp.getHandle().damage(0.33);
 		}
 
 		@EventHandler

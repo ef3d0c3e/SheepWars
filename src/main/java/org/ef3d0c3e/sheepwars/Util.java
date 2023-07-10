@@ -4,7 +4,7 @@ import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftEntity;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.projectiles.ProjectileSource;
@@ -149,9 +149,45 @@ public class Util
 			return null;
 	}
 
+	/**
+	 * Gets random location within rectangle cuboid
+	 * @param lowest Cuboid's lowest edge
+	 * @param highest Cuboid highest edge
+	 * @return Random location inside rectangle cuboid
+	 */
+	public static Vector getRandomWithinCuboid(final Vector lowest, final Vector highest)
+	{
+		return new Vector(
+			Math.random()*(highest.getX() - lowest.getX()),
+			Math.random()*(highest.getY() - lowest.getY()),
+			Math.random()*(highest.getZ() - lowest.getZ())
+		).add(lowest);
+	}
+
+
+	/**
+	 * Gets a random location within a ball
+	 * @param center Ball's center
+	 * @param radius Ball's radius
+	 * @return Random location inside ball
+	 */
+	public static Location getRandomWithinBall(final Location center, final double radius)
+	{
+		final double r = Math.random() * radius;
+		final double t = Math.random() * Math.PI * 2.0;
+		final double p = Math.random() * Math.PI - Math.PI / 2.0;
+
+		final double st = Math.sin(t);
+		final double ct = Math.cos(t);
+		final double sp = Math.sin(p);
+		final double cp = Math.cos(p);
+
+		return center.add(r*st*ct, r*st*sp, r*cp);
+	}
+
 	public interface RunInCircle
 	{
-		public void operation(final Location loc, final double t, final int i);
+		void operation(final Location loc, final double t, final int i);
 	}
 
 	/**
@@ -186,7 +222,7 @@ public class Util
 
 	public interface RunInLine
 	{
-		public void operation(final Location loc, final int i);
+		void operation(final Location loc, final int i);
 	}
 
 	/**
@@ -215,7 +251,7 @@ public class Util
 
 	public interface RunInSphereBlock
 	{
-		public void operation(final Block b);
+		void operation(final Block b);
 	}
 
 	public static void runInSphereBlock(final Location center, final double radius, final RunInSphereBlock f)

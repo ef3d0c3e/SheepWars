@@ -1,6 +1,8 @@
 package org.ef3d0c3e.sheepwars;
 
 import fr.mrmicky.fastboard.FastBoard;
+import locale.Locale;
+import locale.LocaleManager;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.*;
@@ -47,7 +49,7 @@ public class CPlayer
 				final Kit kit = Kits.list.get(Game.nextInt() % Kits.list.size());
 				try
 				{
-					cp.setKit(kit.getClass().getDeclaredConstructor().newInstance());
+					cp.setKit(kit.getClass().getDeclaredConstructor(CPlayer.class).newInstance(cp));
 				}
 				catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
 				{
@@ -118,6 +120,9 @@ public class CPlayer
 	@Getter @Setter
 	private PlayerInteraction.Data interactionData;
 
+	@Getter @Setter
+	private Locale locale;
+
 	/**
 	 * Constructor
 	 * @param p Player
@@ -137,6 +142,8 @@ public class CPlayer
 		skin = -1;
 
 		interactionData = new PlayerInteraction.Data();
+
+		//locale = LocaleManager.getDefaultLocale();
 	}
 
 	/**
@@ -372,7 +379,7 @@ public class CPlayer
 		header = " §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l \n"
 			+ "§6§l<§f§l°§6§l)))>< §a §l✤ §e§lSHEEPWARS §a§l✤ §6 §l><(((§f§l°§6§l>\n";
 		footer = "\n"
-			+ "§b§lVersion:§e 1.0 §7§o[/changelog]\n"
+			+ "§b§lVersion:§e 1.4 §7§o[/changelog]\n"
 			+ "§c§lSite internet:§d pundalik.org/sheepwars\n";
 		if (Game.hasStarted())
 			footer += MessageFormat.format("\n§e§lCarte: §a{0}\n", Game.getGameMap().getDisplayName());

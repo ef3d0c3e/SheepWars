@@ -48,7 +48,7 @@ public class DarkSheep extends BaseSheep
 
 	protected void spawnParticles(final int time)
 	{
-		final World world = (World)level.getWorld();
+		final World world = (World)level().getWorld();
 		world.spawnParticle(Particle.CAMPFIRE_COSY_SMOKE, getX(), getY(), getZ(), 1, 0.0, 0.0, 0.0, 0.0);
 	}
 
@@ -61,29 +61,29 @@ public class DarkSheep extends BaseSheep
 
 	public void ctick()
 	{
-		if (isOnGround())
+		if (onGround())
 			++grounded;
 
-		if (grounded >= 5)
+		if (grounded >= 5 && grounded % 10 == 0)
 		{
-			if (grounded % 10 == 0)
+			// Particles
+			final World world = (World)level().getWorld();
+			final Location center = new Location(world, getX(), getY()+0.5, getZ());
+			Util.runInCircle(center, new Vector(0, 1, 0), 7.0, 32, (loc, t, i) ->
 			{
-				// Particles
-				final World world = (World)level.getWorld();
-				final Location center = new Location(world, getX(), getY()+0.5, getZ());
-				Util.runInCircle(center, new Vector(0, 1, 0), 7.0, 32, (loc, t, i) ->
-				{
-					world.spawnParticle(Particle.SQUID_INK, loc, 1, 0.0, 0.0, 0.0, 0.0);
+				world.spawnParticle(Particle.SQUID_INK, loc, 1, 0.0, 0.0, 0.0, 0.0);
 
-					if (grounded % 20 == 0)
-						world.spawnParticle(Particle.VIBRATION, loc, 1,
-							new Vibration(loc, new Vibration.Destination.EntityDestination(this.getBukkitEntity()), 20));
-				});
+				if (grounded % 20 == 0)
+					world.spawnParticle(Particle.VIBRATION, loc, 1,
+						new Vibration(loc, new Vibration.Destination.EntityDestination(this.getBukkitEntity()), 20));
+			});
 
+			if (grounded % 40 == 0)
+			{
 				// Effect
 				CPlayer.forEach(cp ->
 				{
-					if (!cp.isAlive() || !cp.isOnline() || cp.getTeam() == owner.getTeam())
+					if (!cp.isAlive() || !cp.isOnline() || cp.getTeam() == null || cp.getTeam() == owner.getTeam())
 						return;
 					if (cp.getHandle().getLocation().distance(center) >= 7.5)
 						return;

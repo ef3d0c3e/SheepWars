@@ -8,7 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
@@ -50,7 +50,7 @@ public class BoardingSheep extends BaseSheep
 
 	protected void spawnParticles(final int time)
 	{
-		final World world = (World)level.getWorld();
+		final World world = (World)level().getWorld();
 		world.spawnParticle(Particle.END_ROD, getX(), getY(), getZ(), 1, 0.0, 0.0, 0.0, 0.0);
 	}
 
@@ -67,12 +67,11 @@ public class BoardingSheep extends BaseSheep
 		super.launch(direction, strength, duration);
 
 		((CraftPlayer) owner.getHandle()).getHandle().startRiding(this, true);
-
 	}
 
 	public void ctick()
 	{
-		if (isOnGround())
+		if (onGround())
 			++grounded;
 
 		if (grounded >= 5 || flyTime >= 120)

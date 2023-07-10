@@ -5,6 +5,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.contents.LiteralContents;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -51,7 +52,7 @@ public class IncendiarySheep extends BaseSheep
 
 	protected void spawnParticles(final int time)
 	{
-		final World world = (World)level.getWorld();
+		final World world = (World)level().getWorld();
 		world.spawnParticle(Particle.FLAME, getX(), getY()+0.4, getZ(), 1, 0.0, 0.0, 0.0, 0.0);
 	}
 
@@ -65,7 +66,7 @@ public class IncendiarySheep extends BaseSheep
 
 	public void ctick()
 	{
-		if (isOnGround())
+		if (onGround())
 			++grounded;
 
 		if (grounded >= 5)
@@ -78,9 +79,9 @@ public class IncendiarySheep extends BaseSheep
 
 			if (fuse == 40)
 			{
-				final World world = (World)level.getWorld();
+				final World world = (World)level().getWorld();
 				this.remove(RemovalReason.DISCARDED);
-				this.level.explode(this, getX(), getY(), getZ(), 5, true, Explosion.BlockInteraction.DESTROY);
+				this.level().explode(this, getX(), getY(), getZ(), 5, true, Level.ExplosionInteraction.BLOCK);
 
 				for (int i = 0; i < 20; ++i)
 				{

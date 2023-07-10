@@ -5,6 +5,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.contents.LiteralContents;
 import net.minecraft.world.item.DyeColor;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.block.data.type.Snow;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -51,7 +52,7 @@ public class FrozenSheep extends BaseSheep
 
 	protected void spawnParticles(final int time)
 	{
-		final World world = (World)level.getWorld();
+		final World world = (World)level().getWorld();
 		world.spawnParticle(Particle.SNOWFLAKE, getX(), getY(), getZ(), 1, 0.0, 0.0, 0.0, 0.0);
 	}
 
@@ -62,9 +63,13 @@ public class FrozenSheep extends BaseSheep
 		super(loc, owner);
 	}
 
+	static Material[] SNOW_REPLACEABLE = {
+
+	};
+
 	public void ctick()
 	{
-		if (isOnGround())
+		if (onGround())
 			++grounded;
 
 		if (grounded >= 5)
@@ -72,7 +77,7 @@ public class FrozenSheep extends BaseSheep
 			if (grounded % 10 == 0)
 			{
 				// Particles
-				final World world = (World)level.getWorld();
+				final World world = (World)level().getWorld();
 				final Location center = new Location(world, getX(), getY()+0.5, getZ());
 				Util.runInCircle(center, new Vector(0, 1, 0), 8.0, 32, (loc, t, i) ->
 				{
@@ -97,7 +102,7 @@ public class FrozenSheep extends BaseSheep
 
 			if (grounded % 200 == 5)
 			{
-				final Location center = new Location((World)level.getWorld(), getX(), getY()+0.5, getZ());
+				final Location center = new Location((World)level().getWorld(), getX(), getY()+0.5, getZ());
 				Util.runInSphereBlock(center, 8.0, (block) ->
 				{
 					if (block.getType() == Material.WATER)
@@ -110,7 +115,7 @@ public class FrozenSheep extends BaseSheep
 							if (Game.nextInt() % 2 == 0)
 							{
 								snow.setLayers(snow.getLayers() + 1);
-								block.setBlockData(snow);
+								block.setBlockData(snow, false);
 							}
 						}
 						else
@@ -118,7 +123,14 @@ public class FrozenSheep extends BaseSheep
 					}
 					else if (block.getType() == Material.AIR && block.canPlace(Material.SNOW.createBlockData()))
 					{
-						block.setType(Material.SNOW);
+						block.setType(Material.SNOW, false);
+					}
+					else if (block.getType() != Material.AIR && !block.getType().isSolid())
+					{
+						final Block below = ((World)level().getWorld()).getBlockAt(block.getLocation().clone().add(0, -1, 0));
+						if (below.getType().isSolid())
+							block.setType(Material.SNOW, false);
+
 					}
 				});
 			}

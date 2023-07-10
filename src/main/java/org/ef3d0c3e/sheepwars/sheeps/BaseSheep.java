@@ -23,7 +23,7 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.Level;
+import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -42,7 +42,7 @@ public abstract class BaseSheep extends Animal
 
 	public BaseSheep(final Location loc, final CPlayer owner)
 	{
-		super(EntityType.SHEEP, ((Level)loc.getWorld()));
+		super(EntityType.SHEEP, ((CraftWorld)loc.getWorld()).getHandle());
 		this.absMoveTo(loc.getX(), loc.getY(), loc.getZ());
 
 		this.owner = owner;
@@ -58,7 +58,7 @@ public abstract class BaseSheep extends Animal
 
 	public void spawn()
 	{
-		this.getLevel().getWorld().addEntity(this, CreatureSpawnEvent.SpawnReason.SPAWNER_EGG);
+		this.level().getWorld().addEntity(this, CreatureSpawnEvent.SpawnReason.SPAWNER_EGG);
 	}
 
 	int launch = 0;
@@ -196,7 +196,7 @@ public abstract class BaseSheep extends Animal
 				this.setYRot(-(float)(Math.atan2(launchDir.x, launchDir.z) * 57.2957763671875D));
 				spawnParticles(launch);
 
-				if (isOnGround())
+				if (onGround())
 					launch = (launch * 17)/20;
 				launchDir = launchDir.add(0.0, -0.040, 0.0);
 				--launch;

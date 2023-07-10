@@ -13,7 +13,7 @@ public interface IGui extends InventoryHolder
 	void onGuiClose(final Player p);
 	void onGuiDrag(final Player p, final InventoryDragEvent ev);
 
-	public static class Events implements Listener
+	class Events implements Listener
 	{
 		@EventHandler
 		public void onInventoryClick(final InventoryClickEvent ev)

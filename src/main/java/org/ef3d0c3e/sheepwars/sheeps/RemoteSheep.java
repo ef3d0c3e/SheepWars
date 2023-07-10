@@ -1,43 +1,43 @@
 package org.ef3d0c3e.sheepwars.sheeps;
 
-import net.minecraft.core.Vec3i;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.contents.LiteralContents;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.PlayerRideableJumping;
+import net.minecraft.world.entity.Saddleable;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.phys.Vec3;
 import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.block.data.Levelled;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
 import org.ef3d0c3e.sheepwars.CPlayer;
 import org.ef3d0c3e.sheepwars.Util;
 
-import java.text.MessageFormat;
+import javax.annotation.Nullable;
 
-public class TsunamiSheep extends BaseSheep
+public class RemoteSheep extends BaseSheep implements PlayerRideableJumping, Saddleable
 {
 	static ItemStack ITEM;
 	static
 	{
-		ITEM = new ItemStack(Material.CYAN_WOOL);
+		ITEM = new ItemStack(Material.LIME_WOOL);
 		ItemMeta meta = ITEM.getItemMeta();
-		meta.setDisplayName(Util.getColored("<#4AE8E8>Tsunami"));
+		meta.setDisplayName(Util.getColored("<#4AE84A>Télécommandé"));
 		ITEM.setItemMeta(meta);
 	}
 
 	public DyeColor getColor()
 	{
-		return DyeColor.CYAN;
+		return DyeColor.LIME;
 	}
 
 	public MutableComponent getSheepName()
 	{
-		MutableComponent name = MutableComponent.create(new LiteralContents("Tsunami"));
-		name.setStyle(Style.EMPTY.withColor(0x4AE8E8));
+		MutableComponent name = MutableComponent.create(new LiteralContents("Télécommandé"));
+		name.setStyle(Style.EMPTY.withColor(0x4AE84A));
 		return name;
 	}
 
@@ -54,51 +54,89 @@ public class TsunamiSheep extends BaseSheep
 	protected void spawnParticles(final int time)
 	{
 		final World world = level().getWorld();
-		world.spawnParticle(Particle.WATER_BUBBLE, getX(), getY(), getZ(), 1, 0.0, 0.0, 0.0, 0.0);
-		world.spawnParticle(Particle.WATER_SPLASH, getX(), getY(), getZ(), 3, 0.2, 0.2, 0.2, 0.0);
+		world.spawnParticle(Particle.SOUL, getX(), getY(), getZ(), 1, 0.0, 0.0, 0.0, 0.0);
+		world.spawnParticle(Particle.SOUL, getX(), getY(), getZ(), 3, 0.2, 0.2, 0.2, 0.0);
 	}
 
-	int grounded = 0;
 	int ticks = 0;
+	Location ownerPos;
 
-	public TsunamiSheep(final Location loc, final CPlayer owner)
+
+	public RemoteSheep(final Location loc, final CPlayer owner)
 	{
 		super(loc, owner);
+
+		ownerPos = owner.getHandle().getLocation();
+		((CraftPlayer) owner.getHandle()).getHandle().startRiding(this, true);
 	}
+
+	// TODO: Bossbar timer
 
 	public void ctick()
 	{
-		final World world = level().getWorld();
-
-		final Location sheepLoc = new Location(world, getX(), getY(), getZ());
-		if (onGround() || sheepLoc.getBlock().getType() == Material.WATER)
-			++grounded;
-
-		final Vec3 vel = getDeltaMovement();
-		final Vec3 dir = vel.normalize().cross(new Vec3(0, 1, 0)); // Water slice direction (vel/|vel|) ^ up
-		final int bpt = (int)Math.ceil(vel.length());
-		Bukkit.getConsoleSender().sendMessage(MessageFormat.format("vel={0} bpt={1}", vel.length(), bpt));
-
-		// Set water
-		for (int b = 0; b < bpt; ++b)
-		{
-			final Vec3 pos = new Vec3(getX(), getY(), getZ()).add(vel.scale(((double)b)/bpt));
-			for (int i = -3; i <= 3; ++i)
-			{
-				final Location loc = new Location(world, pos.x + dir.x * i, pos.y + dir.y * i - 1, pos.z + dir.z * i);
-				final Block bl = loc.getBlock();
-				if (bl.getType() != Material.AIR)
-					continue;
-				bl.setType(Material.WATER);
-				Levelled l = (Levelled) bl.getBlockData();
-				l.setLevel(1);
-				bl.setBlockData(l);
-			}
-		}
-
-
-		if (grounded >= 5 || ticks > 200)
+		if (ticks > 200)
 			remove(RemovalReason.DISCARDED);
-		++ticks;
+		ticks++;
+	}
+
+	// PlayerRideableJumping
+	@Override
+	public void onPlayerJump(int i)
+	{
+		launch(new Vector(0, 1, 0), 1.0, 1);
+	}
+
+	@Override
+	public boolean canJump()
+	{
+		return true;
+	}
+
+	@Override
+	public void handleStartJump(int i)
+	{
+
+	}
+
+	@Override
+	public void handleStopJump()
+	{
+
+	}
+
+	@Override
+	public int getJumpCooldown()
+	{
+		return 1;
+	}
+
+	@Override
+	public boolean isSaddleable()
+	{
+		return true;
+	}
+
+	@Override
+	public void equipSaddle(@Nullable SoundSource soundSource)
+	{
+
+	}
+
+	@Override
+	public SoundEvent getSaddleSoundEvent()
+	{
+		return Saddleable.super.getSaddleSoundEvent();
+	}
+
+	@Override
+	public boolean isSaddled()
+	{
+		return true;
+	}
+
+	@Override
+	public boolean alwaysAccepts()
+	{
+		return true;
 	}
 }

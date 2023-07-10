@@ -5,6 +5,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.contents.LiteralContents;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -49,7 +50,7 @@ public class FragmentationBabySheep extends BaseSheep
 
 	protected void spawnParticles(final int time)
 	{
-		final World world = (World)level.getWorld();
+		final World world = (World)level().getWorld();
 		world.spawnParticle(Particle.EXPLOSION_NORMAL, getX(), getY(), getZ(), 1, 0.0, 0.0, 0.0, 0.0);
 	}
 
@@ -63,10 +64,10 @@ public class FragmentationBabySheep extends BaseSheep
 
 	public void ctick()
 	{
-		if (isOnGround())
+		if (onGround())
 		{
 			this.remove(RemovalReason.DISCARDED);
-			this.level.explode(this, getX(), getY(), getZ(), 3, false, Explosion.BlockInteraction.DESTROY);
+			this.level().explode(this, getX(), getY(), getZ(), 3, false, Level.ExplosionInteraction.BLOCK);
 		}
 		else if (lifeTime == 160)
 		{

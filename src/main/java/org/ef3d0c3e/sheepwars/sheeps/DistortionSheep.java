@@ -6,6 +6,7 @@ import net.minecraft.network.chat.contents.LiteralContents;
 import net.minecraft.world.item.DyeColor;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
@@ -50,7 +51,7 @@ public class DistortionSheep extends BaseSheep
 
 	protected void spawnParticles(final int time)
 	{
-		final World world = (World)level.getWorld();
+		final World world = (World)level().getWorld();
 		world.spawnParticle(Particle.PORTAL, getX(), getY(), getZ(), 1, 0.0, 0.0, 0.0, 0.0);
 	}
 
@@ -64,12 +65,12 @@ public class DistortionSheep extends BaseSheep
 
 	public void ctick()
 	{
-		if (isOnGround())
+		if (onGround())
 			++grounded;
 
 		if (grounded >= 5)
 		{
-			final World world = (World)level.getWorld();
+			final World world = (World)level().getWorld();
 			final Location center = new Location(world, getX(), getY() + 0.5, getZ());
 
 			// Particles
@@ -111,7 +112,7 @@ public class DistortionSheep extends BaseSheep
 			for (final Entity ent : world.getEntities())
 			{
 				final double distSq = ent.getLocation().distanceSquared(center);
-				if (distSq >= 49.0 || distSq <= 0.1 || ((net.minecraft.world.entity.Entity)ent).getHandle() instanceof DistortionSheep)
+				if (distSq >= 49.0 || distSq <= 0.1 || ((CraftEntity)ent).getHandle() instanceof DistortionSheep)
 					continue;
 				if (ent instanceof Player)
 				{

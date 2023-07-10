@@ -1,7 +1,7 @@
 name: SheepWars
 version: '${project.version}'
 main: org.ef3d0c3e.sheepwars.SheepWars
-api-version: 1.19
+api-version: 1.20
 prefix: SheepWars
 load: STARTUP
 depend:
@@ -10,13 +10,3 @@ depend:
 authors: [ ef3d0c3e ]
 description: SheepWars is a mini-game plugin
 website: github.com/ef3d0c3e/SheepWars
-commands:
-  sheepwars:
-    description: Commande principale du sheepwars
-    permission: sheepwars.manage
-    usage: /<command> <section>
-    aliases: sw
-  changelog:
-    description: Affiche le changelog
-    usage: /<command> <page>
-    aliases: ch

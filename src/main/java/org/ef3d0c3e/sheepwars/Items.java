@@ -71,7 +71,7 @@ public class Items
 
 	public static void init()
 	{
-		key = new NamespacedKey(SheepWars.plugin, "swid");
+		key = new NamespacedKey(SheepWars.getPlugin(), "swid");
 
 		voteItem = ID.VOTE.create(Material.MAP, "§eCarte §7(Click-Droit)", "§7Utilisez cet objet pour", "§7voter pour une carte");
 		statItem = ID.STAT.create(Material.ENDER_CHEST, "§6Statistiques §7(Click-Droit)", "§7Utilisez cet objet pour", "§7afficher les statistiques");

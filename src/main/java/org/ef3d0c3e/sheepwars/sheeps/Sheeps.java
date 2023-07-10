@@ -1,7 +1,7 @@
 package org.ef3d0c3e.sheepwars.sheeps;
 
 import org.bukkit.*;
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -36,22 +36,25 @@ public class Sheeps
 				@Override
 				public void run()
 				{
+					// Current active world
 					World world = null;
 					if (Game.hasStarted())
 						world = Game.getMap();
 					else
-						world = Game.getLobby();
+						world = Lobby.getWorld();
 					if (world == null)
 						return;
 
+					// Tick custom entities
 					for (final Entity ent : world.getEntities())
 					{
-						if (!(((CraftEntity)ent).getHandle() instanceof BaseSheep))
-							continue;
-
-						((BaseSheep)((CraftEntity)ent).getHandle()).ctick();
+						if (((CraftEntity)ent).getHandle() instanceof BaseSheep)
+							((BaseSheep)((CraftEntity)ent).getHandle()).ctick();
+						else if (((CraftEntity)ent).getHandle() instanceof SlimeSheepSlime)
+							((SlimeSheepSlime)((CraftEntity)ent).getHandle()).ctick();
 					}
 
+					// Give players sheeps wools
 					if (ticks % 400 == 0)
 					{
 						CPlayer.forEach(cp ->
@@ -59,17 +62,15 @@ public class Sheeps
 							if (!cp.isAlive() || !cp.isOnline())
 								return;
 
-							final ArrayList<ItemStack> sheeps = cp.getKit().getSheeps();
-
-							cp.getHandle().getInventory().addItem(sheeps.get( Game.nextInt() % sheeps.size() ));
+							cp.getHandle().getInventory().addItem(cp.getKit().getWoolRandomizer().getNextWool());
 							if (Game.nextInt() % 10 + 1 <= (int)(cp.getKit().getAdditionalSheepChance() * 10))
-								cp.getHandle().getInventory().addItem(sheeps.get( Game.nextInt() % sheeps.size() ));
+								cp.getHandle().getInventory().addItem(cp.getKit().getWoolRandomizer().getNextWool());
 						});
 					}
 
 					++ticks;
 				}
-			}.runTaskTimer(SheepWars.plugin, 0, 1);
+			}.runTaskTimer(SheepWars.getPlugin(), 0, 1);
 
 			// Register listeners for all sheeps
 			list.forEach((name, pair) ->
@@ -84,7 +85,7 @@ public class Sheeps
 							continue;
 
 						final Listener listener = (Listener)SubClass.getDeclaredConstructor().newInstance();
-						Bukkit.getPluginManager().registerEvents(listener, SheepWars.plugin);
+						Bukkit.getPluginManager().registerEvents(listener, SheepWars.getPlugin());
 					}
 				}
 				catch (InstantiationException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e)
@@ -105,10 +106,6 @@ public class Sheeps
 		@EventHandler
 		public void onWoolUse(final PlayerInteractEvent ev)
 		{
-			if (ev.getPlayer().getVehicle() != null &&
-				((CraftEntity)ev.getPlayer().getVehicle()).getHandle() instanceof RemoteSheep)
-				return;
-
 			if (ev.getAction() != Action.RIGHT_CLICK_AIR && ev.getAction() != Action.RIGHT_CLICK_BLOCK)
 				return;
 			if (ev.getItem() == null)
@@ -144,10 +141,6 @@ public class Sheeps
 		@EventHandler
 		public void onWoolDrop(final PlayerDropItemEvent ev)
 		{
-			if (ev.getPlayer().getVehicle() != null &&
-				((CraftEntity)ev.getPlayer().getVehicle()).getHandle() instanceof RemoteSheep)
-				return;
-
 			list.forEach((name, pair) ->
 			{
 				if (!ev.getItemDrop().getItemStack().isSimilar(pair.getA()))
@@ -207,8 +200,10 @@ public class Sheeps
 		list.put("incendiary", new Pair(IncendiarySheep.getItem(), IncendiarySheep.class));
 		list.put("seeker", new Pair(SeekerSheep.getItem(), SeekerSheep.class));
 		list.put("swap", new Pair(SwapSheep.getItem(), SwapSheep.class));
-		//list.put("remote", new Pair(RemoteSheep.getItem(), RemoteSheep.class));
 		list.put("lightning", new Pair(LightningSheep.getItem(), LightningSheep.class));
+		list.put("tsunami", new Pair(TsunamiSheep.getItem(), TsunamiSheep.class));
+		list.put("slime", new Pair(SlimeSheep.getItem(), SlimeSheep.class));
+		//list.put("remote", new Pair(RemoteSheep.getItem(), RemoteSheep.class));
 	}
 
 	static public int getDispawnLayer()

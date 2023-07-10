@@ -1,13 +1,26 @@
-displayname: Oil Rig
+displayname: Plateforme Pétrolière
 offset: 0 0 0
 icon: IRON_BLOCK
 limbo-begin: 69
 limbo-end: 63
 world-time: 6000
+bonus-lowest: -1 89 -4
+bonus-highest: 9 97 10
 spawns:
   red:
-    - 10 64 -5
-    - 10 64 5
+    - -14.5 88 16.5
+    - -27.5 88 0.5
+    - -24.5 89 -12.5
+    - -27.5 103 0.5
+    - -21.5 99 -12.5
+    - -10.5 83.0625 18.5
   blue:
-    - -10 64 -5
-    - -10 64 5
+    - 20.5 88 -9.5
+    - 33.5 88 6.5
+    - 30.5 89 19.5
+    - 33.5 103 6.5
+    - 27.5 99 19.5
+    - 16.5 83.0625 -11.5
+yaw:
+  red: -90
+  blue: 90

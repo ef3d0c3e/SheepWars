@@ -49,7 +49,7 @@ public class SwapSheep extends BaseSheep
 
 	protected void spawnParticles(final int time)
 	{
-		final World world = (World)level.getWorld();
+		final World world = (World)level().getWorld();
 		world.spawnParticle(Particle.SOUL, getX(), getY(), getZ(), 1, 0.0, 0.0, 0.0, 0.0);
 	}
 
@@ -63,7 +63,7 @@ public class SwapSheep extends BaseSheep
 
 	public void ctick()
 	{
-		if (isOnGround())
+		if (onGround())
 			++grounded;
 
 		if (grounded >= 5)
@@ -71,7 +71,7 @@ public class SwapSheep extends BaseSheep
 			// Particles
 			if (fuse % 10 == 0)
 			{
-				final World world = (World)level.getWorld();
+				final World world = (World)level().getWorld();
 				final Location center = new Location(world, getX(), getY()+0.5, getZ());
 				Util.runInCircle(center, new Vector(0, 1, 0), 9.0, 24, (loc, t, i) ->
 				{
@@ -92,7 +92,7 @@ public class SwapSheep extends BaseSheep
 			// Effect
 			if (fuse == 40)
 			{
-				final Location loc = new Location((World)level.getWorld(), getX(), getY(), getZ());
+				final Location loc = new Location((World)level().getWorld(), getX(), getY(), getZ());
 				this.remove(RemovalReason.DISCARDED);
 				if (!owner.isAlive() || !owner.isOnline())
 					return;

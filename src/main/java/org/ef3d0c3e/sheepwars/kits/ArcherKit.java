@@ -3,9 +3,11 @@ package org.ef3d0c3e.sheepwars.kits;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.ef3d0c3e.sheepwars.CPlayer;
 import org.ef3d0c3e.sheepwars.Util;
 import org.ef3d0c3e.sheepwars.sheeps.*;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 
 public class ArcherKit extends Kit
@@ -45,8 +47,26 @@ public class ArcherKit extends Kit
 		return ITEM;
 	}
 
-	public ArcherKit()
+	public ArcherKit(@Nullable CPlayer player)
 	{
-		super();
+		super(player);
+
+		// Class specific
+		woolRandomizer.add(SwapSheep.class, 2.5f);
+		woolRandomizer.add(ShieldSheep.class, 2.0f);
+		woolRandomizer.add(DarkSheep.class, 1.5f);
+		woolRandomizer.add(HealerSheep.class, 1.f);
+		woolRandomizer.add(EarthQuakeSheep.class, 1.f);
+		woolRandomizer.add(DistortionSheep.class, 1.f);
+		woolRandomizer.add(BoardingSheep.class, 1.f);
+
+		// Other
+		woolRandomizer.add(ExplosiveSheep.class, 1.f);
+		woolRandomizer.add(FragmentationSheep.class, 0.5f);
+		woolRandomizer.add(IncendiarySheep.class, 0.5f);
+		woolRandomizer.add(TsunamiSheep.class, 0.5f);
+		woolRandomizer.add(FrozenSheep.class, 0.5f);
+		woolRandomizer.add(SeekerSheep.class, 0.5f);
+
 	}
 }

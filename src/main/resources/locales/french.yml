@@ -1,0 +1,7 @@
+config:
+  name: french
+  displayname: Français
+  banner: "minecraft:white_banner{BlockEntityTag:{Patterns:[{Pattern:ls,Color:11},{Pattern:rs,Color:14}]}}"
+system:
+  reload: "§cLe serveur restart...\n§eReconnectez-vous"
+  kick: "§eReconnectez-vous!"

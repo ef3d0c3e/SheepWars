@@ -8,25 +8,21 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.WrappedGameProfile;
 import com.comphenix.protocol.wrappers.WrappedServerPing;
+import locale.LocaleManager;
+import lombok.Getter;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.FileUtil;
-import org.ef3d0c3e.sheepwars.commands.CmdChangelog;
-import org.ef3d0c3e.sheepwars.commands.CmdSW;
-import org.ef3d0c3e.sheepwars.commands.Commands;
+import org.ef3d0c3e.sheepwars.commands.CommandRegisterer;
 import org.ef3d0c3e.sheepwars.level.Biomes;
 import org.ef3d0c3e.sheepwars.level.Lobby;
 import org.ef3d0c3e.sheepwars.level.Map;
 import org.ef3d0c3e.sheepwars.level.SWChunkGenerator;
-import org.ef3d0c3e.sheepwars.sheeps.Sheeps;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,9 +32,41 @@ import java.util.UUID;
 
 public final class SheepWars extends JavaPlugin
 {
-	public static Plugin plugin;
-	public static Server server;
-	public static ProtocolManager protocolManager;
+	@Getter
+	private static Plugin plugin;
+	@Getter
+	private static ProtocolManager protocolManager;
+	@Getter
+	private static String versionString;
+
+	private void saveResources()
+	{
+		// Create 'plugins/SheepWars'
+		if (!getDataFolder().exists())
+		{
+			Bukkit.getConsoleSender().sendMessage("§cSheepWars>§7 Creating configuration directory");
+			getDataFolder().mkdirs();
+		}
+
+		saveResource("sw_lobby.schem", false);
+		saveResource("sw_lobby.yml", false);
+
+		if (!LocaleManager.getLocaleFolder().exists())
+		{
+			Bukkit.getConsoleSender().sendMessage("§cSheepWars>§7 Creating locales directory");
+			LocaleManager.getLocaleFolder().mkdirs();
+		}
+
+		if (!Map.getMapFolder().exists())
+		{
+			Bukkit.getConsoleSender().sendMessage("§cSheepWars>§7 Creating maps directory");
+			Map.getMapFolder().mkdirs();
+		}
+
+		//Reflections refl = new Reflections(null, Scanners.Resources);
+		//refl.getR
+		//Set<String> resourceList = refl.getResources(x -> x instanceof Resource);
+	}
 
 	@Override
 	public void onLoad()
@@ -47,9 +75,8 @@ public final class SheepWars extends JavaPlugin
 		final World erase = Bukkit.getWorld("sheepwars");
 		if (erase != null)
 		{
-			Bukkit.getConsoleSender().sendMessage("§cSheepWars>§7 Suppression du monde 'sheepwars'");
-			for (final Player p : erase.getPlayers())
-				p.kickPlayer("§eReconnectez-vous");
+			Bukkit.getConsoleSender().sendMessage("§cSheepWars>§7 Deleting world 'sheepwars'");
+			CPlayer.forEach(cp -> { if (cp.getHandle().getWorld() == erase) cp.getHandle().kickPlayer(cp.getLocale().SYSTEM_KICK); });
 			Bukkit.getServer().unloadWorld(erase, false);
 			try
 			{
@@ -60,13 +87,15 @@ public final class SheepWars extends JavaPlugin
 				e.printStackTrace();
 			}
 		}
+
+		Bukkit.getConsoleSender().sendMessage(getServer().getVersion());
+		versionString = getServer().getVersion();
 	}
 
 	@Override
 	public void onEnable()
 	{
 		plugin = this;
-		server = getServer();
 		protocolManager = ProtocolLibrary.getProtocolManager();
 
 		// Motd
@@ -85,7 +114,7 @@ public final class SheepWars extends JavaPlugin
 
 				// Version
 				ping.setVersionProtocol(999); // Will display our custom version name
-				ping.setVersionName(MessageFormat.format("§d<§e1.18+§d> §6» §l{0}/{1}", ping.getPlayersOnline(), ping.getPlayersMaximum()));
+				ping.setVersionName(MessageFormat.format("§d<§e1.19.4§d> §6» §l{0}/{1}", ping.getPlayersOnline(), ping.getPlayersMaximum()));
 
 				//// Custom player list
 				ping.setPlayers(Arrays.asList(
@@ -96,31 +125,12 @@ public final class SheepWars extends JavaPlugin
 			}
 		});
 
-		// Misc
-		Misc.init();
+		saveResources();
 
-		if (!getDataFolder().exists())
-		{
-			Bukkit.getConsoleSender().sendMessage("§cSheepWars>§7 Création du dossier de configuration!");
-			getDataFolder().mkdirs();
-		}
-		// TODO: Iterate over all resources
-		saveResource("sw_lobby.schem", false);
+		// Register all commands
+		CommandRegisterer.registerCommands();
 
-		if (!Map.getMapFolder().exists())
-		{
-
-			Bukkit.getConsoleSender().sendMessage("§cSheepWars>§7 Création du dossier des maps!");
-			Map.getMapFolder().mkdirs();
-		}
-
-		// Commands
-		new Commands(
-			new CmdSW(),
-			new CmdChangelog()
-		);
-
-		Biomes.loadBiomes();
+		Biomes.loadRegistry();
 		Bukkit.getPluginManager().registerEvents(new Events(), plugin);
 		Game.init();
 
@@ -131,7 +141,7 @@ public final class SheepWars extends JavaPlugin
 			Bukkit.getPluginManager().callEvent(ev);
 		}
 
-		Bukkit.getConsoleSender().sendMessage("§cSheepWars>§7 Plugin activé!");
+		Bukkit.getConsoleSender().sendMessage("§cSheepWars>§7 Plugin successfully enabled");
 	}
 
 	@Override
@@ -140,22 +150,21 @@ public final class SheepWars extends JavaPlugin
 		if (Game.hasStarted())
 		{
 			// Teleport all players to spawn
-			for (final Player p : Bukkit.getOnlinePlayers())
-			{
-				p.teleport(Game.getLobby().getSpawnLocation());
-				p.kickPlayer("§eLe serveur reload...");
+			CPlayer.forEach(cp -> {
+				cp.getHandle().teleport(Lobby.getWorld().getSpawnLocation());
+				cp.getHandle().kickPlayer(cp.getLocale().SYSTEM_RELOAD);
 				/* Kick players to avoid
 				 * [Render thread/ERROR]: Error executing task on Client
 				 * java.lang.IllegalArgumentException: No value with id <ID>
 				 */
-			}
+			});
 		}
 
-		final World world = Bukkit.getWorld("world");
+		final World world = Lobby.getWorld();
 		if (world != null)
 		{
 			Bukkit.unloadWorld(world, false);
-			Bukkit.getConsoleSender().sendMessage("§cSheepWars>§7 Suppression des données des joueurs");
+			Bukkit.getConsoleSender().sendMessage("§cSheepWars>§7 Deleting player data");
 			try
 			{
 				final File pdata = new File(world.getWorldFolder().getAbsolutePath() + "/playerdata");
@@ -176,7 +185,7 @@ public final class SheepWars extends JavaPlugin
 
 		protocolManager.removePacketListeners(plugin);
 
-		Bukkit.getConsoleSender().sendMessage("§cSheepWars>§7 Plugin désactivé!");
+		Bukkit.getConsoleSender().sendMessage("§cSheepWars>§7 Plugin disabled.");
 	}
 
 	/**

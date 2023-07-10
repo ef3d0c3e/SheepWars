@@ -5,7 +5,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.contents.LiteralContents;
 import net.minecraft.world.item.DyeColor;
 import org.bukkit.*;
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -51,7 +51,7 @@ public class LightningSheep extends BaseSheep
 
 	protected void spawnParticles(final int time)
 	{
-		final World world = (World)level.getWorld();
+		final World world = (World)level().getWorld();
 		world.spawnParticle(Particle.ELECTRIC_SPARK, getX(), getY(), getZ(), 1, 0.0, 0.0, 0.0, 0.0);
 	}
 
@@ -65,7 +65,7 @@ public class LightningSheep extends BaseSheep
 
 	public void ctick()
 	{
-		if (isOnGround())
+		if (onGround())
 			++grounded;
 
 		if (lifeTime == 200)
@@ -73,19 +73,22 @@ public class LightningSheep extends BaseSheep
 
 		if (grounded >= 5)
 		{
+			final World world = (World)level().getWorld();
+			final Location center = new Location(world, getX(), getY()+0.5, getZ());
+
+			// Particles
 			if (grounded % 30 == 0)
 			{
-				// Particles
-				final World world = (World)level.getWorld();
-				final Location center = new Location(world, getX(), getY()+0.5, getZ());
 				Util.runInCircle(center, new Vector(0, 1, 0), 4.5, 32, (loc, t, i) ->
 				{
-					if (grounded % 20 == 0)
-						world.spawnParticle(Particle.VIBRATION, loc, 1,
-							new Vibration(loc, new Vibration.Destination.EntityDestination(this.getBukkitEntity()), 20));
+					world.spawnParticle(Particle.VIBRATION, loc, 1,
+						new Vibration(loc, new Vibration.Destination.EntityDestination(this.getBukkitEntity()), 20));
 				});
+			}
 
-
+			// Lightning
+			if (grounded % 30 == 10)
+			{
 				final int amt = Game.nextInt() % 3;
 				for (int i = 0; i < amt; ++i)
 				{

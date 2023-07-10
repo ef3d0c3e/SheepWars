@@ -1,6 +1,5 @@
 package org.ef3d0c3e.sheepwars.level;
 
-import com.mojang.brigadier.Message;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
@@ -13,17 +12,15 @@ import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.session.ClipboardHolder;
-import it.unimi.dsi.fastutil.Hash;
-import org.apache.commons.io.FileUtils;
+import com.sk89q.worldedit.world.block.BlockState;
+import lombok.Getter;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.util.FileUtil;
 import org.bukkit.util.Vector;
 import org.ef3d0c3e.sheepwars.CPlayer;
 import org.ef3d0c3e.sheepwars.SheepWars;
 import org.ef3d0c3e.sheepwars.Util;
-import oshi.util.tuples.Pair;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,7 +41,7 @@ public class Map
 	 */
 	public static File getMapFolder()
 	{
-		return new File(SheepWars.plugin.getDataFolder().getAbsolutePath() + "/maps");
+		return new File(SheepWars.getPlugin().getDataFolder().getAbsolutePath() + "/maps");
 	}
 
 	private static HashMap<String, Map> mapList = null;
@@ -132,6 +129,8 @@ public class Map
 				map.limboBegin = config.getInt("limbo-begin");
 				map.limboEnd = config.getInt("limbo-end");
 				map.worldTime = config.getInt("world-time");
+				map.lowestWool = Util.parseVector(config.getString("bonus-lowest"));
+				map.highestWool = Util.parseVector(config.getString("bonus-highest"));
 				map.redSpawns = new ArrayList<>();
 				for (final String spawn : config.getStringList("spawns.red"))
 					map.redSpawns.add(Util.parseVector(spawn));
@@ -152,77 +151,44 @@ public class Map
 		}
 	}
 
+	@Getter
 	protected String name;
+	@Getter
 	protected String displayName;
+	@Getter
 	protected Material icon;
+	@Getter
 	protected File schematic;
+	@Getter
+	protected Clipboard mapContent;
 
+	@Getter
 	protected Vector offset;
+	@Getter
 	protected Vector lowestPoint;
+	@Getter
 	protected Vector highestPoint;
+	@Getter
 	protected int limboBegin;
+	@Getter
 	protected int limboEnd;
+	@Getter
 	protected int worldTime;
+	@Getter
+	protected Vector lowestWool;
+	@Getter
+	protected Vector highestWool;
+	@Getter
 	protected ArrayList<Vector> redSpawns;
+	@Getter
 	protected float redYaw;
+	@Getter
 	protected ArrayList<Vector> blueSpawns;
+	@Getter
 	protected float blueYaw;
 
+	@Getter
 	protected int vote;
-
-	/**
-	 * Gets map's name
-	 * @return Map's name
-	 */
-	public String getName()
-	{
-		return name;
-	}
-
-	/**
-	 * Gets map's display name
-	 * @return Map's display name
-	 */
-	public String getDisplayName()
-	{
-		return displayName;
-	}
-
-	/**
-	 * Gets map's icon
-	 * @return Icon material
-	 */
-	public Material getIcon()
-	{
-		return icon;
-	}
-
-	/**
-	 * Gets offset from center
-	 * @return Offset
-	 */
-	public Vector getOffset()
-	{
-		return offset;
-	}
-
-	/**
-	 * Gets map's lowest point
-	 * @return Lowest point
-	 */
-	public Vector getLowestPoint()
-	{
-		return lowestPoint;
-	}
-
-	/**
-	 * Gets map's highest point
-	 * @return Highest point
-	 */
-	public Vector getHighestPoint()
-	{
-		return highestPoint;
-	}
 
 	/**
 	 * Gets whether location is in bound
@@ -231,31 +197,24 @@ public class Map
 	 */
 	public boolean isBounded(final Location loc)
 	{
+		return isBounded(loc, false);
+	}
+
+	/**
+	 * Gets whether location is in bound
+	 * @param loc Location
+	 * @param infiniteUp If set to true, will allow infinite height
+	 * @return true if bounded, false otherwise
+	 */
+	public boolean isBounded(final Location loc, boolean infiniteUp)
+	{
 		return
 			lowestPoint.getX() <= loc.getX() &&
 			highestPoint.getX() >= loc.getX() &&
 			lowestPoint.getY() <= loc.getY() &&
-			highestPoint.getY() >= loc.getY() &&
+			(infiniteUp || highestPoint.getY() >= loc.getY()) &&
 			lowestPoint.getZ() <= loc.getZ() &&
 			highestPoint.getZ() >= loc.getZ();
-	}
-
-	/**
-	 * Gets limbo begin height
-	 * @return Height
-	 */
-	public int getLimboBegin()
-	{
-		return limboBegin;
-	}
-
-	/**
-	 * Gets limbo end height
-	 * @return Height
-	 */
-	public int getLimboEnd()
-	{
-		return limboEnd;
 	}
 
 	/**
@@ -274,48 +233,17 @@ public class Map
 	}
 
 	/**
-	 * Gets spawns location of red team
-	 * @return Spawns location of red team
+	 * Gets block from original map
+	 * @param loc Location of block after pasting
+	 * @return
 	 */
-	public ArrayList<Vector> getRedSpawns()
+	public BlockState getOriginalBlock(final Location loc)
 	{
-		return redSpawns;
-	}
-
-	/**
-	 * Gets red yaw
-	 * @return Red team's yaw
-	 */
-	public float getRedYaw()
-	{
-		return redYaw;
-	}
-
-	/**
-	 * Gets spawns location of blue team
-	 * @return Spawns location of blue team
-	 */
-	public ArrayList<Vector> getBlueSpawns()
-	{
-		return blueSpawns;
-	}
-
-	/**
-	 * Gets blue yaw
-	 * @return Blue team's yaw
-	 */
-	public float getBlueYaw()
-	{
-		return blueYaw;
-	}
-
-	/**
-	 * Gets number of votes
-	 * @return Number of votes
-	 */
-	public int getVote()
-	{
-		return vote;
+		return mapContent.getBlock(BlockVector3.at(
+			loc.getBlockX()-offset.getBlockX(),
+			loc.getBlockY()-offset.getBlockY()-64,
+			loc.getBlockZ()-offset.getBlockZ()
+		).add(mapContent.getOrigin()));
 	}
 
 	/**
@@ -341,28 +269,26 @@ public class Map
 
 			ClipboardFormat format = ClipboardFormats.findByFile(schematic);
 			ClipboardReader reader = format.getReader(new FileInputStream(schematic));
-			Clipboard clipboard = reader.read();
+			mapContent = reader.read();
 
 			com.sk89q.worldedit.world.World adaptedWorld = BukkitAdapter.adapt(world);
 			EditSession editSession = WorldEdit.getInstance().newEditSession(adaptedWorld);
-			Operation operation = new ClipboardHolder(clipboard).createPaste(editSession)
+			Operation operation = new ClipboardHolder(mapContent).createPaste(editSession)
 				.to(BlockVector3.at(offset.getX(), offset.getY()+64, offset.getZ()))
 				.ignoreAirBlocks(true)
 				.build();
 
 			lowestPoint = new Vector(
-				clipboard.getOrigin().getX() - clipboard.getMaximumPoint().getX() + offset.getX(),
-				clipboard.getMinimumPoint().getY() - clipboard.getOrigin().getY() + offset.getY() + 64,
-				clipboard.getOrigin().getZ() - clipboard.getMaximumPoint().getZ() + offset.getZ()+1
+				mapContent.getOrigin().getX() - mapContent.getMaximumPoint().getX() + offset.getX(),
+				mapContent.getMinimumPoint().getY() - mapContent.getOrigin().getY() + offset.getY() + 64,
+				mapContent.getOrigin().getZ() - mapContent.getMaximumPoint().getZ() + offset.getZ()+1
 			);
 			highestPoint = new Vector(
-				clipboard.getOrigin().getX() - clipboard.getMinimumPoint().getX() + offset.getX()-1,
-				lowestPoint.getY() + clipboard.getDimensions().getY() - 1,
-				clipboard.getOrigin().getZ() - clipboard.getMinimumPoint().getZ() + offset.getZ()
+				mapContent.getOrigin().getX() - mapContent.getMinimumPoint().getX() + offset.getX()-1,
+				lowestPoint.getY() + mapContent.getDimensions().getY() - 1,
+				mapContent.getOrigin().getZ() - mapContent.getMinimumPoint().getZ() + offset.getZ()
 			);
-			//Bukkit.getConsoleSender().sendMessage(MessageFormat.format("orig = {0}\nmin = {1}\nmax = {2}\ndim = {3}",
-			//clipboard.getOrigin(), clipboard.getMinimumPoint(), clipboard.getMaximumPoint(), clipboard.getDimensions()));
-			//Bukkit.getConsoleSender().sendMessage(MessageFormat.format("low = {0}\nhigh = {1}", lowestPoint, highestPoint));
+
 			Operations.complete(operation);
 			editSession.close();
 

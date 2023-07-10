@@ -3,17 +3,10 @@ package org.ef3d0c3e.sheepwars;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.ef3d0c3e.sheepwars.events.CPlayerJoinEvent;
-import sun.jvm.hotspot.utilities.ProcImageClassLoader;
-
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.concurrent.LinkedBlockingDeque;
 
 public class PlayerInteraction
 {

@@ -51,7 +51,7 @@ public class HealerSheep extends BaseSheep
 
 	protected void spawnParticles(final int time)
 	{
-		final World world = (World)level.getWorld();
+		final World world = (World)level().getWorld();
 		world.spawnParticle(Particle.HEART, getX(), getY(), getZ(), 1, 0.0, 0.0, 0.0, 0.0);
 	}
 
@@ -65,7 +65,7 @@ public class HealerSheep extends BaseSheep
 
 	public void ctick()
 	{
-		if (isOnGround())
+		if (onGround())
 			++grounded;
 
 		if (grounded >= 5)
@@ -75,7 +75,7 @@ public class HealerSheep extends BaseSheep
 			if (grounded % 20 == 0)
 			{
 				// Particles
-				final World world = (World)level.getWorld();
+				final World world = (World)level().getWorld();
 				final Location center = new Location(world, getX(), getY()+0.5, getZ());
 				Util.runInCircle(center, new Vector(0, 1, 0), 5.5, 32, (loc, t, i) ->
 				{

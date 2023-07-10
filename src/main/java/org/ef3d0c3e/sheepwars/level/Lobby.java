@@ -17,7 +17,7 @@ import lombok.Getter;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftEntity;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -34,6 +34,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.ef3d0c3e.sheepwars.*;
 import org.ef3d0c3e.sheepwars.events.CPlayerJoinEvent;
@@ -53,44 +54,51 @@ import java.text.MessageFormat;
 
 public class Lobby
 {
+	@Getter
 	protected static Vector lobbyOffset;
+	@Getter
 	protected static Vector lobbySpawn;
+	@Getter
 	protected static int limboHeight;
-
-	/**
-	 * Gets height of limbo layer
-	 * @return Height of limbo layer
-	 */
-	public static int getLimboHeight()
-	{
-		return limboHeight;
-	}
+	@Getter
+	private static World world = null;
 
 	public static void init()
 	{
-		FileConfiguration config = YamlConfiguration.loadConfiguration(new File(SheepWars.plugin.getDataFolder().getAbsolutePath() + "/sw_lobby.yml"));
+		FileConfiguration config = YamlConfiguration.loadConfiguration(new File(SheepWars.getPlugin().getDataFolder().getAbsolutePath() + "/sw_lobby.yml"));
 		Lobby.lobbyOffset = Util.parseVector(config.getString("offset"));
 		Lobby.lobbySpawn = Util.parseVector(config.getString("spawn"));
 		Lobby.limboHeight = config.getInt("limbo");
+
+		// Create world
+		new BukkitRunnable()
+		{
+			@Override
+			public void run()
+			{
+				world = Bukkit.getWorld("lobby");
+				if (world == null)
+					world = Bukkit.createWorld(new WorldCreator("lobby")
+						.generator(new SWChunkGenerator())
+						.biomeProvider(new SWBiomeProvider())
+						.seed(1)
+					);
+
+				// Post world
+				world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+				world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
+				world.setGameRule(GameRule.SEND_COMMAND_FEEDBACK, false);
+				world.setGameRule(GameRule.RANDOM_TICK_SPEED, 0);
+				world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
+				world.setGameRule(GameRule.DO_INSOMNIA, false);
+				world.setGameRule(GameRule.SPAWN_RADIUS, 0);
+				world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+				world.setTime(6000);
+				world.setWeatherDuration(0);
+				world.setSpawnLocation((int)Lobby.getLobbySpawn().getX(), (int)Lobby.getLobbySpawn().getY(), (int)Lobby.getLobbySpawn().getZ());
+			}
+		}.runTaskLater(SheepWars.getPlugin(), 1);
 	}
-
-	/**
-	 * Gets lobby offset
-	 * @return Lobby offset
-	 */
-	public static Vector getLobbyOffset()
-									 {
-										return lobbyOffset;
-														   }
-
-	/**
-	 * Gets lobby spawn
-	 * @return Lobby spawn
-	 */
-	public static Vector getLobbySpawn()
-									{
-									   return lobbySpawn;
-														 }
 
 	public static class Events implements Listener
 	{
@@ -104,13 +112,13 @@ public class Lobby
 		@EventHandler
 		public void onChunkLoad(ChunkLoadEvent ev)
 		{
-			if (!ev.isNewChunk() || ev.getChunk().getX() != 0 || ev.getChunk().getZ() != 0 || !ev.getWorld().getName().equals("world"))
+			if (!ev.isNewChunk() || ev.getChunk().getX() != 0 || ev.getChunk().getZ() != 0 || ev.getWorld() != getWorld())
 				return;
 
 			Bukkit.getConsoleSender().sendMessage("§cSheepWars>§7 Génération du lobby...");
 			try
 			{
-				File lobby = new File(SheepWars.plugin.getDataFolder().getAbsolutePath() + "/sw_lobby.schem");
+				File lobby = new File(SheepWars.getPlugin().getDataFolder().getAbsolutePath() + "/sw_lobby.schem");
 				ClipboardFormat format = ClipboardFormats.findByFile(lobby);
 				ClipboardReader reader = format.getReader(new FileInputStream(lobby));
 				Clipboard clipboard = reader.read();
@@ -255,7 +263,7 @@ public class Lobby
 			if (ev.getTo().getY() > limboHeight)
 				return;
 
-			ev.setTo(Game.getLobby().getSpawnLocation());
+			ev.setTo(getWorld().getSpawnLocation());
 		}
 
 		// TODO
@@ -271,7 +279,7 @@ public class Lobby
 		//}
 
 		/**
-		 * Give items
+		 * Give items & set gamemode
 		 */
 		@EventHandler(priority = EventPriority.HIGH)
 		public void onJoin(final CPlayerJoinEvent ev)
@@ -287,11 +295,11 @@ public class Lobby
 			cp.getHandle().setGameMode(GameMode.ADVENTURE);
 
 			if (ev.isNewPlayer())
-				cp.getHandle().teleport(Game.getLobby().getSpawnLocation());
+				cp.getHandle().teleport(getWorld().getSpawnLocation());
 		}
 
 		/**
-		 * Remove vote
+		 * Remove player's vote
 		 */
 		@EventHandler
 		public void onQuit(final CPlayerQuitEvent ev)
@@ -301,6 +309,7 @@ public class Lobby
 			Team.setTeam(cp, null);
 		}
 
+		// TODO: Refactor to item system
 		@EventHandler
 		public void onTeamItemUse(final PlayerInteractEvent ev)
 		{
@@ -330,6 +339,7 @@ public class Lobby
 			cp.getHandle().getInventory().addItem(Items.getTeamItem(cp));
 		}
 
+		// TODO: Refactor to item system
 		/**
 		 * Open inventories
 		 * @param ev Event
@@ -432,26 +442,34 @@ public class Lobby
 			final CPlayer cp = CPlayer.getPlayer(p);
 
 			// Set kit
-			try
+			if (click.isLeftClick())
 			{
-				cp.setKit(kit.getClass().getDeclaredConstructor().newInstance());
+				try
+				{
+					cp.setKit(kit.getClass().getDeclaredConstructor(CPlayer.class).newInstance(cp));
+				}
+				catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
+				{
+					e.printStackTrace();
+				}
+
+				cp.updateScoreboard();
+				cp.updateTabname();
+
+				// Update inventory
+				p.openInventory(getInventory());
+
+				// Change items
+				Items.remove(cp, Items.ID.KIT);
+				cp.getHandle().getInventory().addItem(Items.getKitItem(cp));
+
+				cp.getHandle().playSound(cp.getHandle().getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 65536.f, 1.4f);
 			}
-			catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
+			// Open wool probability
+			else if (click.isRightClick())
 			{
-				e.printStackTrace();
+				p.openInventory(new Kit.WoolRandomizer.Gui(kit.getWoolRandomizer()).getInventory());
 			}
-
-			cp.updateScoreboard();
-			cp.updateTabname();
-
-			// Update inventory
-			p.openInventory(getInventory());
-
-			// Change items
-			Items.remove(cp, Items.ID.KIT);
-			cp.getHandle().getInventory().addItem(Items.getKitItem(cp));
-
-			cp.getHandle().playSound(cp.getHandle().getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 65536.f, 1.4f);
 		}
 
 		@Override

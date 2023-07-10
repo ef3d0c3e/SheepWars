@@ -1,20 +1,27 @@
 package org.ef3d0c3e.sheepwars;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Sheep;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFromToEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.FileUtil;
 import org.bukkit.util.Vector;
 import org.ef3d0c3e.sheepwars.events.*;
 import org.ef3d0c3e.sheepwars.kits.ArcherKit;
@@ -30,6 +37,8 @@ import org.ef3d0c3e.sheepwars.stats.StatEvents;
 import org.ef3d0c3e.sheepwars.stats.StatMenu;
 import org.ef3d0c3e.sheepwars.stats.StatSave;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Random;
@@ -101,6 +110,16 @@ public class Game
 				@Override
 				public void run()
 				{
+					// Bonus wool
+					if (ticks > 600 && ticks % 600 == 0 && BonusWool.BONUS_WOOLS.isEmpty())
+					{
+						final Vector pos = Util.getRandomWithinCuboid(gameMap.getLowestWool(), gameMap.getHighestWool());
+						final Location loc = new Location(map, pos.getX(), pos.getY(), pos.getZ());
+						new BonusWool(loc);
+
+						Bukkit.broadcastMessage("§7Un bloc bonus vient d'apparaître!");
+					}
+
 					// Limbo
 					if (ticks % 15 == 0)
 						CPlayer.forEach(cp ->
@@ -132,8 +151,7 @@ public class Game
 									0
 								);
 								cp.getHandle().playSound(cp.getHandle().getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, SoundCategory.MASTER, 65536.f, 1.f);
-							}
-							else
+							} else
 							{
 								cp.getHandle().sendTitle(
 									"§9Bonne chance!",
@@ -147,9 +165,14 @@ public class Game
 						});
 					}
 
+					// Kits ticks
+					CPlayer.forEach(p -> {
+						p.getKit().tick(ticks);
+					});
+
 					++ticks;
 				}
-			}.runTaskTimer(SheepWars.plugin, 0, 1);
+			}.runTaskTimer(SheepWars.getPlugin(), 0, 1);
 		}
 
 		/**
@@ -164,8 +187,21 @@ public class Game
 
 			final Map map = Game.getGameMap();
 			//Bukkit.getConsoleSender().sendMessage(MessageFormat.format("{0} {1}", map.getLowestPoint(), map.getHighestPoint()));
-			if (!map.isBounded(ev.getToBlock().getLocation()))
+			if (!map.isBounded(ev.getToBlock().getLocation(), true))
 				ev.setCancelled(true);
+		}
+
+		/**
+		 * Prevents snow update
+		 * @param ev Event
+		 */
+		@EventHandler
+		public void onSnowUpdate(final BlockPhysicsEvent ev)
+		{
+			if (ev.getSourceBlock().getType() != Material.SNOW)
+				return;
+
+			ev.setCancelled(true);
 		}
 
 		@EventHandler
@@ -221,84 +257,52 @@ public class Game
 	}
 
 	private static Random random;
+	@Getter
 	private static Timer timer;
 	private static boolean started = false;
 
-	public static StatMenu.Events statMenuListener;
-	public static SkinMenu.Events skinMenuListener;
-	public static Lobby.Events lobbyListener;
-	private static World lobby;
+	private static StatMenu.Events statMenuListener;
+	private static SkinMenu.Events skinMenuListener;
+	private static Lobby.Events lobbyListener;
+	@Getter
 	private static World map;
+	@Getter @Setter
 	private static Map gameMap;
 
 	public static Team RED_TEAM;
 	public static Team BLUE_TEAM;
 
 
-	/**
-	 * Gets lobby
-	 * @return Lobby world
-	 */
-	public static World getLobby()
-	{
-		return lobby;
-	}
-
-	/**
-	 * Gets map
-	 * @return Map world
-	 */
-	public static World getMap()
-	{
-		return map;
-	}
-
-	/**
-	 * Gets game map
-	 * @returns Game map
-	 */
-	public static Map getGameMap()
-	{
-		return gameMap;
-	}
-
-	/**
-	 * Sets map
-	 * @param map Map world
-	 */
-	public static void setMap(final World map)
-	{
-		Game.map = map;
-	}
 
 	/**
 	 * Call before game starts
 	 */
 	public static void init()
 	{
+		random = new Random(System.currentTimeMillis());
+
+		// Init lobby and create world
 		Lobby.init();
 
-		random = new Random(System.currentTimeMillis());
-		lobby = Bukkit.getWorld("world"); // null if world does not exists
+		// Loas maps and maps configs
 		Map.reloadMaps();
 
-
 		Items.init();
-		Bukkit.getPluginManager().registerEvents(new IGui.Events(), SheepWars.plugin);
+		Bukkit.getPluginManager().registerEvents(new IGui.Events(), SheepWars.getPlugin());
 
 		StatMenu.init();
 		StatSave.init();
 		statMenuListener = new StatMenu.Events();
-		Bukkit.getPluginManager().registerEvents(statMenuListener, SheepWars.plugin);
+		Bukkit.getPluginManager().registerEvents(statMenuListener, SheepWars.getPlugin());
 
 		skinMenuListener = new SkinMenu.Events();
-		Bukkit.getPluginManager().registerEvents(skinMenuListener, SheepWars.plugin);
-		Bukkit.getPluginManager().registerEvents(new Skin.Events(), SheepWars.plugin);
+		Bukkit.getPluginManager().registerEvents(skinMenuListener, SheepWars.getPlugin());
+		Bukkit.getPluginManager().registerEvents(new Skin.Events(), SheepWars.getPlugin());
 
-		Bukkit.getPluginManager().registerEvents(new Sheeps.Events(), SheepWars.plugin);
-		SheepWars.server.getPluginManager().registerEvents(new CPlayer.Events(), SheepWars.plugin);
+		Bukkit.getPluginManager().registerEvents(new Sheeps.Events(), SheepWars.getPlugin());
+		Bukkit.getServer().getPluginManager().registerEvents(new CPlayer.Events(), SheepWars.getPlugin());
 		lobbyListener = new Lobby.Events();
-		SheepWars.server.getPluginManager().registerEvents(lobbyListener, SheepWars.plugin);
+		Bukkit.getServer().getPluginManager().registerEvents(lobbyListener, SheepWars.getPlugin());
 
 
 		// Teams
@@ -306,36 +310,8 @@ public class Game
 		BLUE_TEAM = new Team(Team.Color.BLEU, "Bleu");
 		Team.addTeam(RED_TEAM);
 		Team.addTeam(BLUE_TEAM);
-
-		// Post world initialization
-		new BukkitRunnable()
-		{
-			@Override
-			public void run()
-			{
-				postWorld();
-			}
-		}.runTaskLater(SheepWars.plugin, 1);
 	}
 
-	/**
-	 * After world is loaded
-	 */
-	public static void postWorld()
-	{
-		lobby = Bukkit.getWorld("world");
-		lobby.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
-		lobby.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
-		lobby.setGameRule(GameRule.SEND_COMMAND_FEEDBACK, false);
-		lobby.setGameRule(GameRule.RANDOM_TICK_SPEED, 0);
-		lobby.setGameRule(GameRule.DO_MOB_SPAWNING, false);
-		lobby.setGameRule(GameRule.DO_INSOMNIA, false);
-		lobby.setGameRule(GameRule.SPAWN_RADIUS, 0);
-		lobby.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
-		lobby.setTime(6000);
-		lobby.setWeatherDuration(0);
-		lobby.setSpawnLocation((int)Lobby.getLobbySpawn().getX(), (int)Lobby.getLobbySpawn().getY(), (int)Lobby.getLobbySpawn().getZ());
-	}
 
 	/**
 	 * Starts the game
@@ -347,7 +323,7 @@ public class Game
 		Bukkit.getPluginManager().callEvent(ev);
 
 		timer = new Timer();
-		timer.runTaskTimer(SheepWars.plugin, 0, 20);
+		timer.runTaskTimer(SheepWars.getPlugin(), 0, 20);
 		started = true;
 		gameMap = map;
 
@@ -355,12 +331,13 @@ public class Game
 		HandlerList.unregisterAll(skinMenuListener);
 		HandlerList.unregisterAll(lobbyListener);
 
-		SheepWars.server.getPluginManager().registerEvents(new Events(), SheepWars.plugin);
-		SheepWars.server.getPluginManager().registerEvents(new PlayerInteraction.Events(), SheepWars.plugin);
-		SheepWars.server.getPluginManager().registerEvents(new StatEvents(), SheepWars.plugin);
-		SheepWars.server.getPluginManager().registerEvents(new Combat.Events(), SheepWars.plugin);
-		SheepWars.server.getPluginManager().registerEvents(new Team.Events(), SheepWars.plugin);
-		SheepWars.server.getPluginManager().registerEvents(new RefilledResource.Events(), SheepWars.plugin);
+		Bukkit.getServer().getPluginManager().registerEvents(new Events(), SheepWars.getPlugin());
+		Bukkit.getServer().getPluginManager().registerEvents(new PlayerInteraction.Events(), SheepWars.getPlugin());
+		Bukkit.getServer().getPluginManager().registerEvents(new StatEvents(), SheepWars.getPlugin());
+		Bukkit.getServer().getPluginManager().registerEvents(new Combat.Events(), SheepWars.getPlugin());
+		Bukkit.getServer().getPluginManager().registerEvents(new Team.Events(), SheepWars.getPlugin());
+		Bukkit.getServer().getPluginManager().registerEvents(new RefilledResource.Events(), SheepWars.getPlugin());
+		Bukkit.getServer().getPluginManager().registerEvents(new BonusWool.Events(), SheepWars.getPlugin());
 
 		Game.map = map.generate();
 		CPlayer.forEach((cp) -> {
@@ -476,15 +453,6 @@ public class Game
 	public static int nextInt()
 	{
 		return random.nextInt(65536);
-	}
-
-	/**
-	 * Gets timer
-	 * @return Timer
-	 */
-	public static Timer getTimer()
-	{
-		return timer;
 	}
 
 	/**

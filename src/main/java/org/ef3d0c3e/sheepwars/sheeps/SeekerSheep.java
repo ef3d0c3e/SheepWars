@@ -12,11 +12,11 @@ import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import org.bukkit.*;
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftLivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -65,7 +65,7 @@ public class SeekerSheep extends BaseSheep
 
 	protected void spawnParticles(final int time)
 	{
-		final World world = (World)level.getWorld();
+		final World world = (World)level().getWorld();
 		world.spawnParticle(Particle.SNEEZE, getX(), getY(), getZ(), 1, 0.0, 0.0, 0.0, 0.0);
 	}
 
@@ -98,7 +98,7 @@ public class SeekerSheep extends BaseSheep
 
 	public void ctick()
 	{
-		if (isOnGround())
+		if (onGround())
 			++grounded;
 
 		if (grounded >= 5)
@@ -111,7 +111,7 @@ public class SeekerSheep extends BaseSheep
 
 			if (fuse >= 40 && fuse % 40 == 0)
 			{
-				final Location loc = new Location((World)level.getWorld(), getX(), getY(), getZ());
+				final Location loc = new Location((World)level().getWorld(), getX(), getY(), getZ());
 				target = null;
 				CPlayer.forEach(cp ->
 				{
@@ -198,7 +198,7 @@ public class SeekerSheep extends BaseSheep
 			if (distSq - 2.0 <= (double)(this.stopDistance * this.stopDistance))
 			{
 				mob.remove(RemovalReason.DISCARDED);
-				mob.level.explode(mob, mob.getX(), mob.getY(), mob.getZ(), 5.f, false, Explosion.BlockInteraction.DESTROY);
+				mob.level().explode(mob, mob.getX(), mob.getY(), mob.getZ(), 5.f, false, Level.ExplosionInteraction.BLOCK);
 			}
 		}
 	}

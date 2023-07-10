@@ -3,9 +3,11 @@ package org.ef3d0c3e.sheepwars.kits;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.ef3d0c3e.sheepwars.CPlayer;
 import org.ef3d0c3e.sheepwars.Util;
 import org.ef3d0c3e.sheepwars.sheeps.*;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 
 public class TechnicianKit extends Kit
@@ -50,33 +52,29 @@ public class TechnicianKit extends Kit
 		return 0.1;
 	}
 
-	public TechnicianKit()
+	public TechnicianKit(@Nullable CPlayer player)
 	{
-		super();
+		super(player);
 
-		sheeps.add(SeekerSheep.getItem());
-		sheeps.add(SeekerSheep.getItem());
-		sheeps.add(SeekerSheep.getItem());
-		sheeps.add(SeekerSheep.getItem());
-		sheeps.add(SeekerSheep.getItem());
-		sheeps.add(SeekerSheep.getItem());
-		sheeps.add(SeekerSheep.getItem());
-		sheeps.add(SeekerSheep.getItem());
-		sheeps.add(SeekerSheep.getItem());
-		sheeps.add(SeekerSheep.getItem());
-		sheeps.add(SeekerSheep.getItem());
-		sheeps.add(SeekerSheep.getItem());
-		sheeps.add(SeekerSheep.getItem());
-		sheeps.add(SeekerSheep.getItem());
-		sheeps.add(SeekerSheep.getItem());
-		//sheeps.add(RemoteSheep.getItem());
-		//sheeps.add(RemoteSheep.getItem());
-		sheeps.add(LightningSheep.getItem());
-		sheeps.add(LightningSheep.getItem());
-		sheeps.add(LightningSheep.getItem());
-		sheeps.add(LightningSheep.getItem());
-		sheeps.add(LightningSheep.getItem());
-		sheeps.add(LightningSheep.getItem());
-		sheeps.add(LightningSheep.getItem());
+		// Special
+		woolRandomizer.add(SlimeSheep.class, 2.0f);
+
+		// Class specific
+		woolRandomizer.add(SeekerSheep.class, 1.5f);
+		woolRandomizer.add(FrozenSheep.class, 1.5f);
+		woolRandomizer.add(TsunamiSheep.class, 1.0f);
+		woolRandomizer.add(SwapSheep.class, 1.0f);
+
+		// Other
+		woolRandomizer.add(ExplosiveSheep.class, 1.f);
+		woolRandomizer.add(ShieldSheep.class, 0.5f);
+		woolRandomizer.add(HealerSheep.class, 0.5f);
+		woolRandomizer.add(DarkSheep.class, 0.5f);
+		woolRandomizer.add(DistortionSheep.class, 0.5f);
+		woolRandomizer.add(EarthQuakeSheep.class, 0.5f);
+		woolRandomizer.add(BoardingSheep.class, 0.5f);
+		woolRandomizer.add(FragmentationSheep.class, 0.5f);
+		woolRandomizer.add(IncendiarySheep.class, 0.5f);
+
 	}
 }

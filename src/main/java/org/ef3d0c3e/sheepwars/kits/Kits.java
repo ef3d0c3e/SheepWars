@@ -10,11 +10,11 @@ public class Kits
 	{
 		list = new ArrayList<>();
 
-		list.add(new MageKit());
-		list.add(new EnchanterKit());
-		list.add(new ArcherKit());
-		list.add(new BarbarianKit());
-		list.add(new BuilderKit());
-		list.add(new TechnicianKit());
+		list.add(new MageKit(null));
+		list.add(new EnchanterKit(null));
+		list.add(new ArcherKit(null));
+		list.add(new BarbarianKit(null));
+		list.add(new BuilderKit(null));
+		list.add(new TechnicianKit(null));
 	}
 }

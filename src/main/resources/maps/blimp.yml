@@ -1,0 +1,24 @@
+displayname: Dirigeables
+offset: 0 24 0
+icon: WHITE_WOOL
+limbo-begin: 63
+limbo-end: 60
+world-time: 6000
+bonus-lowest: -17 83 -4
+bonus-highest: 17 94 4
+spawns:
+  red:
+    - -15.5 84 -15.5
+    - 12.5 84 14.5
+    - 0.5 90 -15.5
+    - 37.5 101 -1.5
+    - -5.5 97 -15.5
+  blue:
+    - 16.5 84 15.5
+    - -11.5 84 14.5
+    - 0.5 90 15.5
+    - 38.5 101 1.5
+    - 6.5 97 15.5
+yaw:
+  red: 0
+  blue: 180
