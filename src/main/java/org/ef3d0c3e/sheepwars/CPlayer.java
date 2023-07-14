@@ -1,8 +1,6 @@
 package org.ef3d0c3e.sheepwars;
 
 import fr.mrmicky.fastboard.FastBoard;
-import locale.Locale;
-import locale.LocaleManager;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.*;
@@ -16,6 +14,7 @@ import org.ef3d0c3e.sheepwars.events.CPlayerJoinEvent;
 import org.ef3d0c3e.sheepwars.events.CPlayerQuitEvent;
 import org.ef3d0c3e.sheepwars.kits.Kit;
 import org.ef3d0c3e.sheepwars.kits.Kits;
+import org.ef3d0c3e.sheepwars.locale.Locale;
 import org.ef3d0c3e.sheepwars.stats.StatDouble;
 import org.ef3d0c3e.sheepwars.stats.StatSave;
 import org.ef3d0c3e.sheepwars.stats.StatValue;
@@ -143,7 +142,7 @@ public class CPlayer
 
 		interactionData = new PlayerInteraction.Data();
 
-		//locale = LocaleManager.getDefaultLocale();
+		locale = SheepWars.getLocaleManager().getDefaultLocale();
 	}
 
 	/**

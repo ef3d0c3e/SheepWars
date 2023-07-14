@@ -6,6 +6,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.ef3d0c3e.sheepwars.CPlayer;
+import org.ef3d0c3e.sheepwars.SheepWars;
 import org.ef3d0c3e.sheepwars.Util;
 import org.ef3d0c3e.sheepwars.sheeps.*;
 
@@ -27,7 +28,7 @@ public class EnchanterKit extends Kit
 			"",
 			"§7Augmente vos chances d'obtenir",
 			"§7des moutons spéciaux",
-			"§7Et obtient une autre arme",
+			"§7Et obtien un Bâton de Lévitation",
 			"§7à la place de l'épée"
 		));
 		ITEM.setItemMeta(meta);
@@ -89,6 +90,15 @@ public class EnchanterKit extends Kit
 		final ArrayList<ItemStack> items = new ArrayList<>();
 
 		// Wand
+		final ItemWand wand = new ItemWand();
+		final ItemStack wandItem = new ItemStack(Material.BLAZE_ROD);
+		{
+			ItemMeta meta = wandItem.getItemMeta();
+			meta.setDisplayName("§bBâton de Lévitation");
+			wandItem.setItemMeta(meta);
+		}
+		items.add(wand.apply(wandItem));
+		SheepWars.getItemRegistry().registerItem(wand);
 
 		// Bow
 		final ItemStack bow = new ItemStack(Material.BOW);

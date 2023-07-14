@@ -8,7 +8,6 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.WrappedGameProfile;
 import com.comphenix.protocol.wrappers.WrappedServerPing;
-import locale.LocaleManager;
 import lombok.Getter;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
@@ -19,10 +18,12 @@ import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ef3d0c3e.sheepwars.commands.CommandRegisterer;
+import org.ef3d0c3e.sheepwars.items.ItemRegistry;
 import org.ef3d0c3e.sheepwars.level.Biomes;
 import org.ef3d0c3e.sheepwars.level.Lobby;
 import org.ef3d0c3e.sheepwars.level.Map;
 import org.ef3d0c3e.sheepwars.level.SWChunkGenerator;
+import org.ef3d0c3e.sheepwars.locale.LocaleManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +39,10 @@ public final class SheepWars extends JavaPlugin
 	private static ProtocolManager protocolManager;
 	@Getter
 	private static String versionString;
+	@Getter
+	private static LocaleManager localeManager;
+	@Getter
+	private static ItemRegistry itemRegistry;
 
 	private void saveResources()
 	{
@@ -50,12 +55,6 @@ public final class SheepWars extends JavaPlugin
 
 		saveResource("sw_lobby.schem", false);
 		saveResource("sw_lobby.yml", false);
-
-		if (!LocaleManager.getLocaleFolder().exists())
-		{
-			Bukkit.getConsoleSender().sendMessage("§cSheepWars>§7 Creating locales directory");
-			LocaleManager.getLocaleFolder().mkdirs();
-		}
 
 		if (!Map.getMapFolder().exists())
 		{
@@ -76,7 +75,7 @@ public final class SheepWars extends JavaPlugin
 		if (erase != null)
 		{
 			Bukkit.getConsoleSender().sendMessage("§cSheepWars>§7 Deleting world 'sheepwars'");
-			CPlayer.forEach(cp -> { if (cp.getHandle().getWorld() == erase) cp.getHandle().kickPlayer(cp.getLocale().SYSTEM_KICK); });
+			CPlayer.forEach(cp -> { if (cp.getHandle().getWorld() == erase) cp.getHandle().kickPlayer(cp.getLocale().SYSTEM_RELOAD); });
 			Bukkit.getServer().unloadWorld(erase, false);
 			try
 			{
@@ -97,6 +96,8 @@ public final class SheepWars extends JavaPlugin
 	{
 		plugin = this;
 		protocolManager = ProtocolLibrary.getProtocolManager();
+		localeManager = new LocaleManager(new File(getDataFolder() + "/locales"));
+		itemRegistry = new ItemRegistry();
 
 		// Motd
 		protocolManager.addPacketListener(new PacketAdapter(plugin, ListenerPriority.NORMAL, PacketType.Status.Server.SERVER_INFO)

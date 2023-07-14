@@ -60,6 +60,13 @@ public class CmdChangelog extends Command
 			"+ Ajout du Mouton Slime::● Il ralentit et tire des projectiles\nvers les ennemis",
 			"- Nerf du Mouton Sombre::↓ Aveuglement permanent → 1.5s/2s",
 		},
+		{ // Page 6
+			"",
+			" &9 &9 &n14 juillet 2023&9: &6&oSheepWars 1.5",
+			"",
+			"~ Remake du Kit Enchanteur::● Son épée est remplacée\npar le Bâton de Lévitation",
+			"+ Des laines bonus",
+		},
 	};
 
 	public CmdChangelog()

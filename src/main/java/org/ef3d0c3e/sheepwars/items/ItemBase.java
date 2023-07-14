@@ -1,0 +1,193 @@
+package org.ef3d0c3e.sheepwars.items;
+
+import com.comphenix.protocol.wrappers.EnumWrappers;
+import com.sk89q.worldedit.blocks.BaseItem;
+import lombok.AccessLevel;
+import lombok.Getter;
+import org.bukkit.NamespacedKey;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.entity.ItemDespawnEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
+import org.ef3d0c3e.sheepwars.SheepWars;
+
+import javax.annotation.Nullable;
+import java.util.UUID;
+
+public abstract class ItemBase
+{
+	/**
+	 * UUID persistant tag
+	 */
+	static private final PersistentDataType<byte[], UUID> TAG_UUID = new UUIDItemTagType();
+
+	/**
+	 * Key used to store item's id
+	 */
+	static protected final NamespacedKey KEY_ID = new NamespacedKey(SheepWars.getPlugin(), "sheepwars_uuid");
+
+	/**
+	 * Item's id
+	 */
+	@Getter(AccessLevel.MODULE)
+	private UUID id;
+
+	/**
+	 * Constructor
+	 */
+	public ItemBase()
+	{
+		this.id = UUID.randomUUID();
+	}
+
+	/**
+	 * Gets item's key
+	 * @param item Item to get id of
+	 * @return Item's id or null
+	 */
+	protected static @Nullable UUID getId(final ItemStack item)
+	{
+		final ItemMeta meta = item.getItemMeta();
+		if (meta == null)
+			return null;
+		final PersistentDataContainer container = meta.getPersistentDataContainer();
+		if (container == null)
+			return null;
+
+		return container.getOrDefault(KEY_ID, TAG_UUID, null);
+	}
+
+	/**
+	 * Applies custom item to itemstack
+	 * @param item Item to apply custom item to
+	 * @return ItemStack
+	 */
+	public ItemStack apply(final ItemStack item)
+	{
+		final ItemStack custom = item.clone();
+		final ItemMeta meta = custom.getItemMeta();
+		meta.getPersistentDataContainer().set(KEY_ID, TAG_UUID, getId());
+		custom.setItemMeta(meta);
+
+		return custom;
+	}
+
+	protected abstract boolean onDrop(final Player p, final ItemStack item);
+	protected abstract boolean onInteract(final Player p, final ItemStack item, final Action action, final EquipmentSlot hand, final Block clicked, final BlockFace clickedFace);
+	protected boolean onEnchant(final EnchantItemEvent ev) { return true; }
+	protected boolean onPickup(final LivingEntity ent, final Item item, final int remaining) { return false; }
+	protected boolean onDespawn(final Item item) { return false; }
+
+	/**
+	 * Events to handle custom items
+	 * Note: Does not handle events related to entities/inventories not linked to a player
+	 */
+	public static class Events implements Listener
+	{
+		private final ItemRegistry registry;
+
+		public Events(final ItemRegistry registry)
+		{
+			this.registry = registry;
+		}
+
+		/**
+		 * Handles custom item interactions
+		 * @param ev Event
+		 */
+		@EventHandler
+		public void onInteract(final PlayerInteractEvent ev)
+		{
+			if (ev.getItem() == null)
+				return;
+			final ItemBase item = registry.getItem(ev.getItem());
+			if (item == null)
+				return;
+
+			ev.setCancelled(item.onInteract(
+				ev.getPlayer(),
+				ev.getItem(),
+				ev.getAction(),
+				ev.getHand(),
+				ev.getClickedBlock(),
+				ev.getBlockFace()
+			));
+		}
+
+		/**
+		 * Handles custom item dropping
+		 * @param ev Event
+		 */
+		@EventHandler
+		public void onDrop(final PlayerDropItemEvent ev)
+		{
+			final ItemStack stack = ev.getItemDrop().getItemStack();
+
+			final ItemBase item = registry.getItem(stack);
+			if (item == null)
+				return;
+
+			ev.setCancelled(item.onDrop(ev.getPlayer(), stack));
+		}
+
+		/**
+		 * Handles custom item enchant
+		 * @param ev Event
+		 */
+		@EventHandler
+		public void onEnchant(final EnchantItemEvent ev)
+		{
+			final ItemBase item = registry.getItem(ev.getItem());
+			if (item == null)
+				return;
+
+			item.onEnchant(ev);
+		}
+
+		/**
+		 * Handles custom item pickup
+		 * @param ev Event
+		 */
+		@EventHandler
+		public void onPickup(final EntityPickupItemEvent ev)
+		{
+			final ItemBase item = registry.getItem(ev.getItem().getItemStack());
+			if (item == null)
+				return;
+
+			ev.setCancelled(item.onPickup(
+				ev.getEntity(),
+				ev.getItem(),
+				ev.getRemaining()
+			));
+		}
+
+		/**
+		 * Handles custom item despawn
+		 * @param ev Event
+		 */
+		@EventHandler
+		public void onPickup(final ItemDespawnEvent ev)
+		{
+			final ItemBase item = registry.getItem(ev.getEntity().getItemStack());
+			if (item == null)
+				return;
+
+			ev.setCancelled(item.onDespawn(ev.getEntity()));
+		}
+	}
+}

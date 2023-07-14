@@ -52,7 +52,7 @@ public class LightningSheep extends BaseSheep
 	protected void spawnParticles(final int time)
 	{
 		final World world = (World)level().getWorld();
-		world.spawnParticle(Particle.ELECTRIC_SPARK, getX(), getY(), getZ(), 1, 0.0, 0.0, 0.0, 0.0);
+		world.spawnParticle(Particle.VILLAGER_ANGRY, getX(), getY(), getZ(), 1, 0.0, 0.0, 0.0, 0.0);
 	}
 
 	int grounded = 0;

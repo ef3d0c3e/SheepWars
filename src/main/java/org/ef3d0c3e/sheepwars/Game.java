@@ -2,30 +2,20 @@ package org.ef3d0c3e.sheepwars;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Sheep;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.FileUtil;
 import org.bukkit.util.Vector;
 import org.ef3d0c3e.sheepwars.events.*;
+import org.ef3d0c3e.sheepwars.items.ItemBase;
 import org.ef3d0c3e.sheepwars.kits.ArcherKit;
-import org.ef3d0c3e.sheepwars.kits.BarbarianKit;
 import org.ef3d0c3e.sheepwars.kits.BuilderKit;
 import org.ef3d0c3e.sheepwars.kits.TechnicianKit;
 import org.ef3d0c3e.sheepwars.level.Lobby;
@@ -37,24 +27,29 @@ import org.ef3d0c3e.sheepwars.stats.StatEvents;
 import org.ef3d0c3e.sheepwars.stats.StatMenu;
 import org.ef3d0c3e.sheepwars.stats.StatSave;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Random;
 
 public class Game
 {
-	static class Timer extends BukkitRunnable
+	public static class Timer extends BukkitRunnable
 	{
-		private int seconds;
+		@Getter
+		private int ticks = 0;
+		private int seconds = 0;
 
 		@Override
 		public void run()
 		{
-			// Update scoreboard every seconds
-			CPlayer.forEach((cp) -> cp.updateScoreboard());
-			++seconds;
+			if (ticks % 20 == 0)
+			{
+				// Update scoreboard every seconds
+				CPlayer.forEach((cp) -> cp.updateScoreboard());
+				++seconds;
+			}
+
+			++ticks;
 		}
 
 		/**
@@ -298,6 +293,7 @@ public class Game
 		skinMenuListener = new SkinMenu.Events();
 		Bukkit.getPluginManager().registerEvents(skinMenuListener, SheepWars.getPlugin());
 		Bukkit.getPluginManager().registerEvents(new Skin.Events(), SheepWars.getPlugin());
+		Bukkit.getPluginManager().registerEvents(new ItemBase.Events(SheepWars.getItemRegistry()), SheepWars.getPlugin());
 
 		Bukkit.getPluginManager().registerEvents(new Sheeps.Events(), SheepWars.getPlugin());
 		Bukkit.getServer().getPluginManager().registerEvents(new CPlayer.Events(), SheepWars.getPlugin());
@@ -323,7 +319,7 @@ public class Game
 		Bukkit.getPluginManager().callEvent(ev);
 
 		timer = new Timer();
-		timer.runTaskTimer(SheepWars.getPlugin(), 0, 20);
+		timer.runTaskTimer(SheepWars.getPlugin(), 0, 1);
 		started = true;
 		gameMap = map;
 

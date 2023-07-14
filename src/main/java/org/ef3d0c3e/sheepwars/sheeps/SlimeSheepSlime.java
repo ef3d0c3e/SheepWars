@@ -11,6 +11,8 @@ import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.level.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -163,6 +165,9 @@ public class SlimeSheepSlime extends Mob
 				Snowball s = (Snowball)level().getWorld().spawnEntity(loc.clone().add(dir.clone().multiply(0.2)), org.bukkit.entity.EntityType.SNOWBALL);
 				s.setItem(new ItemStack(Material.SLIME_BALL));
 				s.setVelocity(dir.multiply(1.0));
+
+				final World w = level().getWorld();
+				w.playSound(new Location(w, getX(), getY(), getZ()), Sound.ENTITY_SLIME_JUMP, 12.f, 1.f);
 			}
 		}
 
