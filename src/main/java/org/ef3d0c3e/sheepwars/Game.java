@@ -350,76 +350,7 @@ public class Game
 			cp.updateTablist();
 
 			// Gear
-			final ItemStack helmet = new ItemStack(Material.LEATHER_HELMET);
-			{
-				LeatherArmorMeta meta = (LeatherArmorMeta)helmet.getItemMeta();
-				meta.setUnbreakable(true);
-				meta.addItemFlags(ItemFlag.HIDE_DYE);
-				meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-				meta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 1, true);
-				meta.setColor(cp.getTeam().getArmorColor());
-				helmet.setItemMeta(meta);
-			}
-			final ItemStack chestplate = new ItemStack(Material.LEATHER_CHESTPLATE);
-			{
-				LeatherArmorMeta meta = (LeatherArmorMeta)chestplate.getItemMeta();
-				meta.setUnbreakable(true);
-				meta.addItemFlags(ItemFlag.HIDE_DYE);
-				meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-				meta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2, true);
-				meta.setColor(cp.getTeam().getArmorColor());
-				chestplate.setItemMeta(meta);
-			}
-			final ItemStack leggings = new ItemStack(Material.LEATHER_LEGGINGS);
-			{
-				LeatherArmorMeta meta = (LeatherArmorMeta)leggings.getItemMeta();
-				meta.setUnbreakable(true);
-				meta.addItemFlags(ItemFlag.HIDE_DYE);
-				meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-				meta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 1, true);
-				meta.setColor(cp.getTeam().getArmorColor());
-				leggings.setItemMeta(meta);
-			}
-			final ItemStack boots = new ItemStack(Material.LEATHER_BOOTS);
-			{
-				LeatherArmorMeta meta = (LeatherArmorMeta)boots.getItemMeta();
-				meta.setUnbreakable(true);
-				meta.addItemFlags(ItemFlag.HIDE_DYE);
-				meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-				meta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 1, true);
-				meta.setColor(cp.getTeam().getArmorColor());
-				boots.setItemMeta(meta);
-			}
-			final ItemStack sword = new ItemStack(cp.getKit() instanceof BarbarianKit ? Material.STONE_SWORD : Material.WOODEN_SWORD);
-			{
-				ItemMeta meta = sword.getItemMeta();
-				meta.setUnbreakable(true);
-				meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-				sword.setItemMeta(meta);
-			}
-			final ItemStack bow = new ItemStack(Material.BOW);
-			{
-				ItemMeta meta = bow.getItemMeta();
-				meta.setUnbreakable(true);
-				meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-				bow.setItemMeta(meta);
-			}
-
-			cp.getHandle().getInventory().setHelmet(helmet);
-			cp.getHandle().getInventory().setChestplate(chestplate);
-			cp.getHandle().getInventory().setLeggings(leggings);
-			cp.getHandle().getInventory().setBoots(boots);
-			cp.getHandle().getInventory().setItem(0, sword);
-			cp.getHandle().getInventory().setItem(1, bow);
+			cp.getKit().setLoadout(cp.getHandle().getInventory(), cp.getTeam());
 		});
 		RefilledResource.addResource(new RefilledResource(40, new ItemStack(Material.ARROW),
 			cp -> cp.getKit() instanceof ArcherKit ? 5 : 3,

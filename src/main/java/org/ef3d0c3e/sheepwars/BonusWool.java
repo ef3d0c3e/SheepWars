@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.ef3d0c3e.sheepwars.sheeps.BoardingSheep;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +30,7 @@ public class BonusWool
 	}
 
 	private static Material[] COLORS = {
-		Material.WHITE_WOOL, Material.GREEN_WOOL, Material.PURPLE_WOOL, Material.PINK_WOOL, Material.CYAN_WOOL, Material.YELLOW_WOOL, Material.LIGHT_GRAY_WOOL
+		Material.LIGHT_BLUE_WOOL, Material.GREEN_WOOL, Material.PURPLE_WOOL, Material.PINK_WOOL, Material.CYAN_WOOL, Material.YELLOW_WOOL, Material.WHITE_WOOL
 	};
 
 	private static WoolEffect[] EFFECTS = {
@@ -93,13 +94,13 @@ public class BonusWool
 
 			buffed.forEach(cp -> cp.getHandle().sendMessage("§7L'équipe ennemi brille!"));
 		},
-		// Invisibility
+		// Get boarding
 		buffed -> buffed.forEach(cp -> {
 			if (!cp.isOnline() || !cp.isAlive())
 				return;
 
-			cp.getHandle().addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 100, 0, false, true, true));
-			cp.getHandle().sendMessage("§7Vous obtenez Invisibilité!");
+			cp.getHandle().getInventory().addItem(BoardingSheep.getItem());
+			cp.getHandle().sendMessage("§7Vous obtenez un Mouton Abordage!");
 		})
 	};
 

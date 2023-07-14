@@ -1,6 +1,8 @@
 package org.ef3d0c3e.sheepwars.kits;
 
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.ef3d0c3e.sheepwars.CPlayer;
@@ -8,7 +10,9 @@ import org.ef3d0c3e.sheepwars.Util;
 import org.ef3d0c3e.sheepwars.sheeps.*;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class ArcherKit extends Kit
 {
@@ -68,5 +72,35 @@ public class ArcherKit extends Kit
 		woolRandomizer.add(FrozenSheep.class, 0.5f);
 		woolRandomizer.add(SeekerSheep.class, 0.5f);
 
+	}
+
+	@Override
+	public List<ItemStack> getWeapons()
+	{
+		final ArrayList<ItemStack> items = new ArrayList<>();
+
+		// Sword
+		final ItemStack sword = new ItemStack(Material.WOODEN_SWORD);
+		{
+			ItemMeta meta = sword.getItemMeta();
+			meta.setUnbreakable(true);
+			meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+			meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+			sword.setItemMeta(meta);
+		}
+		items.add(sword);
+
+		// Bow
+		final ItemStack bow = new ItemStack(Material.BOW);
+		{
+			ItemMeta meta = bow.getItemMeta();
+			meta.setUnbreakable(true);
+			meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+			meta.addEnchant(Enchantment.ARROW_KNOCKBACK, 1, true);
+			bow.setItemMeta(meta);
+		}
+		items.add(bow);
+
+		return items;
 	}
 }

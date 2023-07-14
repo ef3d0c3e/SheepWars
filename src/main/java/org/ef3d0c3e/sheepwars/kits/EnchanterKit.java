@@ -1,6 +1,7 @@
 package org.ef3d0c3e.sheepwars.kits;
 
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -9,7 +10,9 @@ import org.ef3d0c3e.sheepwars.Util;
 import org.ef3d0c3e.sheepwars.sheeps.*;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class EnchanterKit extends Kit
 {
@@ -24,8 +27,8 @@ public class EnchanterKit extends Kit
 			"",
 			"§7Augmente vos chances d'obtenir",
 			"§7des moutons spéciaux",
-			"§7Et obtient des blocs",
-			"§7pour défendre"
+			"§7Et obtient une autre arme",
+			"§7à la place de l'épée"
 		));
 		ITEM.setItemMeta(meta);
 	}
@@ -78,5 +81,26 @@ public class EnchanterKit extends Kit
 		woolRandomizer.add(FragmentationSheep.class, 0.5f);
 		woolRandomizer.add(IncendiarySheep.class, 0.5f);
 		woolRandomizer.add(SeekerSheep.class, 0.5f);
+	}
+
+	@Override
+	public List<ItemStack> getWeapons()
+	{
+		final ArrayList<ItemStack> items = new ArrayList<>();
+
+		// Wand
+
+		// Bow
+		final ItemStack bow = new ItemStack(Material.BOW);
+		{
+			ItemMeta meta = bow.getItemMeta();
+			meta.setUnbreakable(true);
+			meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+			meta.addEnchant(Enchantment.ARROW_KNOCKBACK, 1, true);
+			bow.setItemMeta(meta);
+		}
+		items.add(bow);
+
+		return items;
 	}
 }
