@@ -1,0 +1,7 @@
+config:
+  name: english
+  displayname: English
+  banner: "minecraft:blue_banner{BlockEntityTag:{Patterns:[{Pattern:dls,Color:0},{Pattern:drs,Color:0},{Pattern:dls,Color:0},{Pattern:drs,Color:0},{Pattern:cr,Color:14},{Pattern:cs,Color:0},{Pattern:cs,Color:0},{Pattern:ms,Color:0},{Pattern:ms,Color:0},{Pattern:sc,Color:14}]}}"
+system:
+  reload: "§cServer is restarting...\n§eReconnect as soon as it's online"
+  kick: "§ePlease reconnect"
