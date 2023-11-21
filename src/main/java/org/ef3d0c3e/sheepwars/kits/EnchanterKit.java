@@ -17,22 +17,7 @@ import java.util.List;
 
 public class EnchanterKit extends Kit
 {
-	static ItemStack ITEM;
-
-	static
-	{
-		ITEM = new ItemStack(Material.KNOWLEDGE_BOOK);
-		final ItemMeta meta = ITEM.getItemMeta();
-		meta.setDisplayName(Util.getColored("<#E1EB70>Enchanteur"));
-		meta.setLore(Arrays.asList(
-			"",
-			"§7Augmente vos chances d'obtenir",
-			"§7des moutons spéciaux",
-			"§7Et obtien un Bâton de Lévitation",
-			"§7à la place de l'épée"
-		));
-		ITEM.setItemMeta(meta);
-	}
+	static ItemStack ITEM = new ItemStack(Material.KNOWLEDGE_BOOK);
 
 	@Override
 	public String getName()
@@ -41,15 +26,21 @@ public class EnchanterKit extends Kit
 	}
 
 	@Override
-	public String getColoredName()
+	public String getColoredName(final CPlayer cp)
 	{
-		return Util.getColored("<#E1EB70>Enchanteur");
+		return Util.getColored("<#E1EB70>") + cp.getLocale().KIT_ENCHANTER;
 	}
 
 	@Override
 	public ItemStack getDisplayItem()
 	{
 		return ITEM;
+	}
+
+	@Override
+	public List<String> getLore(final CPlayer cp)
+	{
+		return cp.getLocale().KIT_ENCHANTERLORE;
 	}
 
 
@@ -94,7 +85,7 @@ public class EnchanterKit extends Kit
 		final ItemStack wandItem = new ItemStack(Material.BLAZE_ROD);
 		{
 			ItemMeta meta = wandItem.getItemMeta();
-			meta.setDisplayName("§bBâton de Lévitation");
+			meta.setDisplayName("§b" + player.getLocale().KIT_ENCHANTERWAND);
 			wandItem.setItemMeta(meta);
 		}
 		items.add(wand.apply(wandItem));

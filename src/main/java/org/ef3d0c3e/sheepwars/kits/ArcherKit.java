@@ -16,20 +16,7 @@ import java.util.List;
 
 public class ArcherKit extends Kit
 {
-	static ItemStack ITEM;
-
-	static
-	{
-		ITEM = new ItemStack(Material.BOW);
-		final ItemMeta meta = ITEM.getItemMeta();
-		meta.setDisplayName(Util.getColored("<#C8EB70>Archer"));
-		meta.setLore(Arrays.asList(
-			"",
-			"§7Améliore votre arc et vous",
-			"§7donne plus de flèches"
-		));
-		ITEM.setItemMeta(meta);
-	}
+	static ItemStack ITEM = new ItemStack(Material.BOW);
 
 	public int streak = 0;
 
@@ -40,9 +27,15 @@ public class ArcherKit extends Kit
 	}
 
 	@Override
-	public String getColoredName()
+	public String getColoredName(final CPlayer cp)
 	{
-		return Util.getColored("<#C8EB70>Archer");
+		return Util.getColored("<#C8EB70>") + cp.getLocale().KIT_ARCHER;
+	}
+
+	@Override
+	public List<String> getLore(final CPlayer cp)
+	{
+		return cp.getLocale().KIT_ARCHERLORE;
 	}
 
 	@Override

@@ -9,23 +9,11 @@ import org.ef3d0c3e.sheepwars.sheeps.*;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.List;
 
 public class TechnicianKit extends Kit
 {
-	static ItemStack ITEM;
-
-	static
-	{
-		ITEM = new ItemStack(Material.LEVER);
-		final ItemMeta meta = ITEM.getItemMeta();
-		meta.setDisplayName(Util.getColored("<#61B36C>Technicien"));
-		meta.setLore(Arrays.asList(
-			"",
-			"§7Augmente vos chances d'obtenir",
-			"§7des moutons technique"
-		));
-		ITEM.setItemMeta(meta);
-	}
+	static ItemStack ITEM = new ItemStack(Material.LEVER);
 
 	@Override
 	public String getName()
@@ -34,9 +22,15 @@ public class TechnicianKit extends Kit
 	}
 
 	@Override
-	public String getColoredName()
+	public String getColoredName(final CPlayer cp)
 	{
-		return Util.getColored("<#61B36C>Technicien");
+		return Util.getColored("<#61B36C>") + cp.getLocale().KIT_TECHNICIAN;
+	}
+
+	@Override
+	public List<String> getLore(final CPlayer cp)
+	{
+		return cp.getLocale().KIT_TECHNICIANLORE;
 	}
 
 	@Override

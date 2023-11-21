@@ -11,7 +11,7 @@ import java.util.UUID;
  */
 public class ItemRegistry
 {
-	private final HashMap<UUID, ItemBase> registry;
+	public final HashMap<UUID, ItemBase> registry;
 
 	/**
 	 * Gets custom item from itemstack

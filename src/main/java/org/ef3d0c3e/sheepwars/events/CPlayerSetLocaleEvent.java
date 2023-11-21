@@ -1,11 +1,13 @@
 package org.ef3d0c3e.sheepwars.events;
 
-import org.bukkit.Bukkit;
+import lombok.Getter;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.ef3d0c3e.sheepwars.CPlayer;
+import org.ef3d0c3e.sheepwars.Team;
+import org.ef3d0c3e.sheepwars.locale.Locale;
 
-public class CPlayerJoinEvent extends Event
+public class CPlayerSetLocaleEvent extends Event
 {
 	private static final HandlerList HANDLERS_LIST = new HandlerList();
 
@@ -19,27 +21,20 @@ public class CPlayerJoinEvent extends Event
 		return HANDLERS_LIST;
 	}
 
-	final CPlayer cp;
-	final boolean newPlayer;
+	@Getter
+	final CPlayer player;
+	@Getter
+	final Locale locale;
 
 	/**
 	 * Constructor
+	 * @note Note fired on join
 	 * @param cp Player
-	 * @param newPlayer Whether player is a new player or not (first time joining)
+	 * @param locale Player's locale
 	 */
-	public CPlayerJoinEvent(final CPlayer cp, final boolean newPlayer)
+	public CPlayerSetLocaleEvent(final CPlayer cp, final Locale locale)
 	{
-		this.cp = cp;
-		this.newPlayer = newPlayer;
-	}
-
-	public CPlayer getPlayer()
-	{
-		return cp;
-	}
-
-	public boolean isNewPlayer()
-	{
-		return newPlayer;
+		this.player = cp;
+		this.locale = locale;
 	}
 }

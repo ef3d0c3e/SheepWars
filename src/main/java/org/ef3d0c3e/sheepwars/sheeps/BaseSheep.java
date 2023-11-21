@@ -5,7 +5,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.contents.LiteralContents;
-import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -24,7 +23,7 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
-import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_20_R2.CraftWorld;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -49,9 +48,10 @@ public abstract class BaseSheep extends Animal
 		this.owner = owner;
 		final MutableComponent name = getSheepName();
 
+		// TODO: Move this to packet-based interface
 		setCustomName(name.append(
 			MutableComponent
-				.create(new LiteralContents(" |" + owner.getTeam().getName() + "|"))
+				.create(new LiteralContents(" |" + owner.getTeam().getName(owner) + "|"))
 				.withStyle(Style.EMPTY
 					.withColor(owner.getTeam().getColorValue())
 					.withBold(true))));

@@ -1,7 +1,96 @@
 config:
   name: french
   displayname: Français
-  banner: "minecraft:white_banner{BlockEntityTag:{Patterns:[{Pattern:ls,Color:11},{Pattern:rs,Color:14}]}}"
+  banner:
+    ==: org.bukkit.inventory.ItemStack
+    v: 3578
+    type: WHITE_BANNER
+    meta:
+      ==: ItemMeta
+      meta-type: BANNER
+      patterns:
+      - ==: Pattern
+        color: BLUE
+        pattern: ls
+      - ==: Pattern
+        color: RED
+        pattern: rs
 system:
   reload: "§cLe serveur restart...\n§eReconnectez-vous"
   kick: "§eReconnectez-vous!"
+team:
+  red: "Rouge"
+  blue: "Bleu"
+map:
+  choose: "§9Votez pour une carte"
+  votes: "§7 - Vote(s): §e{0}"
+locale:
+  changed: "§7Langue changée en §a{0}§7."
+  menu:
+    title: "§9Changez votre langue"
+kit:
+  choose: "§9Choisissez un kit"
+  archer: "Archer"
+  archerlore:
+    - ""
+    - "§7Améliore votre arc et vous"
+    - "§7donne plus de flèches"
+  barbarian: "Barbare"
+  barbarianlore:
+    - ""
+    - "§7Améliore votre épée vous donne"
+    - "§7plus de moutons pour aborder"
+  builder: "Maçon"
+  builderlore:
+    - ""
+    - "§7Vous obtenez des blocs"
+    - "§7pour construire"
+  enchanter: "Enchanteur"
+  enchanterwand: "Bâton de Lévitation"
+  enchanterlore:
+    - ""
+    - "§7Augmente vos chances d'obtenir"
+    - "§7des moutons spéciaux"
+    - "§7Et obtien un Bâton de Lévitation"
+    - "§7à la place de l'épée"
+  mage: "Mage"
+  marelore:
+    - ""
+    - "§7Augmente vos chances d'obtenir"
+    - "§7des moutons offensifs"
+  technician: "Technicien"
+  technicianlore:
+    - ""
+    - "§7Augmente vos chances d'obtenir"
+    - "§7des moutons technique"
+scoreboard:
+  title: " §f● §d§lSHEEPWARS§f ● "
+  kit: "§d|§f §lKit"
+  team: "§d|§f §lÉquipes"
+  duration: "§d|§f §lDurée"
+  footer: "   <#87EDAB>pundalik.org"
+tab:
+  header: " §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l \n\
+    §6§l<§f§l°§6§l)))>< §a §l✤ §e§lSHEEPWARS §a§l✤ §6 §l><(((§f§l°§6§l>\n"
+  footer: "\n\
+    §b§lVersion:§e {0} §7§o[/changelog]\n\
+    §c§lSite internet:§d pundalik.org/sheepwars\n"
+  footermap: "\n§e§lCarte: §a{0}\n"
+item:
+  rightclick: "§7(Click-Droit)"
+  team: "Équipe {0}"
+  teamlore:
+    - "§7Utilisez cet item pour"
+    - "§7changer d'équipe"
+  kit: "§6Kit §7: {0}"
+  kitlore:
+    - "§7Utilisez cet objet pour"
+    - "§7changer de kit"
+  vote: "§eCarte"
+  votelore:
+    - "§7Utilisez cet objet pour"
+    - "§7voter pour une carte"
+  language: "§aLangue §7: §9{0}"
+  languagelore:
+    - "§7Utilisez cet item pour"
+    - "§7pour changer la langue"

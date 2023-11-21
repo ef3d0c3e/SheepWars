@@ -1,6 +1,5 @@
 package org.ef3d0c3e.sheepwars;
 
-import fr.mrmicky.fastboard.FastBoard;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.*;
@@ -9,9 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.ef3d0c3e.sheepwars.events.CPlayerDeathEvent;
-import org.ef3d0c3e.sheepwars.events.CPlayerJoinEvent;
-import org.ef3d0c3e.sheepwars.events.CPlayerQuitEvent;
+import org.ef3d0c3e.sheepwars.events.*;
 import org.ef3d0c3e.sheepwars.kits.Kit;
 import org.ef3d0c3e.sheepwars.kits.Kits;
 import org.ef3d0c3e.sheepwars.locale.Locale;
@@ -55,12 +52,6 @@ public class CPlayer
 					e.printStackTrace();
 				}
 			}
-
-			cp.fb = new FastBoard(cp.getHandle());
-			CPlayer.forEach((cp2) -> cp2.updateScoreboard()); // Update for everyone
-			cp.updateTablist();
-			cp.updateTabname();
-			cp.updateNametag();
 		}
 
 		@EventHandler
@@ -105,9 +96,11 @@ public class CPlayer
 	private Player player;
 	private OfflinePlayer offlinePlayer;
 	private Location lastLocation;
-	private FastBoard fb;
+	@Getter
 	private boolean alive;
+	@Getter
 	private Team team;
+	@Getter
 	private Kit kit;
 
 	private org.bukkit.scoreboard.Team nametagTeam;
@@ -118,9 +111,10 @@ public class CPlayer
 
 	@Getter @Setter
 	private PlayerInteraction.Data interactionData;
-
-	@Getter @Setter
+	@Getter
 	private Locale locale;
+	@Getter
+	private CosmeticManager cosmetics;
 
 	/**
 	 * Constructor
@@ -131,7 +125,6 @@ public class CPlayer
 		player = p;
 		offlinePlayer = Bukkit.getOfflinePlayer(p.getUniqueId());
 		lastLocation = p.getLocation();
-		fb = null;
 		alive = false;
 		team = null;
 		kit = null;
@@ -141,8 +134,8 @@ public class CPlayer
 		skin = -1;
 
 		interactionData = new PlayerInteraction.Data();
-
 		locale = SheepWars.getLocaleManager().getDefaultLocale();
+		cosmetics = new CosmeticManager(this);
 	}
 
 	/**
@@ -183,15 +176,6 @@ public class CPlayer
 	}
 
 	/**
-	 * Gets whether player is alive
-	 * @return True if player is alive, false otherwise
-	 */
-	public boolean isAlive()
-	{
-		return alive;
-	}
-
-	/**
 	 * Sets whether player is alive
 	 * @param alive Whether player is alive
 	 */
@@ -201,40 +185,41 @@ public class CPlayer
 	}
 
 	/**
-	 * Gets player's team
-	 * @return Player's team
-	 */
-	public Team getTeam()
-	{
-		return team;
-	}
-
-	/**
 	 * Adds player to team
+	 * @note Fires a CPlayerTeamChangeEvent
 	 * @param team Player's team
 	 * @note Use Team.setTeam() instead
 	 */
 	public void setTeam(final Team team)
 	{
+		final Team oldTeam = this.team;
 		this.team = team;
-	}
 
-	/**
-	 * Gets player's kit
-	 * @return Player's kit
-	 */
-	public Kit getKit()
-	{
-		return kit;
+		if (oldTeam != null && team != null) // Do not fire on connect/disconnect
+			Bukkit.getPluginManager().callEvent(new CPlayerTeamChangeEvent(this, oldTeam, team));
 	}
 
 	/**
 	 * Sets player's kit
+	 * @note Fires a CPlayerKitChangeEvent
 	 * @param kit Player's kit
 	 */
 	public void setKit(final Kit kit)
 	{
+		final Kit oldKit = kit;
 		this.kit = kit;
+		Bukkit.getServer().getPluginManager().callEvent(new CPlayerKitChangeEvent(this, oldKit, kit));
+	}
+
+	/**
+	 * Sets player locale
+	 * @note Fires a CPlayerSetLocaleEvent
+	 * @brief locale New locale
+	 */
+	public void setLocale(final Locale locale)
+	{
+		this.locale = locale;
+		Bukkit.getServer().getPluginManager().callEvent(new CPlayerSetLocaleEvent(this, locale));
 	}
 
 	/**
@@ -303,133 +288,6 @@ public class CPlayer
 	{
 		for (CPlayer cp : playerList.values())
 			f.operation(cp);
-	}
-
-	/**
-	 * Update player's scoreboard
-	 */
-	public void updateScoreboard()
-	{
-		ArrayList<String> l = new ArrayList<>();
-		if (!Game.hasStarted()) // Lobby
-		{
-			fb.updateTitle(" §f● §d§lSHEEPWARS§f ● ");
-
-			l.add("§0");
-			l.add("§d|§f §lKit");
-			l.add(getKit().getColoredName());
-
-			l.add("§0");
-			l.add("§d|§f §lÉquipes");
-			Game.forEachTeam((team) ->
-			{
-				if (team == getTeam())
-					l.add(MessageFormat.format("{0}§7: §6»§e{1}§6«",
-						Util.getColored(team.getColoredName()), team.getPlayerList().size()));
-				else
-					l.add(MessageFormat.format("{0}§7:§e {1}",
-						Util.getColored(team.getColoredName()), team.getPlayerList().size()));
-			});
-
-			l.add("§0");
-			l.add(Util.getColored("   <#87EDAB>pundalik.org"));
-		}
-		else
-		{
-			fb.updateTitle(" §f● §d§lSHEEPWARS§f ● ");
-
-			l.add("§0");
-			l.add("§d|§f §lDurée");
-			l.add("§e" + Game.getTimer().getPrettyTime());
-
-			if (isAlive())
-			{
-				l.add("§0");
-				l.add("§d|§f §lKit");
-				l.add(getKit().getColoredName());
-			}
-
-			l.add("§0");
-			l.add("§d|§f §lÉquipes");
-			Game.forEachTeam((team) ->
-			{
-				if (team == getTeam())
-					l.add(MessageFormat.format("{0}§7: §6»§e{1}§6«",
-						Util.getColored(team.getColoredName()), team.getAliveCount()));
-				else
-					l.add(MessageFormat.format("{0}§7:§e {1}",
-						Util.getColored(team.getColoredName()), team.getAliveCount()));
-			});
-
-			l.add("§0");
-			l.add(Util.getColored("   <#87EDAB>pundalik.org"));
-		}
-
-		fb.updateLines(l);
-	}
-
-	/**
-	 * Updates tab list header/footer
-	 */
-	public void updateTablist()
-	{
-		String header, footer;
-
-		header = " §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l \n"
-			+ "§6§l<§f§l°§6§l)))>< §a §l✤ §e§lSHEEPWARS §a§l✤ §6 §l><(((§f§l°§6§l>\n";
-		footer = "\n"
-			+ "§b§lVersion:§e 1.4 §7§o[/changelog]\n"
-			+ "§c§lSite internet:§d pundalik.org/sheepwars\n";
-		if (Game.hasStarted())
-			footer += MessageFormat.format("\n§e§lCarte: §a{0}\n", Game.getGameMap().getDisplayName());
-
-		player.setPlayerListHeaderFooter(header, footer);
-	}
-
-	/**
-	 * Updates player's name in tab
-	 */
-	public void updateTabname()
-	{
-		String color, prefix, suffix;
-		if (getTeam() == null)
-			color = "§7";
-		else
-			color = Util.getColored(getTeam().getColorCode());
-
-		prefix = suffix = "";
-		if (!Game.hasStarted() || isAlive())
-			suffix = " §7: " + getKit().getColoredName();
-
-		player.setPlayerListName(MessageFormat.format("{1}{2}{0}{3}", player.getName(), prefix, color, suffix));
-	}
-
-	/**
-	 * Updates player's nametag (prefix & suffix)
-	 * @note Also display health
-	 */
-	public void updateNametag()
-	{
-		if (nametagTeam == null)
-		{
-			nametagTeam = Bukkit.getScoreboardManager().getMainScoreboard().getTeam(player.getName());
-			if (nametagTeam == null)
-				nametagTeam = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(player.getName());
-			nametagTeam.setOption(org.bukkit.scoreboard.Team.Option.COLLISION_RULE, org.bukkit.scoreboard.Team.OptionStatus.NEVER); // Just set this once
-		}
-
-		nametagTeam.setPrefix("");
-		nametagTeam.setSuffix("");
-		nametagTeam.setColor(ChatColor.DARK_GRAY);
-		if (getTeam() != null)
-		{
-			nametagTeam.setPrefix(Util.getColored(getTeam().getColorCode()) + "|" + getTeam().getName() + "| ");
-		}
-
-		// TODO: Health
-
-		if (nametagTeam.getEntries().isEmpty()) // Should only ever contain a single player
-			nametagTeam.addEntry(player.getName());
 	}
 
 	/**

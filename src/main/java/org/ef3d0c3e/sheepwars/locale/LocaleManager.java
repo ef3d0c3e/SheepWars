@@ -18,10 +18,17 @@ public class LocaleManager
 {
 	@Getter
 	private DirectoryStream<Path> localeDir;
+	@Getter
 	private final List<Locale> locales = new ArrayList<>();
 
 	public Locale getDefaultLocale()
 	{
+		// TODO: config.default_locale
+		for (Locale l : locales)
+		{
+			if (l.CONFIG_NAME.equals("english"))
+				return l;
+		}
 		return locales.get(0);
 	}
 
@@ -36,47 +43,25 @@ public class LocaleManager
 			Bukkit.getServer().getLogger().log(Level.WARNING, "Unable to create/read locale directory : " + e.getMessage());
 		}
 
-		if (!dir.exists()) // Create locale dir
+		// Read locales
+		for (final Path p : localeDir)
 		{
-			Bukkit.getServer().getLogger().log(Level.INFO, "Creating locales directory");
-				dir.mkdirs();
-		}
-
-		// Write default locale
-		if (!localeDir.iterator().hasNext())
-		{
-			locales.add(new Locale()); // Default locale
-
-			Bukkit.getServer().getLogger().log(Level.INFO, "Writing default locale");
-			final YamlConfiguration cfg = getDefaultLocale().serialize();
+			final YamlConfiguration cfg = new YamlConfiguration();
 			try
 			{
-				cfg.save(new File(localeDir + "english.yml"));
+				Bukkit.getServer().getLogger().log(Level.INFO, "Reading locale : " + p.toString());
+				cfg.load(p.toFile());
+				final Locale l = new Locale();
+				l.deserialize(cfg);
+
+				locales.add(l);
 			}
-			catch (IOException e)
+			catch (IOException | InvalidConfigurationException e)
 			{
 				Bukkit.getServer().getLogger().log(Level.WARNING, "Unable to save default locale to 'english.yml' : " + e.getMessage());
 			}
 		}
-		else // Read all locales
-		{
-			for (final Path p : localeDir)
-			{
-				final YamlConfiguration cfg = new YamlConfiguration();
-				try
-				{
-					Bukkit.getServer().getLogger().log(Level.INFO, "Reading locale : " + p.toString());
-					cfg.load(p.toFile());
-					final Locale l = new Locale();
-					l.deserialize(cfg);
-
-					locales.add(l);
-				}
-				catch (IOException | InvalidConfigurationException e)
-				{
-					Bukkit.getServer().getLogger().log(Level.WARNING, "Unable to save default locale to 'english.yml' : " + e.getMessage());
-				}
-			}
-		}
 	}
+
+	public int size() { return locales.size(); }
 }

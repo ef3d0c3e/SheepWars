@@ -130,8 +130,19 @@ public abstract class Kit
 
 
 	public abstract String getName();
-	public abstract String getColoredName();
-	public abstract ItemStack getDisplayItem();
+	public abstract String getColoredName(final CPlayer cp);
+	public abstract List<String> getLore(final CPlayer cp);
+	protected abstract ItemStack getDisplayItem();
+	public ItemStack getDisplayItem(final CPlayer cp)
+	{
+		final ItemStack item = getDisplayItem().clone();
+		final ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(getColoredName(cp));
+		meta.setLore(getLore(cp));
+		item.setItemMeta(meta);
+
+		return item;
+	}
 
 	public double getAdditionalSheepChance()
 	{

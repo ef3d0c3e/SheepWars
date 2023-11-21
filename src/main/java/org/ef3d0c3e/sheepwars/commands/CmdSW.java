@@ -9,7 +9,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import org.ef3d0c3e.sheepwars.CPlayer;
 import org.ef3d0c3e.sheepwars.Game;
+import org.ef3d0c3e.sheepwars.SheepWars;
 import org.ef3d0c3e.sheepwars.Util;
+import org.ef3d0c3e.sheepwars.items.ItemBase;
 import org.ef3d0c3e.sheepwars.level.Map;
 import org.ef3d0c3e.sheepwars.sheeps.BaseSheep;
 import org.ef3d0c3e.sheepwars.sheeps.Sheeps;
@@ -17,9 +19,7 @@ import oshi.util.tuples.Pair;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class CmdSW extends Command
 {
@@ -156,6 +156,13 @@ public class CmdSW extends Command
 			Bukkit.broadcastMessage(MessageFormat.format("§8'{'§6☀§8'}' §7Carte choisie: §a{0}", map.getDisplayName()));
 
 			Game.start(map);
+		}
+		else if (category.equals("reg"))
+		{
+			for (java.util.Map.Entry<UUID, ItemBase> ent : SheepWars.getItemRegistry().registry.entrySet())
+			{
+				sender.sendMessage(MessageFormat.format(" - {0} : {1}", ent.getKey(), ent.getValue()));
+			}
 		}
 
 		return true;

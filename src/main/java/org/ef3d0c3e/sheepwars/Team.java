@@ -1,12 +1,23 @@
 package org.ef3d0c3e.sheepwars;
 
+import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.ef3d0c3e.sheepwars.events.CPlayerDeathEvent;
+import org.ef3d0c3e.sheepwars.events.CPlayerTeamChangeEvent;
 import org.ef3d0c3e.sheepwars.events.GameEndEvent;
 import org.ef3d0c3e.sheepwars.events.GameStartEvent;
+import org.ef3d0c3e.sheepwars.items.ItemBase;
+import org.ef3d0c3e.sheepwars.level.MapMenu;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -22,7 +33,6 @@ public class Team
 	 */
 	static class Color
 	{
-		String colorName; ///< Color's name
 		String colorCode; ///< Color's code (with delimiters)
 		int colorValue; ///< Color's hex value
 		Material wool; ///< Corresponding colored wool
@@ -35,9 +45,8 @@ public class Team
 		 * @param wool Corresponding colored wool
 		 * @param banner Corresponding colored banner
 		 */
-		private Color(final String colorName, final String colorCode, final Material wool, final Material banner)
+		private Color(final String colorCode, final Material wool, final Material banner)
 		{
-			this.colorName = colorName;
 			this.colorCode = colorCode;
 			colorValue = 0;
 			colorValue |= Integer.valueOf(colorCode.substring(2, 4), 16) << 16;
@@ -47,38 +56,8 @@ public class Team
 			this.banner = banner;
 		}
 
-		public final static Color ORANGE = new Color("Orange", "<#D09000>", Material.ORANGE_WOOL, Material.ORANGE_BANNER);
-		public final static Color MAGENTA = new Color("Magenta", "<#D050A0>", Material.MAGENTA_WOOL, Material.MAGENTA_BANNER);
-		public final static Color BLEUCLAIR = new Color("BleuClair", "<#40B0F0>", Material.LIGHT_BLUE_WOOL, Material.LIGHT_BLUE_BANNER);
-		public final static Color JAUNE = new Color("Jaune", "<#D0F000>", Material.YELLOW_WOOL, Material.YELLOW_BANNER);
-		public final static Color VERTCLAIR = new Color("VertClair", "<#20D050>", Material.LIME_WOOL, Material.LIME_BANNER);
-		public final static Color ROSE = new Color("Rose", "<#F090D0>", Material.PINK_WOOL, Material.PINK_BANNER);
-		public final static Color GRIS = new Color("Gris", "<#404040>", Material.GRAY_WOOL, Material.GRAY_BANNER);
-		public final static Color GRISCLAIR = new Color("GrisClair", "<#909090>", Material.LIGHT_GRAY_WOOL, Material.LIGHT_GRAY_BANNER);
-		public final static Color CYAN = new Color("Cyan", "<#20D0D0>", Material.CYAN_WOOL, Material.CYAN_BANNER);
-		public final static Color VIOLET = new Color("Violet", "<#FF30B0>", Material.PURPLE_WOOL, Material.PURPLE_BANNER);
-		public final static Color BLEU = new Color("Bleu", "<#1050ff>", Material.BLUE_WOOL, Material.BLUE_BANNER);
-		public final static Color MARRON = new Color("Marron", "<#C06A00>", Material.BROWN_WOOL, Material.BROWN_BANNER);
-		public final static Color VERT = new Color("Vert", "<#00FF20>", Material.GREEN_WOOL, Material.GREEN_BANNER);
-		public final static Color ROUGE = new Color("Rouge", "<#F04040>", Material.RED_WOOL, Material.RED_BANNER);
-
-		public final static Color list[] =
-		{
-			ORANGE,
-			MAGENTA,
-			BLEUCLAIR,
-			JAUNE,
-			VERTCLAIR,
-			ROSE,
-			GRIS,
-			GRISCLAIR,
-			CYAN,
-			VIOLET,
-			BLEU,
-			MARRON,
-			VERT,
-			ROUGE,
-		};
+		public final static Color BLUE = new Color("<#1050ff>", Material.BLUE_WOOL, Material.BLUE_BANNER);
+		public final static Color RED = new Color("<#F04040>", Material.RED_WOOL, Material.RED_BANNER);
 	}
 
 	public static class Events implements Listener
@@ -92,8 +71,6 @@ public class Team
 			team.forEach((cp) -> team.aliveCount += cp.isAlive() ? 1 : 0 );
 			if (!team.isAlive())
 				Bukkit.getPluginManager().callEvent(new GameEndEvent(team == Game.RED_TEAM ? Game.BLUE_TEAM : Game.RED_TEAM));
-
-			CPlayer.forEach(cp -> cp.updateScoreboard());
 		}
 
 		@EventHandler
@@ -150,12 +127,35 @@ public class Team
 	}
 
 	/**
+	 * Gets the base name for the team
+	 * @return Team's base name
+	 */
+	public String getBaseName()
+	{
+		return this.name;
+	}
+
+	/**
 	 * Gets team's name
 	 * @return Team's name
 	 */
-	public String getName()
+	public String getName(CPlayer cp)
 	{
-		return name;
+		if (name.equals("red"))
+			return cp.getLocale().TEAM_RED;
+		else if (name.equals("blue"))
+			return cp.getLocale().TEAM_BLUE;
+		return "<unknown>";
+	}
+
+
+	/**
+	 * Gets team's name as chat
+	 * @return Team's name as chat
+	 */
+	public WrappedChatComponent getTeamName(CPlayer cp)
+	{
+		return WrappedChatComponent.fromText(Util.getColored(getColorCode()) + getName(cp));
 	}
 
 	/**
@@ -264,11 +264,63 @@ public class Team
 	 */
 	public static void setTeam(final CPlayer cp, final Team team)
 	{
-		if (cp.getTeam() != null) // Erase from team
-			cp.getTeam().playerList.remove(cp);
+		final Team oldTeam = cp.getTeam();
+		if (oldTeam != null) // Erase from team
+			oldTeam.playerList.remove(cp);
 
-		cp.setTeam(team);
-		if (team != null)
+		if (team != null) // null on disconnect
 			team.playerList.add(cp);
+		cp.setTeam(team);
+	}
+
+
+	public static class TeamChangeItem extends ItemBase
+	{
+		public TeamChangeItem()
+		{
+			super();
+		}
+
+		@Override
+		protected boolean onInteract(Player p, ItemStack item, Action action, EquipmentSlot hand, Block clicked, BlockFace clickedFace)
+		{
+			if (Game.hasStarted() || (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK))
+				return true;
+
+			final CPlayer cp = CPlayer.getPlayer(p);
+			// Change team (get next team)
+			for (int i = 0; i < Team.getTeamList().size(); ++i)
+			{
+				if (cp.getTeam() != Team.getTeamList().get(i))
+					continue;
+
+				Team.setTeam(cp, Team.getTeamList().get( (i+1) % Team.getTeamList().size() )); // Fires a CPlayerTeamChangeEvent
+				break;
+			}
+
+			// Change wool type
+			p.getInventory().setItem(hand, getItem(cp));
+
+			return true;
+		}
+
+		@Override
+		protected boolean onDrop(Player p, ItemStack item)
+		{
+			return true;
+		}
+	}
+
+	static final private TeamChangeItem TeamItem = new TeamChangeItem();
+	public static ItemStack getItem(final CPlayer cp)
+	{
+		final ItemStack item = new ItemStack(cp.getTeam().getColoredBanner());
+		final ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(Util.getColored(cp.getTeam().getColorCode()) + MessageFormat.format(cp.getLocale().ITEM_TEAM, cp.getTeam().getName(cp)) + " " + cp.getLocale().ITEM_RIGHTCLICK);
+		meta.setLore(cp.getLocale().ITEM_TEAMLORE);
+		item.setItemMeta(meta);
+
+		SheepWars.getItemRegistry().registerItem(TeamItem);
+		return TeamItem.apply(item);
 	}
 }

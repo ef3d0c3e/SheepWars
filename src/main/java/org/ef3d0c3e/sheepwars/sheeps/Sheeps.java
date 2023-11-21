@@ -1,7 +1,7 @@
 package org.ef3d0c3e.sheepwars.sheeps;
 
 import org.bukkit.*;
-import org.bukkit.craftbukkit.v1_20_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_20_R2.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,7 +20,6 @@ import org.ef3d0c3e.sheepwars.level.Lobby;
 import oshi.util.tuples.Pair;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Sheeps

@@ -67,6 +67,12 @@ public class CmdChangelog extends Command
 			"~ Remake du Kit Enchanteur::● Son épée est remplacée\npar le Bâton de Lévitation",
 			"+ Des laines bonus",
 		},
+		{ // Page 7
+			"",
+			" &9 &9 &n20 novembre 2023&9: &6&oSheepWars 1.6",
+			"",
+			"+ Langage",
+		},
 	};
 
 	public CmdChangelog()

@@ -1,7 +1,119 @@
 config:
   name: english
   displayname: English
-  banner: "minecraft:blue_banner{BlockEntityTag:{Patterns:[{Pattern:dls,Color:0},{Pattern:drs,Color:0},{Pattern:dls,Color:0},{Pattern:drs,Color:0},{Pattern:cr,Color:14},{Pattern:cs,Color:0},{Pattern:cs,Color:0},{Pattern:ms,Color:0},{Pattern:ms,Color:0},{Pattern:sc,Color:14}]}}"
+  banner:
+    ==: org.bukkit.inventory.ItemStack
+    v: 3578
+    type: BLUE_BANNER
+    meta:
+      ==: ItemMeta
+      meta-type: BANNER
+      patterns:
+      - ==: Pattern
+        color: WHITE
+        pattern: dls
+      - ==: Pattern
+        color: WHITE
+        pattern: drs
+      - ==: Pattern
+        color: WHITE
+        pattern: dls
+      - ==: Pattern
+        color: WHITE
+        pattern: drs
+      - ==: Pattern
+        color: RED
+        pattern: cr
+      - ==: Pattern
+        color: WHITE
+        pattern: cs
+      - ==: Pattern
+        color: WHITE
+        pattern: cs
+      - ==: Pattern
+        color: WHITE
+        pattern: ms
+      - ==: Pattern
+        color: WHITE
+        pattern: ms
+      - ==: Pattern
+        color: RED
+        pattern: sc
 system:
   reload: "§cServer is restarting...\n§eReconnect as soon as it's online"
   kick: "§ePlease reconnect"
+team:
+  red: "Red"
+  blue: "Blue"
+map:
+  choose: "§9Vote for a map"
+  votes: "§7 - Vote(s): §e{0}"
+locale:
+  changed: "§7Language changed to §a{0}§7."
+  menu:
+    title: "§9Change your language"
+kit:
+  choose: "§9Choose a kit"
+  archer: "Archer"
+  archerlore:
+    - ""
+    - "§7Increases bow damage and"
+    - "§7gets more arrows"
+  barbarian: "Barbarian"
+  barbarianlore:
+    - ""
+    - "§7Increases sword damage and"
+    - "§7gets more Boarding Sheeps"
+  builder: "Builder"
+  builderlore:
+    - ""
+    - "§7Obtains building blocks"
+  enchanter: "Enchanter"
+  enchanterwand: "Levitation Wand"
+  enchanterlore:
+    - ""
+    - "§7Increases chances of getting"
+    - "§7special sheeps"
+    - "§7And replaces your sword"
+    - "§7with a Levitation Wand"
+  mage: "Mage"
+  mahelore:
+    - ""
+    - "§7Increases chances of getting"
+    - "§7des moutons offensifs"
+  technician: "Technician"
+  technicianlore:
+    - ""
+    - "§7Increases chances of getting"
+    - "§7technical sheeps"
+scoreboard:
+  title: " §f● §d§lSHEEPWARS§f ● "
+  kit: "§d|§f §lKit"
+  team: "§d|§f §lTeams"
+  duration: "§d|§f §lDuration"
+  footer: "   <#87EDAB>pundalik.org"
+tab:
+  header: " §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l §l \n\
+    §6§l<§f§l°§6§l)))>< §a §l✤ §e§lSHEEPWARS §a§l✤ §6 §l><(((§f§l°§6§l>\n"
+  footer: "\n\
+    §b§lVersion:§e {0} §7§o[/changelog]\n\
+    §c§lWebsite:§d pundalik.org/sheepwars\n"
+  footermap: "\n§e§lMap: §a{0}\n"
+item:
+  rightclick: "§7(Right-Click)"
+  team: "{0} Team"
+  teamlore:
+    - "§7Use this item to"
+    - "§7change team"
+  kit: "§6Kit §7: {0}"
+  kitlore:
+    - "§7Use this item to"
+    - "§7change kit"
+  vote: "§eMap"
+  votelore:
+    - "§7Use this item to"
+    - "§7vote for a map"
+  language: "§aLanguage §7: §9{0}"
+  languagelore:
+    - "§7Use this item to"
+    - "§7change language"

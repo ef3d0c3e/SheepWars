@@ -17,7 +17,7 @@ import lombok.Getter;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.v1_20_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_20_R2.entity.CraftEntity;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -40,8 +40,10 @@ import org.ef3d0c3e.sheepwars.*;
 import org.ef3d0c3e.sheepwars.events.CPlayerJoinEvent;
 import org.ef3d0c3e.sheepwars.events.CPlayerQuitEvent;
 import org.ef3d0c3e.sheepwars.kits.Kit;
+import org.ef3d0c3e.sheepwars.kits.KitMenu;
 import org.ef3d0c3e.sheepwars.kits.Kits;
 import org.ef3d0c3e.sheepwars.IGui;
+import org.ef3d0c3e.sheepwars.locale.LocaleMenu;
 import org.ef3d0c3e.sheepwars.sheeps.BaseSheep;
 import org.spigotmc.event.entity.EntityDismountEvent;
 import org.spigotmc.event.entity.EntityMountEvent;
@@ -98,6 +100,22 @@ public class Lobby
 				world.setSpawnLocation((int)Lobby.getLobbySpawn().getX(), (int)Lobby.getLobbySpawn().getY(), (int)Lobby.getLobbySpawn().getZ());
 			}
 		}.runTaskLater(SheepWars.getPlugin(), 1);
+	}
+
+	/**
+	 * Updates player inventory
+	 * @param cp Player
+	 */
+	public static void updateInventory(final CPlayer cp)
+	{
+		cp.getHandle().getInventory().clear();
+		cp.getHandle().getInventory().setItem(0, Team.getItem(cp));
+		cp.getHandle().getInventory().setItem(1, KitMenu.getItem(cp));
+		cp.getHandle().getInventory().setItem(4, MapMenu.getItem(cp));
+		cp.getHandle().getInventory().setItem(6, LocaleMenu.getItem(cp));
+		cp.getHandle().getInventory().setItem(7, Items.getSkinItem(cp));
+		cp.getHandle().getInventory().setItem(8, Items.statItem);
+		cp.getHandle().setGameMode(GameMode.ADVENTURE);
 	}
 
 	public static class Events implements Listener
@@ -286,13 +304,7 @@ public class Lobby
 		{
 			final CPlayer cp = ev.getPlayer();
 
-			cp.getHandle().getInventory().clear();
-			cp.getHandle().getInventory().setItem(0, Items.getTeamItem(cp));
-			cp.getHandle().getInventory().setItem(1, Items.getKitItem(cp));
-			cp.getHandle().getInventory().setItem(4, Items.voteItem);
-			cp.getHandle().getInventory().setItem(7, Items.getSkinItem(cp));
-			cp.getHandle().getInventory().setItem(8, Items.statItem);
-			cp.getHandle().setGameMode(GameMode.ADVENTURE);
+			Lobby.updateInventory(cp);
 
 			if (ev.isNewPlayer())
 				cp.getHandle().teleport(getWorld().getSpawnLocation());
@@ -308,62 +320,9 @@ public class Lobby
 			Map.setVote(cp, null);
 			Team.setTeam(cp, null);
 		}
-
-		// TODO: Refactor to item system
-		@EventHandler
-		public void onTeamItemUse(final PlayerInteractEvent ev)
-		{
-			if (ev.getAction() != Action.RIGHT_CLICK_AIR && ev.getAction() != Action.RIGHT_CLICK_BLOCK)
-				return;
-			if (ev.getItem() == null || !Items.is(Items.ID.TEAM, ev.getItem()))
-				return;
-
-			ev.setCancelled(true);
-			final CPlayer cp = CPlayer.getPlayer(ev.getPlayer());
-
-			// Change team (get next team)
-			for (int i = 0; i < Team.getTeamList().size(); ++i)
-			{
-				if (cp.getTeam() != Team.getTeamList().get(i))
-					continue;
-
-				Team.setTeam(cp, Team.getTeamList().get( (i+1) % Team.getTeamList().size() ));
-				CPlayer.forEach((cp2) -> cp2.updateScoreboard()); // Update for everyone
-				cp.updateTabname();
-				cp.updateNametag();
-				break;
-			}
-
-			// Change wool type
-			Items.remove(cp, Items.ID.TEAM);
-			cp.getHandle().getInventory().addItem(Items.getTeamItem(cp));
-		}
-
-		// TODO: Refactor to item system
-		/**
-		 * Open inventories
-		 * @param ev Event
-		 */
-		@EventHandler
-		public void onKitItemUse(final PlayerInteractEvent ev)
-		{
-			if (ev.getAction() != Action.RIGHT_CLICK_AIR && ev.getAction() != Action.RIGHT_CLICK_BLOCK || ev.getItem() == null)
-				return;
-			final CPlayer cp = CPlayer.getPlayer(ev.getPlayer());
-			if (Items.is(Items.ID.KIT, ev.getItem()))
-			{
-				ev.setCancelled(true);
-				cp.getHandle().openInventory(new KitGui(cp).getInventory());
-			}
-			else if (Items.is(Items.ID.VOTE, ev.getItem()))
-			{
-				ev.setCancelled(true);
-				cp.getHandle().openInventory(new VoteGui(cp).getInventory());
-			}
-
-		}
 	}
 
+	// TODO: Move all guis to their own classes
 	@AllArgsConstructor
 	public static class VoteGui implements IGui
 	{
@@ -416,79 +375,6 @@ public class Lobby
 				}
 
 				inv.addItem(item);
-			}
-
-			return inv;
-		}
-	}
-
-	@AllArgsConstructor
-	public static class KitGui implements IGui
-	{
-		@Getter
-		private CPlayer cp;
-		@Override
-		public void onGuiClose(final Player p) {}
-		@Override
-		public void onGuiDrag(final Player p, final InventoryDragEvent ev) {}
-
-		@Override
-		public void onGuiClick(final Player p, final ClickType click, final int slot, final ItemStack item)
-		{
-			if (item == null || item.getType() == Material.AIR)
-				return;
-
-			final Kit kit = Kits.list.get(slot);
-			final CPlayer cp = CPlayer.getPlayer(p);
-
-			// Set kit
-			if (click.isLeftClick())
-			{
-				try
-				{
-					cp.setKit(kit.getClass().getDeclaredConstructor(CPlayer.class).newInstance(cp));
-				}
-				catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
-				{
-					e.printStackTrace();
-				}
-
-				cp.updateScoreboard();
-				cp.updateTabname();
-
-				// Update inventory
-				p.openInventory(getInventory());
-
-				// Change items
-				Items.remove(cp, Items.ID.KIT);
-				cp.getHandle().getInventory().addItem(Items.getKitItem(cp));
-
-				cp.getHandle().playSound(cp.getHandle().getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 65536.f, 1.4f);
-			}
-			// Open wool probability
-			else if (click.isRightClick())
-			{
-				p.openInventory(new Kit.WoolRandomizer.Gui(kit.getWoolRandomizer()).getInventory());
-			}
-		}
-
-		@Override
-		public Inventory getInventory()
-		{
-			final Inventory inv = Bukkit.createInventory(this, (Kits.list.size() / 9 + 1) * 9, "§9Choisissez un kit");
-			for (final Kit kit : Kits.list)
-			{
-				if (cp.getKit().getClass() == kit.getClass())
-				{
-					ItemStack item = kit.getDisplayItem().clone();
-					ItemMeta meta = item.getItemMeta();
-					meta.addEnchant(Enchantment.DURABILITY, 1, true);
-					meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-					item.setItemMeta(meta);
-					inv.addItem(item);
-				}
-				else
-					inv.addItem(kit.getDisplayItem());
 			}
 
 			return inv;

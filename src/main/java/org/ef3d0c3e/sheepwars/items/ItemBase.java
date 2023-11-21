@@ -54,6 +54,11 @@ public abstract class ItemBase
 		this.id = UUID.randomUUID();
 	}
 
+	public ItemBase(final UUID id)
+	{
+		this.id = id;
+	}
+
 	/**
 	 * Gets item's key
 	 * @param item Item to get id of

@@ -23,12 +23,6 @@ public class BarbarianKit extends Kit
 	{
 		ITEM = new ItemStack(Material.STONE_SWORD);
 		final ItemMeta meta = ITEM.getItemMeta();
-		meta.setDisplayName(Util.getColored("<#E15533>Barbare"));
-		meta.setLore(Arrays.asList(
-			"",
-			"§7Améliore votre épée vous donne",
-			"§7plus de moutons pour aborder"
-		));
 		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 		ITEM.setItemMeta(meta);
 	}
@@ -40,9 +34,15 @@ public class BarbarianKit extends Kit
 	}
 
 	@Override
-	public String getColoredName()
+	public String getColoredName(final CPlayer cp)
 	{
-		return Util.getColored("<#E15533>Barbare");
+		return Util.getColored("<#E15533>") + cp.getLocale().KIT_BARBARIAN;
+	}
+
+	@Override
+	public List<String> getLore(final CPlayer cp)
+	{
+		return cp.getLocale().KIT_BARBARIANLORE;
 	}
 
 	@Override

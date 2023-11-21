@@ -1,7 +1,9 @@
 package org.ef3d0c3e.sheepwars;
 
+import com.google.common.collect.Lists;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import com.mojang.brigadier.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -11,28 +13,22 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.ef3d0c3e.sheepwars.kits.KitMenu;
 import org.ef3d0c3e.sheepwars.skins.Skin;
 
 import java.lang.reflect.Field;
 import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class Items
 {
 	static private NamespacedKey key;
-	public static ItemStack voteItem;
 	public static ItemStack statItem;
 
 	public static enum ID
 	{
-		VOTE(0),
-		TEAM(1),
-		KIT(2),
-		SKIN(3),
-		STAT(4);
+		SKIN(0),
+		STAT(1);
 
 		private int id;
 		private ID(int id)
@@ -73,7 +69,6 @@ public class Items
 	{
 		key = new NamespacedKey(SheepWars.getPlugin(), "swid");
 
-		voteItem = ID.VOTE.create(Material.MAP, "§eCarte §7(Click-Droit)", "§7Utilisez cet objet pour", "§7voter pour une carte");
 		statItem = ID.STAT.create(Material.ENDER_CHEST, "§6Statistiques §7(Click-Droit)", "§7Utilisez cet objet pour", "§7afficher les statistiques");
 	}
 
@@ -92,12 +87,24 @@ public class Items
 		return id.value() == item.getItemMeta().getPersistentDataContainer().get(key, PersistentDataType.INTEGER);
 	}
 
+	@Deprecated
 	public static ItemStack createItem(final Material material, final String name, final String... lore)
 	{
 		final ItemStack item = new ItemStack(material);
 		final ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(name);
 		meta.setLore(Arrays.asList(lore));
+		item.setItemMeta(meta);
+
+		return item;
+	}
+
+	public static ItemStack createItem(final Material material, final String name, final List<String> lore)
+	{
+		final ItemStack item = new ItemStack(material);
+		final ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(name);
+		meta.setLore(lore);
 		item.setItemMeta(meta);
 
 		return item;
@@ -148,23 +155,27 @@ public class Items
 		}
 	}
 
-	/**
-	 * Gets wool for team
-	 * @param cp Player
-	 * @return Colored wool
-	 */
-	public static ItemStack getTeamItem(final CPlayer cp)
-	{
-		return ID.TEAM.create(cp.getTeam().getColoredBanner(),
-			Util.getColored(cp.getTeam().getColorCode()) + "Équipe " + cp.getTeam().getName() + " §7(Click-Droit)",
-			"§7Utilisez cet objet pour", "§7changer d'équipe");
-	}
 
-	public static ItemStack getKitItem(final CPlayer cp)
+	/**
+	 * Replaces all items with matching id
+	 * @param cp Player to replace item form
+	 * @param id Item id
+	 * @param replace Item to replace with
+	 */
+	public static void replace(final CPlayer cp, final ID id, final ItemStack replace)
 	{
-		return ID.KIT.create(Material.NAME_TAG,
-			Util.getColored(cp.getTeam().getColorCode()) + "§6Kit §7: " + cp.getKit().getColoredName() + " §7(Click-Droit)",
-			"§7Utilisez cet objet pour", "§7changer de kit");
+		Iterator<ItemStack> it = cp.getHandle().getInventory().iterator();
+		while (it.hasNext())
+		{
+			ItemStack item = it.next();
+			if (item != null && is(id, item))
+			{
+				item.setAmount(replace.getAmount());
+				item.setType(replace.getType());
+				item.setItemMeta(replace.getItemMeta());
+				item.setData(replace.getData());
+			}
+		}
 	}
 
 	public static ItemStack getSkinItem(final CPlayer cp)

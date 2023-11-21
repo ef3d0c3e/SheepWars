@@ -13,23 +13,11 @@ import oshi.util.tuples.Pair;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class MageKit extends Kit
 {
-	static ItemStack ITEM;
-
-	static
-	{
-		ITEM = new ItemStack(Material.BLAZE_ROD);
-		final ItemMeta meta = ITEM.getItemMeta();
-		meta.setDisplayName(Util.getColored("<#275FFF>Mage"));
-		meta.setLore(Arrays.asList(
-			"",
-			"§7Augmente vos chances d'obtenir",
-			"§7des moutons offensifs"
-		));
-		ITEM.setItemMeta(meta);
-	}
+	static ItemStack ITEM = new ItemStack(Material.BLAZE_ROD);
 
 	@Override
 	public String getName()
@@ -38,9 +26,9 @@ public class MageKit extends Kit
 	}
 
 	@Override
-	public String getColoredName()
+	public String getColoredName(final CPlayer cp)
 	{
-		return Util.getColored("<#275FFF>Mage");
+		return Util.getColored("<#275FFF>") + cp.getLocale().KIT_MAGE;
 	}
 
 	@Override
@@ -49,6 +37,11 @@ public class MageKit extends Kit
 		return ITEM;
 	}
 
+	@Override
+	public List<String> getLore(final CPlayer cp)
+	{
+		return cp.getLocale().KIT_MAGELORE;
+	}
 
 	@Override
 	public double getAdditionalSheepChance()

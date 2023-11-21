@@ -21,15 +21,16 @@ import org.ef3d0c3e.sheepwars.commands.CommandRegisterer;
 import org.ef3d0c3e.sheepwars.items.ItemRegistry;
 import org.ef3d0c3e.sheepwars.level.Biomes;
 import org.ef3d0c3e.sheepwars.level.Lobby;
-import org.ef3d0c3e.sheepwars.level.Map;
 import org.ef3d0c3e.sheepwars.level.SWChunkGenerator;
 import org.ef3d0c3e.sheepwars.locale.LocaleManager;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.text.MessageFormat;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.UUID;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 public final class SheepWars extends JavaPlugin
 {
@@ -46,25 +47,46 @@ public final class SheepWars extends JavaPlugin
 
 	private void saveResources()
 	{
+		if (getDataFolder().exists())
+			return;
+
 		// Create 'plugins/SheepWars'
-		if (!getDataFolder().exists())
+		Bukkit.getConsoleSender().sendMessage("§cSheepWars>§7 Creating configuration directory");
+		getDataFolder().mkdirs();
+
+		// Iterate over plugin's jar
+		try
 		{
-			Bukkit.getConsoleSender().sendMessage("§cSheepWars>§7 Creating configuration directory");
-			getDataFolder().mkdirs();
+			final JarFile jar = new JarFile(getClass().getProtectionDomain().getCodeSource().getLocation().getFile());
+			Enumeration<JarEntry> entries = (Enumeration<JarEntry>)jar.entries();
+			while (entries.hasMoreElements())
+			{
+				JarEntry ent = entries.nextElement();
+				if (!ent.getName().startsWith("resources")) continue;
+				final String stripped = ent.getName().substring("resources/".length());
+				if (stripped.isEmpty()) continue;
+
+				final File file = new File(getDataFolder() + "/" + stripped);
+				if (!file.getName().contains(".")) // Directory
+					continue;
+
+				// File
+				if (!file.getParentFile().exists()) file.getParentFile().mkdirs();
+				file.createNewFile();
+
+				OutputStream out = new FileOutputStream(file);
+				InputStream in = jar.getInputStream(ent);
+				in.transferTo(out);
+				out.close();
+				in.close();
+
+				Bukkit.getConsoleSender().sendMessage(MessageFormat.format("§cSheepWars>§7 Created file ''{0}''", file.getName()));
+			}
 		}
-
-		saveResource("sw_lobby.schem", false);
-		saveResource("sw_lobby.yml", false);
-
-		if (!Map.getMapFolder().exists())
+		catch (IOException e)
 		{
-			Bukkit.getConsoleSender().sendMessage("§cSheepWars>§7 Creating maps directory");
-			Map.getMapFolder().mkdirs();
+			e.printStackTrace();
 		}
-
-		//Reflections refl = new Reflections(null, Scanners.Resources);
-		//refl.getR
-		//Set<String> resourceList = refl.getResources(x -> x instanceof Resource);
 	}
 
 	@Override
@@ -94,6 +116,8 @@ public final class SheepWars extends JavaPlugin
 	@Override
 	public void onEnable()
 	{
+		saveResources();
+
 		plugin = this;
 		protocolManager = ProtocolLibrary.getProtocolManager();
 		localeManager = new LocaleManager(new File(getDataFolder() + "/locales"));
@@ -115,7 +139,7 @@ public final class SheepWars extends JavaPlugin
 
 				// Version
 				ping.setVersionProtocol(999); // Will display our custom version name
-				ping.setVersionName(MessageFormat.format("§d<§e1.19.4§d> §6» §l{0}/{1}", ping.getPlayersOnline(), ping.getPlayersMaximum()));
+				ping.setVersionName(MessageFormat.format("§d<§e1.20.2§d> §6» §l{0}/{1}", ping.getPlayersOnline(), ping.getPlayersMaximum()));
 
 				//// Custom player list
 				ping.setPlayers(Arrays.asList(
@@ -125,8 +149,6 @@ public final class SheepWars extends JavaPlugin
 				ev.getPacket().getServerPings().write(0, ping);
 			}
 		});
-
-		saveResources();
 
 		// Register all commands
 		CommandRegisterer.registerCommands();

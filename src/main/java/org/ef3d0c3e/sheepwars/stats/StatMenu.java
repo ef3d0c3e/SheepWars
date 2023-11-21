@@ -221,7 +221,8 @@ public class StatMenu
 				ArrayList<Triplet<String, String, StatValue>> l = new ArrayList<>();
 				l.add(new Triplet<String, String, StatValue>("played", "§7Parties jouées: §e{0}", new StatLong()));
 				l.add(new Triplet<String, String, StatValue>("won", "§7Parties gagnées: §e{0}", new StatLong()));
-				list.add(new Stat("kits#" + k.getName(), k.getDisplayItem().getType(), k.getColoredName(), l));
+				// TODO: Pass a CP
+				//list.add(new Stat("kits#" + k.getName(), k.getDisplayItem().getType(), k.getColoredName(cp), l));
 
 			}
 		}

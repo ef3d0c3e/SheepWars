@@ -43,6 +43,10 @@ public class ItemWand extends ItemBase
 				start.clone().add(direction.normalize().multiply(i)),
 				1, 0, 0, 0
 			);
+			w.spawnParticle(Particle.END_ROD,
+				start.clone().add(direction.normalize().multiply(i)),
+				1, 0, 0, 0
+			);
 		}
 	}
 
@@ -50,9 +54,9 @@ public class ItemWand extends ItemBase
 	protected boolean onInteract(Player p, ItemStack item, Action action, EquipmentSlot hand, Block clicked, BlockFace clickedFace)
 	{
 		if (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK)
-			return true;
+			return false;
 
-		if (Game.getTimer().getTicks() - lastUsed <= cooldown)
+		if (Game.getTimer().getTicks() - lastUsed <= cooldown || Game.isSafe())
 			return true;
 
 		final RayTraceResult trace = p.getWorld().rayTrace(

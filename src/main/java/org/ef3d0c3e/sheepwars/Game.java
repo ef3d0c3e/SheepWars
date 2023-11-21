@@ -45,7 +45,7 @@ public class Game
 			if (ticks % 20 == 0)
 			{
 				// Update scoreboard every seconds
-				CPlayer.forEach((cp) -> cp.updateScoreboard());
+				CPlayer.forEach((cp) -> cp.getCosmetics().updateScoreboard());
 				++seconds;
 			}
 
@@ -236,9 +236,9 @@ public class Game
 				if (!cp.isOnline())
 					return;
 
-				cp.updateScoreboard();
+				cp.getCosmetics().updateScoreboard();
 				cp.getHandle().sendTitle(
-					MessageFormat.format("{0}L''équipe {1} a gagné!", Util.getColored(winner.getColorCode()), winner.getName()),
+					MessageFormat.format("{0}L''équipe {1} a gagné!", Util.getColored(winner.getColorCode()), winner.getName(cp)),
 					"",
 					5, 40, 10
 				);
@@ -300,12 +300,14 @@ public class Game
 		lobbyListener = new Lobby.Events();
 		Bukkit.getServer().getPluginManager().registerEvents(lobbyListener, SheepWars.getPlugin());
 
-
 		// Teams
-		RED_TEAM = new Team(Team.Color.ROUGE, "Rouge");
-		BLUE_TEAM = new Team(Team.Color.BLEU, "Bleu");
+		RED_TEAM = new Team(Team.Color.RED, "red");
+		BLUE_TEAM = new Team(Team.Color.BLUE, "blue");
 		Team.addTeam(RED_TEAM);
 		Team.addTeam(BLUE_TEAM);
+
+		// Cosmetics
+		Bukkit.getServer().getPluginManager().registerEvents(new CosmeticManager.Events(), SheepWars.getPlugin());
 	}
 
 
@@ -343,7 +345,7 @@ public class Game
 			cp.getHandle().teleport(Game.getRandomSpawn(cp.getTeam()));
 			cp.getHandle().getInventory().clear();
 			cp.getHandle().setGameMode(GameMode.SURVIVAL);
-			cp.updateTablist();
+			cp.getCosmetics().updateTablist();
 
 			// Gear
 			cp.getKit().setLoadout(cp.getHandle().getInventory(), cp.getTeam());

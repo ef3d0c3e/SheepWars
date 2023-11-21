@@ -9,23 +9,11 @@ import org.ef3d0c3e.sheepwars.sheeps.*;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.List;
 
 public class BuilderKit extends Kit
 {
-	static ItemStack ITEM;
-
-	static
-	{
-		ITEM = new ItemStack(Material.BRICKS);
-		final ItemMeta meta = ITEM.getItemMeta();
-		meta.setDisplayName(Util.getColored("<#C9BEAC>Maçon"));
-		meta.setLore(Arrays.asList(
-			"",
-			"§7Vous obtenez des blocs",
-			"§7pour construire"
-		));
-		ITEM.setItemMeta(meta);
-	}
+	static ItemStack ITEM = new ItemStack(Material.BRICKS);
 
 	public int streak = 0;
 
@@ -36,9 +24,15 @@ public class BuilderKit extends Kit
 	}
 
 	@Override
-	public String getColoredName()
+	public String getColoredName(final CPlayer cp)
 	{
-		return Util.getColored("<#C9BEAC>Maçon");
+		return Util.getColored("<#C9BEAC>") + cp.getLocale().KIT_BUILDER;
+	}
+
+	@Override
+	public List<String> getLore(final CPlayer cp)
+	{
+		return cp.getLocale().KIT_BUILDERLORE;
 	}
 
 	@Override

@@ -27,6 +27,9 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Class that manages the combat system
+ */
 public class Combat
 {
 	static public class Data

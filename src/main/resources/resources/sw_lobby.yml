@@ -1,7 +1,8 @@
 offset: 0 20 0
 spawn: 0 84 0
+limbo: 71
 biome:
-  fog: 136 226 168
+  fog: 233 190 224
   sky: 136 224 226
   waterfog: 208 231 187
   water: 110 221 204

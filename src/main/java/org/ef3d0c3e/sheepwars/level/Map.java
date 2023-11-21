@@ -142,7 +142,7 @@ public class Map
 				map.blueYaw = (float)config.getDouble("yaw.blue");
 
 				mapList.put(name, map);
-				Bukkit.getConsoleSender().sendMessage(MessageFormat.format("§cSheepWars>§7 Map ''{0}'' ajouté!", name));
+				Bukkit.getConsoleSender().sendMessage(MessageFormat.format("§cSheepWars>§7 Added map ''{0}''!", name));
 			}
 			catch (FileNotFoundException e)
 			{
