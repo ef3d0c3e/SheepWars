@@ -1,0 +1,81 @@
+config:
+  name: french
+  displayname: Français
+  banner:
+    ==: org.bukkit.inventory.ItemStack
+    v: 3578
+    type: WHITE_BANNER
+    meta:
+      ==: ItemMeta
+      meta-type: BANNER
+      patterns:
+        - ==: Pattern
+          color: BLUE
+          pattern: ls
+        - ==: Pattern
+          color: RED
+          pattern: rs
+system:
+  join: "§8[§a+§8] §7{0}"
+  quit: "§8[§c-§8] §7{0}"
+game:
+  settings:
+    radiuschange: "Rayons de la map modifiés: {0} → {1}"
+    durationchange: "Durée de la partie modifiée: {0}"
+gui:
+  next: "Suivant"
+  previous: "Précédent"
+items:
+  rightclick: "(Click-Droit)"
+  rocket: "Roquette"
+  team: "Équipe"
+  teamlore:
+    - "Utilisez cet item pour"
+    - "changer d'équipe"
+  skin: "Skin"
+  skinlore:
+    - "Utilisez cet item pour"
+    - "changer de skin"
+  kit: "Kit"
+  kitlore:
+    - "Utilisez cet item pour"
+    - "changer de kit"
+lobby:
+  info:
+    radius: "Taille de la map"
+    duration: "Durée de la partie"
+scoreboard:
+  kit: "Kit"
+  team: "Équipe"
+skin:
+  picker: "Choisissez un skin"
+  npcname: "Choisissez un skin"
+  npccurrent: "Skin actuel:"
+  menu: "Skin actuel: {0}"
+  menulore:
+    - ""
+    - "Remettre à zéro"
+team:
+  picker: "Choisissez une équipe"
+  npcname: "Choisissez une équipe"
+  npccurrent: "Votre équipe:"
+  iconpicker: "Choisissez une icône"
+  create:
+    item: "Créez une équipe"
+    itemlore:
+    - "Utilisez cet item pour créer"
+    - "une nouvelle équipe"
+    gui: "Nommez votre équipe"
+    defaultname: "<Équipe>"
+    dupe: "L''équipe {0} existe déjà!"
+    toolong: "Le nom de l''équipe est trop long! (max: {0})"
+    tooshort: "Le nom de l''équipe est trop court! (min: {0})"
+    invalidcolor: "Veuillez entrer une couleur valide."
+    created: "L''équipe {0} vient d''être crée!"
+
+kit:
+  picker: "Choisissez un kit"
+  npcname: "Choisissez un kit"
+  npccurrent: "Votre kit:"
+  zombie:
+    zombification: "Zombification"

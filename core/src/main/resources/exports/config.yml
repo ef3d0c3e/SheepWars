@@ -1,0 +1,4 @@
+lobby:
+  world: "lobby"
+game:
+  overworld: "sheepwars"
