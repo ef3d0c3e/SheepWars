@@ -39,7 +39,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
-                    <finalName>Hunt</finalName>
+                    <finalName>SheepWars</finalName>
                     <outputDirectory>/home/baraquiel/Programming/Minecraft/Sheepwars211/plugins</outputDirectory>
                 </configuration>
             </plugin>
@@ -47,6 +47,7 @@
     </build>
 
     <dependencies>
+        <!-- Core -->
         <dependency>
             <groupId>org.ef3d0c3e.sheepwars</groupId>
             <artifactId>SheepWars-core</artifactId>
