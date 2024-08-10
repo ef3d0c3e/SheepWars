@@ -3,6 +3,7 @@ package org.ef3d0c3e.sheepwars.player;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -61,10 +62,11 @@ public class CosmeticManager {
 
             final CPlayer cp = CPlayer.get(ev.getPlayer());
             String message;
-            //if (cp.getTeam() == null)
+            if (cp.getTeam() == null)
                 message = MessageFormat.format("§f{0}§8:§7 {1}", cp.getHandle().getName(), ev.getMessage());
-            //else
-                //message = MessageFormat.format("{0} | {1}§8:§7 {2}", cp.getTeam().getColoredName(), cp.getHandle().getName(), ev.getMessage());
+            else {
+                message = MessageFormat.format("{0} | {1}§8:§7 {2}", cp.getTeam().getName(cp), cp.getHandle().getName(), ev.getMessage());
+            }
 
             Bukkit.broadcastMessage(message);
         }

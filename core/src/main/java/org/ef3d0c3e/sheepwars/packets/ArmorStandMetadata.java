@@ -28,17 +28,17 @@ public class ArmorStandMetadata {
         }
 
         public Status hasArms(boolean v) {
-            value = (byte)(value | (v ? 0b10 : 0b0));
-            return this;
-        }
-
-        public Status hasBasePlate(boolean v) {
             value = (byte)(value | (v ? 0b100 : 0b0));
             return this;
         }
 
-        public Status isMarker(boolean v) {
+        public Status hasBasePlate(boolean v) {
             value = (byte)(value | (v ? 0b1000 : 0b0));
+            return this;
+        }
+
+        public Status isMarker(boolean v) {
+            value = (byte)(value | (v ? 0b10000 : 0b0));
             return this;
         }
     }

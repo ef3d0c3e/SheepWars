@@ -1,7 +1,9 @@
 package org.ef3d0c3e.sheepwars.v1_21_R0;
 
 import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.protocol.chat.RemoteChatSession;
 import com.github.retrooper.packetevents.protocol.player.GameMode;
+import com.github.retrooper.packetevents.protocol.player.PublicProfileKey;
 import com.github.retrooper.packetevents.protocol.player.TextureProperty;
 import com.github.retrooper.packetevents.protocol.player.UserProfile;
 import com.github.retrooper.packetevents.protocol.world.Difficulty;
@@ -14,7 +16,9 @@ import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPl
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerRespawn;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
+import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import lombok.NonNull;
+import net.kyori.adventure.text.Component;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.protocol.game.ClientboundRespawnPacket;
@@ -67,6 +71,9 @@ public class Skin implements SkinVersionWrapper
                 cp.getHandle().getUniqueId()
         );
 
+        final ServerPlayer p = ((CraftPlayer)cp.getHandle()).getHandle();
+        final net.minecraft.network.chat.RemoteChatSession chatSession = p.getChatSession();
+
         // Add info packet
         final WrapperPlayServerPlayerInfoUpdate info = new WrapperPlayServerPlayerInfoUpdate(
                 WrapperPlayServerPlayerInfoUpdate.Action.ADD_PLAYER,
@@ -85,14 +92,19 @@ public class Skin implements SkinVersionWrapper
                         true,
                         cp.getHandle().getPing(),
                         GameMode.getById(cp.getHandle().getGameMode().getValue()),
-                        null,
-                        null
+                        Component.text(cp.getHandle().getName()),
+                        // FIXME: This is not correct as the player chat session is still invalid
+                        new RemoteChatSession(chatSession.sessionId(), new PublicProfileKey(
+                                chatSession.profilePublicKey().data().expiresAt(),
+                                chatSession.profilePublicKey().data().key(),
+                                chatSession.profilePublicKey().data().keySignature()
+                                )
+                        )
                 )
         );
 
         // Respawn packet
         final ServerLevel level = ((CraftWorld)loc.getWorld()).getHandle();
-        final ServerPlayer p = ((CraftPlayer)cp.getHandle()).getHandle();
 
         final WrapperPlayServerRespawn respawn = new WrapperPlayServerRespawn(
                 new Dimension(level.getLevel().dimensionType().hashCode()),

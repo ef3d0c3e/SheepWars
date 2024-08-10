@@ -9,6 +9,8 @@ import org.ef3d0c3e.sheepwars.level.LevelFactory;
 import org.ef3d0c3e.sheepwars.level.lobby.LobbyLevel;
 import org.ef3d0c3e.sheepwars.packets.PacketListenerFactory;
 
+import java.util.Random;
+
 public class Game {
     private static void changePhase(WantsListen.Target phase)
     {
@@ -27,6 +29,12 @@ public class Game {
 
     //@Getter
     //private static GameLevel level;
+
+    private static final Random random = new Random();
+    public static int nextInt()
+    {
+        return random.nextInt();
+    }
 
 
     /**

@@ -4,7 +4,6 @@ import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
-import com.github.retrooper.packetevents.protocol.npc.NPC;
 import com.github.retrooper.packetevents.protocol.player.GameMode;
 import com.github.retrooper.packetevents.protocol.player.TextureProperty;
 import com.github.retrooper.packetevents.protocol.player.UserProfile;
@@ -15,8 +14,8 @@ import lombok.Getter;
 import lombok.NonNull;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.ef3d0c3e.sheepwars.packets.ArmorStandMetadata;
 import org.ef3d0c3e.sheepwars.packets.EntityMetadata;
 import org.ef3d0c3e.sheepwars.packets.PlayerMetadata;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
@@ -139,7 +138,7 @@ public abstract class PlayerNPC
 			final WrapperPlayServerSpawnEntity spawn = new WrapperPlayServerSpawnEntity(
 					networkId+i+1, Optional.of(UUID.randomUUID()),
 					EntityTypes.ARMOR_STAND,
-					new Vector3d(loc.getX(), loc.getY()+(tags.size()-i-1)*0.3, loc.getZ()),
+					new Vector3d(loc.getX(), loc.getY()+(tags.size()-i-1)*0.3+1.80, loc.getZ()),
 					0.f, 0.f, 0.f,
 					0,
 					Optional.empty()
@@ -153,7 +152,10 @@ public abstract class PlayerNPC
 									.into(),
 							new EntityMetadata.NoGravity(true).into(),
 							new EntityMetadata.CustomNameVisible(true).into(),
-							new EntityMetadata.CustomName(tag).into()
+							new EntityMetadata.CustomName(tag).into(),
+							new ArmorStandMetadata.Status()
+									.isMarker(true)
+									.into()
 					)
 			);
 

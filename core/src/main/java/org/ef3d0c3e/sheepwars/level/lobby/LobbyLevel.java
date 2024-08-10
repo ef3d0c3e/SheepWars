@@ -16,11 +16,13 @@ import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.*;
 import org.ef3d0c3e.sheepwars.SheepWars;
+import org.ef3d0c3e.sheepwars.hologram.HologramFactory;
 import org.ef3d0c3e.sheepwars.level.Level;
 import org.ef3d0c3e.sheepwars.level.VoidBiomeProvider;
 import org.ef3d0c3e.sheepwars.level.VoidChunkGenerator;
 import org.ef3d0c3e.sheepwars.npc.NPCFactory;
 import org.ef3d0c3e.sheepwars.player.skin.SkinNPC;
+import org.ef3d0c3e.sheepwars.teams.TeamNPC;
 
 import java.io.*;
 
@@ -32,9 +34,9 @@ public class LobbyLevel extends Level
     private Location spawn;
 
     //@Getter
-    //private LobbyHologram hologram;
+    private LobbyHologram hologram;
     private SkinNPC skinNpc;
-    //private TeamNPC teamNpc;
+    private TeamNPC teamNpc;
     //private KitNPC kitNpc;
 
     /**
@@ -51,18 +53,16 @@ public class LobbyLevel extends Level
     {
         spawn = config.SPAWN.getLocation(getHandle());
 
-        /*
         hologram = new LobbyHologram(config.INFO.getLocation(getHandle()));
         HologramFactory.register(hologram);
-        */
 
         skinNpc = new SkinNPC(config.SKIN.getLocation(getHandle()));
         NPCFactory.register(skinNpc);
 
-        /*
         teamNpc = new TeamNPC(config.TEAM.getLocation(getHandle()));
         NPCFactory.register(teamNpc);
 
+        /*
         kitNpc = new KitNPC(config.KIT.getLocation(getHandle()));
         NPCFactory.register(kitNpc);
         */

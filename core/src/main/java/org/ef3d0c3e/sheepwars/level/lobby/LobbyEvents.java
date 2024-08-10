@@ -15,11 +15,18 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.EntityDismountEvent;
 import org.bukkit.event.entity.EntityMountEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.ef3d0c3e.sheepwars.events.*;
 import org.ef3d0c3e.sheepwars.game.Game;
+import org.ef3d0c3e.sheepwars.items.IItem;
+import org.ef3d0c3e.sheepwars.player.skin.SkinItem;
 
 import java.util.UUID;
 
@@ -33,10 +40,11 @@ public class LobbyEvents implements Listener
             ev.getPlayer().getHandle().teleport(Game.getLobby().getSpawn());
 
         final PlayerInventory inv = ev.getPlayer().getHandle().getInventory();
+        inv.clear();
         //inv.setItem(0, TeamItem.getItem(ev.getPlayer()));
         //inv.setItem(1, KitItem.getItem(ev.getPlayer()));
-        //inv.setItem(4, RocketItem.getItem(ev.getPlayer()));
-        //inv.setItem(7, SkinItem.getItem(ev.getPlayer()));
+        inv.setItem(4, RocketItem.getItem(ev.getPlayer()));
+        inv.setItem(7, SkinItem.getItem(ev.getPlayer()));
     }
 
     /*
@@ -54,15 +62,15 @@ public class LobbyEvents implements Listener
         final ItemStack replace = KitItem.getItem(ev.getPlayer());
         if (!ItemBase.replace(ev.getPlayer().getHandle().getInventory(), KitItem.ITEM, replace))
             ev.getPlayer().getHandle().getInventory().setItem(1, replace);
-    }
+    }*/
 
     @EventHandler
     public void onSkinChange(final SkinChangeEvent ev)
     {
         final ItemStack replace = SkinItem.getItem(ev.getPlayer());
-        if (!ItemBase.replace(ev.getPlayer().getHandle().getInventory(), SkinItem.ITEM, replace))
+        if (!IItem.replace(ev.getPlayer().getHandle().getInventory(), SkinItem.ITEM, replace))
             ev.getPlayer().getHandle().getInventory().setItem(7, replace);
-    }*/
+    }
 
     // Cancel all unwanted events
     @EventHandler
@@ -72,6 +80,20 @@ public class LobbyEvents implements Listener
             return;
 
         ev.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onInventoryDrag(final InventoryDragEvent ev)
+    {
+        if (ev.getInventory().equals(ev.getWhoClicked().getInventory()))
+            ev.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onInventoryClick(final InventoryClickEvent ev)
+    {
+        if (ev.getInventory().equals(ev.getWhoClicked().getInventory()))
+            ev.setCancelled(true);
     }
 
     @EventHandler

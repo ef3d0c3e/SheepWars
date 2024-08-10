@@ -69,6 +69,8 @@ public class Locale
     public String TEAM_PICKER;
     public String TEAM_NPCNAME;
     public String TEAM_NPCCURRENT;
+    public String TEAM_RED;
+    public String TEAM_BLUE;
 
     // Kits
     public String KIT_PICKER;

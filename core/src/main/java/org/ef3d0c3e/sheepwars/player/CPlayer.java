@@ -13,6 +13,7 @@ import org.ef3d0c3e.sheepwars.events.CPlayerJoinEvent;
 import org.ef3d0c3e.sheepwars.events.CPlayerQuitEvent;
 import org.ef3d0c3e.sheepwars.events.WantsListen;
 import org.ef3d0c3e.sheepwars.locale.Locale;
+import org.ef3d0c3e.sheepwars.teams.Team;
 
 import javax.annotation.Nullable;
 import java.text.MessageFormat;
@@ -96,17 +97,6 @@ public class CPlayer {
     }
 
     /**
-     * The player handle
-     */
-    @Getter
-    private Player handle;
-    /**
-     * The OfflinePlayer handle
-     */
-    @Getter
-    private OfflinePlayer offlinePlayer;
-
-    /**
      * The locale configured for the player
      */
     @Getter
@@ -116,6 +106,17 @@ public class CPlayer {
      */
     @Getter
     private CosmeticManager cosmetics = new CosmeticManager(this);
+
+    /**
+     * The player handle
+     */
+    @Getter
+    private Player handle;
+    /**
+     * The OfflinePlayer handle
+     */
+    @Getter
+    private OfflinePlayer offlinePlayer;
 
     /**
      * Updates the player handle
@@ -141,6 +142,21 @@ public class CPlayer {
     public boolean isOnline()
     {
         return offlinePlayer.isOnline();
+    }
+
+    /**
+     * The player's team
+     * May not be null in lobby phase, null in game phase means spectator i.e. joined after the game started
+     */
+    @Getter
+    private Team team = null;
+
+    /**
+     * @note Don't call! Use {@link Team.setPlayerTeam(cp, team)}
+     * @param team New team
+     */
+    public void setTeam(Team team) {
+        this.team = team;
     }
 
     /**

@@ -55,7 +55,8 @@ team:
   picker: "Choisissez une équipe"
   npcname: "Choisissez une équipe"
   npccurrent: "Votre équipe:"
-
+  red: "Rouge"
+  blue: "Bleue"
 kit:
   picker: "Choisissez un kit"
   npcname: "Choisissez un kit"
