@@ -1,19 +1,45 @@
 package org.ef3d0c3e.sheepwars.v1_21_R0;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.PacketContainer;
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.protocol.player.GameMode;
+import com.github.retrooper.packetevents.protocol.player.TextureProperty;
+import com.github.retrooper.packetevents.protocol.player.UserProfile;
+import com.github.retrooper.packetevents.protocol.world.Difficulty;
+import com.github.retrooper.packetevents.protocol.world.Dimension;
+import com.github.retrooper.packetevents.protocol.world.WorldBlockPosition;
+import com.github.retrooper.packetevents.resources.ResourceLocation;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPlayerInfo;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPlayerInfoRemove;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPlayerInfoUpdate;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerRespawn;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import lombok.NonNull;
+import net.minecraft.core.GlobalPos;
+import net.minecraft.core.Holder;
+import net.minecraft.network.protocol.game.ClientboundRespawnPacket;
+import net.minecraft.network.protocol.game.CommonPlayerSpawnInfo;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.dimension.DimensionType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_21_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_21_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.ef3d0c3e.sheepwars.SheepWars;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 import org.ef3d0c3e.sheepwars.versions.SkinVersionWrapper;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 public class Skin implements SkinVersionWrapper
 {
@@ -37,23 +63,70 @@ public class Skin implements SkinVersionWrapper
         final Location loc = cp.getHandle().getLocation();
 
         // Remove info packet
-        final PacketContainer infoRemove = SheepWars.getProtocolManager().createPacket(PacketType.Play.Server.PLAYER_INFO_REMOVE);
-        infoRemove.getUUIDLists().write(0, Arrays.asList(cp.getHandle().getUniqueId()));
+        final WrapperPlayServerPlayerInfoRemove infoRemove = new WrapperPlayServerPlayerInfoRemove(
+                cp.getHandle().getUniqueId()
+        );
+
+        // Add info packet
+        final WrapperPlayServerPlayerInfoUpdate info = new WrapperPlayServerPlayerInfoUpdate(
+                WrapperPlayServerPlayerInfoUpdate.Action.ADD_PLAYER,
+                new WrapperPlayServerPlayerInfoUpdate.PlayerInfo(
+                        new UserProfile(
+                                cp.getHandle().getUniqueId(),
+                                cp.getHandle().getName(),
+                                List.of(
+                                        new TextureProperty(
+                                                "textures",
+                                                skin.getTexture(),
+                                                skin.getSignature()
+                                        )
+                                )
+                        ),
+                        true,
+                        cp.getHandle().getPing(),
+                        GameMode.getById(cp.getHandle().getGameMode().getValue()),
+                        null,
+                        null
+                )
+        );
+
+        // Respawn packet
+        final ServerLevel level = ((CraftWorld)loc.getWorld()).getHandle();
+        final ServerPlayer p = ((CraftPlayer)cp.getHandle()).getHandle();
+
+        final WrapperPlayServerRespawn respawn = new WrapperPlayServerRespawn(
+                new Dimension(level.getLevel().dimensionType().hashCode()),
+                null,
+                Difficulty.getById(level.getDifficulty().getId()),
+                0,
+                GameMode.getById(cp.getHandle().getGameMode().ordinal()),
+                null,
+                false,
+                true,
+                false,
+                null,
+                null,
+                null
+        );
+
+        final CommonPlayerSpawnInfo respInfo = new CommonPlayerSpawnInfo(
+                level.getLevel().dimensionTypeRegistration(),
+                level.getLevel().dimension(),
+                level.getSeed(),
+                p.gameMode.getGameModeForPlayer(),
+                null,
+                false, true,
+                Optional.empty(),
+                0
+        );
+
+        PacketEvents.getAPI().getPlayerManager().sendPacket(cp.getHandle(), infoRemove);
+        PacketEvents.getAPI().getPlayerManager().sendPacket(cp.getHandle(), info);
+        p.connection.send(new ClientboundRespawnPacket(respInfo, (byte)0x2));
+
 
         /* TODO: Port the ProtocolWrapper code to raw Protocollib
         // Update info packet
-        final WrapperPlayServerPlayerInfo info = new WrapperPlayServerPlayerInfo();
-        info.setActions(Sets.newHashSet(EnumWrappers.PlayerInfoAction.ADD_PLAYER, EnumWrappers.PlayerInfoAction.UPDATE_LISTED));
-
-        final PlayerInfoData data = new PlayerInfoData(
-                cp.getHandle().getUniqueId(),
-                0,
-                true,
-                EnumWrappers.NativeGameMode.fromBukkit(cp.getHandle().getGameMode()),
-                WrappedGameProfile.fromPlayer(cp.getHandle()),
-                WrappedChatComponent.fromText(cp.getHandle().getName())
-        );
-        info.setEntries(Collections.singletonList(data));
 
         // Respawn packet
         final ServerLevel level = ((CraftWorld)loc.getWorld()).getHandle();
@@ -78,7 +151,7 @@ public class Skin implements SkinVersionWrapper
 
         Hunt.getProtocolManager().sendServerPacket(cp.getHandle(), infoRemove);
         Hunt.getProtocolManager().sendServerPacket(cp.getHandle(), info.getHandle());
-        p.connection.send(new ClientboundRespawnPacket(respawn, (byte)0x2));
+        p.connection.send(new ClientboundRespawnPacket(respawn, (byte)0x2));*/
 
         final int slot = cp.getHandle().getInventory().getHeldItemSlot();
         final Collection<PotionEffect> effects = cp.getHandle().getActivePotionEffects();
@@ -91,6 +164,7 @@ public class Skin implements SkinVersionWrapper
             @Override
             public void run()
             {
+                if (!cp.isOnline()) return;
                 final Player p = cp.getHandle();
 
                 p.getInventory().setHeldItemSlot(slot);
@@ -104,8 +178,7 @@ public class Skin implements SkinVersionWrapper
 
 
             }
-        }.runTask(Hunt.getPlugin());
-         */
+        }.runTask(SheepWars.getPlugin());
     }
 
     @Override
