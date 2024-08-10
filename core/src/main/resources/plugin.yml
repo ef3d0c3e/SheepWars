@@ -2,7 +2,7 @@ name: SheepWars
 version: '2.0α'
 main: org.ef3d0c3e.sheepwars.SheepWars
 api-version: 1.21
-depend: [ ProtocolLib, WorldEdit ]
+depend: [ ProtocolLib, WorldEdit, packetevents ]
 authors: [ ef3d0c3e ]
 load: STARTUP
 description: The SheepWars minigame, for free, forever

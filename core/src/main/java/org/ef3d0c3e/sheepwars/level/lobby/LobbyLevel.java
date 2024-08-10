@@ -19,6 +19,7 @@ import org.ef3d0c3e.sheepwars.SheepWars;
 import org.ef3d0c3e.sheepwars.level.Level;
 import org.ef3d0c3e.sheepwars.level.VoidBiomeProvider;
 import org.ef3d0c3e.sheepwars.level.VoidChunkGenerator;
+import org.ef3d0c3e.sheepwars.npc.NPCFactory;
 
 import java.io.*;
 
@@ -54,13 +55,13 @@ public class LobbyLevel extends Level
         HologramFactory.register(hologram);
 
         skinNpc = new SkinDisplayNPC(config.SKIN.getLocation(getHandle()));
-        NPCManager.register(skinNpc);
+        NPCFactory.register(skinNpc);
 
         teamNpc = new TeamNPC(config.TEAM.getLocation(getHandle()));
-        NPCManager.register(teamNpc);
+        NPCFactory.register(teamNpc);
 
         kitNpc = new KitNPC(config.KIT.getLocation(getHandle()));
-        NPCManager.register(kitNpc);
+        NPCFactory.register(kitNpc);
         */
     }
 

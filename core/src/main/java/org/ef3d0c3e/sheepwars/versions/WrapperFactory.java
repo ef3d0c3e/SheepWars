@@ -42,7 +42,6 @@ public class WrapperFactory
     {
         // Build version string (e.g: "1.20.2" -> "1_20_R2")
         final String bukkitVersion = Bukkit.getVersion();
-        Bukkit.getConsoleSender().sendMessage("version=" + bukkitVersion);
         Matcher matcher = Pattern.compile("\\(MC: (?<version>\\d)\\.(?<major>\\d+)(?:\\.(?<minor>\\d+))?\\)").matcher(bukkitVersion);
         if (!matcher.find()) throw new RuntimeException("Could not determine minecraft version from Bukkit version: `" + bukkitVersion + "`");
         String version;

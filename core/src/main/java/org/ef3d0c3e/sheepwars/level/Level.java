@@ -70,6 +70,8 @@ public abstract class Level
     @WantsListen(phase = WantsListen.Target.Always)
     public static class Events implements Listener
     {
+        // FIXME: For the 'default' world, you need to remove it because
+        // we can't register it at the same time it gets loaded... (API limitation)
         @EventHandler
         public void onChunkLoad(final ChunkLoadEvent ev)
         {
@@ -88,6 +90,15 @@ public abstract class Level
         public void onWorldInit(final WorldInitEvent ev)
         {
             ev.getWorld().setKeepSpawnInMemory(false);
+            final Level level = LevelFactory.get(ev.getWorld().getName());
+            if (level == null) return;
+
+            if (!level.initialized)
+            {
+                level.handle = Bukkit.getWorld(level.getWorldName());
+                level.postWorld();
+                level.initialized = true;
+            }
         }
     }
 }

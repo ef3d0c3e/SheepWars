@@ -7,6 +7,7 @@ import org.ef3d0c3e.sheepwars.events.EventListenerFactory;
 import org.ef3d0c3e.sheepwars.events.WantsListen;
 import org.ef3d0c3e.sheepwars.level.LevelFactory;
 import org.ef3d0c3e.sheepwars.level.lobby.LobbyLevel;
+import org.ef3d0c3e.sheepwars.packets.PacketListenerFactory;
 
 public class Game {
     private static void changePhase(WantsListen.Target phase)
@@ -15,8 +16,7 @@ public class Game {
 
         EventListenerFactory.update(phase);
         //TimedListenerFactory.update(phase);
-        //PacketListenerFactory.update(phase);
-        //RecipeFactory.update(phase);
+        PacketListenerFactory.update(phase);
     }
 
     @Getter
@@ -43,7 +43,7 @@ public class Game {
         //LevelFactory.add(level);
 
         // Create lobby world
-        // Game level is created once it is needeed
+        // Game level is created once it is needed
         // @see CmdHunt
         new BukkitRunnable()
         {

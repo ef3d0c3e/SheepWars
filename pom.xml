@@ -12,7 +12,7 @@
     <packaging>pom</packaging>
 	<modules>
 		<module>core</module>
-        <module>spigot-1.21.1</module>
+        <module>spigot-1.21.0</module>
         <module>dist</module>
     </modules>
 
@@ -25,6 +25,10 @@
 
 	<repositories>
         <repository>
+            <id>codemc-releases</id>
+            <url>https://repo.codemc.io/repository/maven-snapshots/</url>
+        </repository>
+        <repository>
             <id>central</id>
             <url>https://repo1.maven.org/maven2/</url>
         </repository>
@@ -35,10 +39,6 @@
         <repository>
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>lukasalt-repo</id>
-            <url>https://repo.lukasa.lt/repository/maven-public/</url>
         </repository>
 	</repositories>
 

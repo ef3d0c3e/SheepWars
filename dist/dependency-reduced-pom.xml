@@ -10,6 +10,14 @@
   <build>
     <plugins>
       <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.3.2</version>
+        <configuration>
+          <finalName>SheepWars</finalName>
+          <outputDirectory>/home/baraquiel/Programming/Minecraft/Sheepwars211/plugins</outputDirectory>
+        </configuration>
+      </plugin>
+      <plugin>
         <artifactId>maven-shade-plugin</artifactId>
         <version>3.6.0</version>
         <executions>
@@ -23,18 +31,18 @@
         <configuration>
           <relocations>
             <relocation>
+              <pattern>com.github.retrooper.packetevents</pattern>
+              <shadedPattern>org.ef3d0c3e.lib.packetevents.api</shadedPattern>
+            </relocation>
+            <relocation>
+              <pattern>io.github.retrooper.packetevents</pattern>
+              <shadedPattern>org.ef3d0c3e.lib.packetevents.impl</shadedPattern>
+            </relocation>
+            <relocation>
               <pattern>fr.mrmicky.fastboard</pattern>
-              <shadedPattern>org.ef3d0c3e.sheepwars.fastboard</shadedPattern>
+              <shadedPattern>org.ef3d0c3e.lib.fastboard</shadedPattern>
             </relocation>
           </relocations>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>2.3.2</version>
-        <configuration>
-          <finalName>SheepWars</finalName>
-          <outputDirectory>/home/baraquiel/Programming/Minecraft/Sheepwars211/plugins</outputDirectory>
         </configuration>
       </plugin>
     </plugins>

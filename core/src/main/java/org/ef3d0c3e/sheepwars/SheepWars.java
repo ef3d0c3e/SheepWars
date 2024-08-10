@@ -1,7 +1,8 @@
 package org.ef3d0c3e.sheepwars;
 
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
+import com.github.retrooper.packetevents.PacketEvents;
+import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
+import org.ef3d0c3e.sheepwars.commands.CommandFactory;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -15,6 +16,7 @@ import org.ef3d0c3e.sheepwars.events.EventListenerFactory;
 import org.ef3d0c3e.sheepwars.game.Game;
 import org.ef3d0c3e.sheepwars.level.VoidChunkGenerator;
 import org.ef3d0c3e.sheepwars.locale.LocaleManager;
+import org.ef3d0c3e.sheepwars.packets.PacketListenerFactory;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 import org.ef3d0c3e.sheepwars.versions.WrapperFactory;
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +24,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.*;
 import java.text.MessageFormat;
 import java.util.Enumeration;
-import java.util.EventListener;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -30,8 +31,6 @@ public final class SheepWars extends JavaPlugin
 {
     @Getter
     private static Plugin plugin;
-    @Getter
-    private static ProtocolManager protocolManager;
     @Getter
     private static Config sheepWarsConfig;
     @Getter
@@ -87,7 +86,6 @@ public final class SheepWars extends JavaPlugin
             {
                 throw new RuntimeException(e);
             }
-
         }
 
         {
@@ -136,22 +134,32 @@ public final class SheepWars extends JavaPlugin
             e.printStackTrace();
         }
 
+        PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
+        PacketEvents.getAPI().load();
+
         consoleMessage("--[ Setup done ]--");
     }
 
     @Override
     public void onDisable() {
+        PacketEvents.getAPI().terminate();
         consoleMessage("Plugin Disabled!");
     }
 
     @Override
     public void onEnable() {
         plugin = this;
-        protocolManager = ProtocolLibrary.getProtocolManager();
+
+        PacketEvents.getAPI().getSettings()
+                .debug(true)
+                .reEncodeByDefault(true);
+        PacketEvents.getAPI().init();
 
         // Factories
         try {
+            CommandFactory.registerCommands();
             EventListenerFactory.create();
+            PacketListenerFactory.create();
         }
         catch (Exception e)
         {
