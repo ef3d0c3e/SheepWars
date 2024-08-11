@@ -1,10 +1,16 @@
 package org.ef3d0c3e.sheepwars.commands;
 
 import com.google.common.collect.Lists;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.ef3d0c3e.sheepwars.SheepWars;
+import org.ef3d0c3e.sheepwars.maps.Map;
+import org.ef3d0c3e.sheepwars.maps.MapManager;
 import org.jetbrains.annotations.NotNull;
+import org.ef3d0c3e.sheepwars.game.Game;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -33,6 +39,20 @@ public class CmdSheepWars extends Command {
             sender.sendMessage(" - §astart §fStarts the game");
             sender.sendMessage(" - §adebug §7<option> §fFor developers");
         }
+        else if (category.equals("debug"))
+        {
+            final Map map = MapManager.getMap("blimp");
+            Game.start(map);
+
+            new BukkitRunnable()
+            {
+                @Override
+                public void run ()
+                {
+                    p.teleport(new Location(Game.getLevel().getHandle(), 0, 64, 0));
+                }
+            }.runTaskLater(SheepWars.getPlugin(), 1);
+        }
 
         return true;
     }
@@ -51,7 +71,7 @@ public class CmdSheepWars extends Command {
         }
         else if (args[0].equals("debug"))
         {
-            if (args.length == 2) return Lists.newArrayList("<poses>");
+            if (args.length == 2) return Lists.newArrayList("<map>");
         }
 
         return null;

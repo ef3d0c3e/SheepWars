@@ -1,0 +1,28 @@
+displayname: Machines Volantes
+offset: 0 20 0
+icon: OAK_PLANKS
+limbo-begin: 63
+limbo-end: 60
+world-time: 6000
+bonus-lowest: -12 83 -6
+bonus-highest: 12 93 8
+spawns:
+  red:
+    - -20.5 80.5 -18.5
+    - -19.5 76 -18.5
+    - 2.5 78.5 -21.5
+    - 7.5 77 -18.5
+    - -3.5 72.5 -18.5
+    - 0.5 69 -10.5
+    - 16.5 79.5 -18.5
+  blue:
+    - 21.5 80.5 21.5
+    - 20.5 76 21.5
+    - -1.5 78.5 24.5
+    - 4.5 77 21.5
+    - 7.5 72.5 21.5
+    - 1.5 69 13.5
+    - 15.5 79.5 21.5
+yaw:
+  red: 0
+  blue: 180

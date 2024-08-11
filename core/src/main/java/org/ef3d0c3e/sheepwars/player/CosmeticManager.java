@@ -1,18 +1,23 @@
 package org.ef3d0c3e.sheepwars.player;
 
+import io.papermc.paper.chat.ChatRenderer;
+import io.papermc.paper.event.player.AsyncChatEvent;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.ef3d0c3e.sheepwars.events.CPlayerJoinEvent;
 import org.ef3d0c3e.sheepwars.events.SkinChangeEvent;
 import org.ef3d0c3e.sheepwars.events.WantsListen;
 import org.ef3d0c3e.sheepwars.player.skin.Skin;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.text.MessageFormat;
@@ -54,8 +59,24 @@ public class CosmeticManager {
     public static class Events implements Listener
     {
         @EventHandler(priority = EventPriority.HIGH)
-        public void onChat(final AsyncPlayerChatEvent ev)
+        public void onChat(final AsyncChatEvent ev)
         {
+            ev.renderer((player, displayName, message, viewer) -> {
+               final CPlayer cp =  CPlayer.get(ev.getPlayer());
+
+               if (cp.getTeam() == null) {
+                   return displayName.color(TextColor.color(220, 220, 240))
+                           .append(Component.text(": ").color(TextColor.color(95, 95, 95)))
+                           .append(message.color(TextColor.color(187, 187, 187)));
+               } else {
+                   return cp.getTeam().getColoredName(cp)
+                           .append(Component.text(" | ").color(cp.getTeam().getColor()))
+                           .append(displayName.color(TextColor.color(220, 220, 240)))
+                           .append(Component.text(": ").color(TextColor.color(95, 95, 95)))
+                           .append(message.color(TextColor.color(187, 187, 187)));
+               }
+            });
+            /*
             if (ev.isCancelled()) return;
 
             ev.setCancelled(true);
@@ -68,7 +89,9 @@ public class CosmeticManager {
                 message = MessageFormat.format("{0} | {1}§8:§7 {2}", cp.getTeam().getName(cp), cp.getHandle().getName(), ev.getMessage());
             }
 
+            Bukkit.spigot().bro
             Bukkit.broadcastMessage(message);
+            */
         }
 
         @EventHandler(priority = EventPriority.LOW)

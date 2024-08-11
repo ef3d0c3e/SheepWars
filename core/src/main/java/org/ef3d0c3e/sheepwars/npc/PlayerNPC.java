@@ -31,6 +31,20 @@ public abstract class PlayerNPC
 	private final UUID uniqueId;
 	@Getter
 	private final int networkId;
+	@Getter
+	private final HashMap<CPlayer, Long> lastInteracted;
+
+	public long lastInteracted(@NonNull CPlayer cp) {
+		final Object last = lastInteracted.get(cp);
+		if (last == null)
+			return 0;
+		else
+			return (long)last;
+	}
+
+	public void setLastInteracted(@NonNull  CPlayer cp) {
+		lastInteracted.put(cp, System.currentTimeMillis());
+	}
 
 	/**
 	 * Constructor
@@ -40,6 +54,7 @@ public abstract class PlayerNPC
 	{
 		uniqueId = UUID.randomUUID();
 		this.networkId = networkId;
+		lastInteracted = new HashMap<>();
 	}
 
 	protected abstract @NonNull String getName();

@@ -27,6 +27,7 @@ import org.ef3d0c3e.sheepwars.events.*;
 import org.ef3d0c3e.sheepwars.game.Game;
 import org.ef3d0c3e.sheepwars.items.IItem;
 import org.ef3d0c3e.sheepwars.player.skin.SkinItem;
+import org.ef3d0c3e.sheepwars.teams.TeamItem;
 
 import java.util.UUID;
 
@@ -41,21 +42,21 @@ public class LobbyEvents implements Listener
 
         final PlayerInventory inv = ev.getPlayer().getHandle().getInventory();
         inv.clear();
-        //inv.setItem(0, TeamItem.getItem(ev.getPlayer()));
+        inv.setItem(0, TeamItem.getItem(ev.getPlayer()));
         //inv.setItem(1, KitItem.getItem(ev.getPlayer()));
         inv.setItem(4, RocketItem.getItem(ev.getPlayer()));
         inv.setItem(7, SkinItem.getItem(ev.getPlayer()));
     }
 
-    /*
     @EventHandler
     public void onTeamChange(final TeamChangeEvent ev)
     {
         final ItemStack replace = TeamItem.getItem(ev.getPlayer());
-        if (!ItemBase.replace(ev.getPlayer().getHandle().getInventory(), TeamItem.ITEM, replace))
+        if (!IItem.replace(ev.getPlayer().getHandle().getInventory(), TeamItem.ITEM, replace))
             ev.getPlayer().getHandle().getInventory().setItem(0, replace);
     }
 
+    /*
     @EventHandler
     public void onKitChange(final KitChangeEvent ev)
     {

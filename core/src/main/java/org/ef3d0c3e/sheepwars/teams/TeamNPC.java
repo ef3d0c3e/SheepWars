@@ -31,12 +31,12 @@ public class TeamNPC extends PlayerNPC {
 
     @Override
     protected @NonNull String getName() {
-        return "skin";
+        return "team";
     }
 
     @Override
     protected @NonNull List<Component> getNametag(@NonNull CPlayer cp) {
-        if (cp.getCosmetics().getCurrentSkin() == null)
+        if (cp.getTeam() == null) // May not happen in lobby mode
             return Lists.newArrayList(
                     Component.text(cp.getLocale().TEAM_NPCNAME)
                             .color(TextColor.color(207, 50, 200))
@@ -49,8 +49,7 @@ public class TeamNPC extends PlayerNPC {
                     Component.text(cp.getLocale().TEAM_NPCCURRENT)
                             .color(TextColor.color(85, 85, 127))
                             .decorate(TextDecoration.UNDERLINED),
-                    Component.text(cp.getCosmetics().getCurrentSkin().getName())
-                            .color(TextColor.color(180, 85, 120))
+                    cp.getTeam().getColoredName(cp)
             );
     }
 
@@ -76,6 +75,9 @@ public class TeamNPC extends PlayerNPC {
         new BukkitRunnable() {
             @Override
             public void run() {
+                if (System.currentTimeMillis() - lastInteracted(cp) < 1000)
+                    return;
+
                 if (!cp.isOnline()) return;
 
                 if (cp.getTeam() == Team.RED) {
@@ -83,6 +85,8 @@ public class TeamNPC extends PlayerNPC {
                 } else {
                     Team.setPlayerTeam(cp, Team.RED);
                 }
+
+                setLastInteracted(cp);
             }
         }.runTask(SheepWars.getPlugin());
     }

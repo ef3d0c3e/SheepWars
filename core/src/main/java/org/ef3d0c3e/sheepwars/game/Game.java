@@ -6,7 +6,10 @@ import org.ef3d0c3e.sheepwars.SheepWars;
 import org.ef3d0c3e.sheepwars.events.EventListenerFactory;
 import org.ef3d0c3e.sheepwars.events.WantsListen;
 import org.ef3d0c3e.sheepwars.level.LevelFactory;
+import org.ef3d0c3e.sheepwars.level.game.GameLevel;
 import org.ef3d0c3e.sheepwars.level.lobby.LobbyLevel;
+import org.ef3d0c3e.sheepwars.maps.Map;
+import org.ef3d0c3e.sheepwars.maps.MapManager;
 import org.ef3d0c3e.sheepwars.packets.PacketListenerFactory;
 
 import java.util.Random;
@@ -27,8 +30,8 @@ public class Game {
     @Getter
     private static LobbyLevel lobby;
 
-    //@Getter
-    //private static GameLevel level;
+    @Getter
+    private static GameLevel level;
 
     private static final Random random = new Random();
     public static int nextInt()
@@ -36,6 +39,19 @@ public class Game {
         return random.nextInt();
     }
 
+    public static void start(final Map map)
+    {
+        changePhase(WantsListen.Target.Game);
+
+        level = new GameLevel(map);
+        LevelFactory.add(level);
+
+        try {
+            level.create();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     /**
      * Sets default phase to lobby
@@ -49,6 +65,9 @@ public class Game {
         LevelFactory.add(lobby);
         //level = new GameLevel();
         //LevelFactory.add(level);
+
+        // Load maps
+        MapManager.reloadMaps();
 
         // Create lobby world
         // Game level is created once it is needed

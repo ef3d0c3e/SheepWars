@@ -12,6 +12,8 @@ import org.ef3d0c3e.sheepwars.SheepWars;
 import org.ef3d0c3e.sheepwars.events.CPlayerJoinEvent;
 import org.ef3d0c3e.sheepwars.events.CPlayerQuitEvent;
 import org.ef3d0c3e.sheepwars.events.WantsListen;
+import org.ef3d0c3e.sheepwars.kits.Kit;
+import org.ef3d0c3e.sheepwars.kits.KitData;
 import org.ef3d0c3e.sheepwars.locale.Locale;
 import org.ef3d0c3e.sheepwars.teams.Team;
 
@@ -158,6 +160,18 @@ public class CPlayer {
     public void setTeam(Team team) {
         this.team = team;
     }
+
+    /**
+     * The player's kit
+     */
+    @Getter
+    private Kit kit = null;
+    /**
+     * Data for the player's kit
+     * May not be null if kit is not null!
+     */
+    @Getter
+    private KitData kitData = null;
 
     /**
      * Events for the player wrapper

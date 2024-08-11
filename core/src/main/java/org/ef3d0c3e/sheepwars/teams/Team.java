@@ -10,7 +10,9 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.ef3d0c3e.sheepwars.events.CPlayerJoinEvent;
 import org.ef3d0c3e.sheepwars.events.TeamChangeEvent;
@@ -26,12 +28,16 @@ public abstract class Team {
     private final ChatColor chatColor;
     @Getter
     private final TextColor color;
+    @Getter
+    private final Material banner;
+
     private HashSet<CPlayer> players;
 
-    private Team(final ChatColor chatColor, final TextColor color)
+    private Team(final ChatColor chatColor, final TextColor color, final Material banner)
     {
         this.chatColor = chatColor;
         this.color = color;
+        this.banner = banner;
         players = new HashSet<>();
     }
 
@@ -84,14 +90,14 @@ public abstract class Team {
             Bukkit.getPluginManager().callEvent(new TeamChangeEvent(cp, oldTeam, team));
     }
 
-    public static Team RED = new Team(ChatColor.RED, TextColor.color(255, 0, 0)) {
+    public static Team RED = new Team(ChatColor.RED, TextColor.color(255, 0, 0), Material.RED_BANNER) {
         @Override
         public String getName(CPlayer cp) {
             return cp.getLocale().TEAM_RED;
         }
     };
 
-    public static Team BLUE = new Team(ChatColor.BLUE, TextColor.color(0, 0, 255)) {
+    public static Team BLUE = new Team(ChatColor.BLUE, TextColor.color(0, 0, 255), Material.BLUE_BANNER) {
         @Override
         public String getName(CPlayer cp) {
             return cp.getLocale().TEAM_BLUE;
@@ -101,7 +107,7 @@ public abstract class Team {
     @WantsListen(phase = WantsListen.Target.Lobby)
     public static class Events implements Listener
     {
-        @EventHandler
+        @EventHandler(priority = EventPriority.LOW)
         public void onJoin(final CPlayerJoinEvent ev)
         {
             if (RED.count() < BLUE.count())

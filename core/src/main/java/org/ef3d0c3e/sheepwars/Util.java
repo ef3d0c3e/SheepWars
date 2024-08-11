@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.profile.PlayerProfile;
 import org.bukkit.profile.PlayerTextures;
+import org.bukkit.util.Vector;
 
 import javax.annotation.Nullable;
 import java.net.MalformedURLException;
@@ -70,5 +71,17 @@ public class Util {
         skull.setItemMeta(meta);
 
         return skull;
+    }
+
+    /**
+     * Parses string to vector
+     * @param text Text in the form ".5 7.5 -10"
+     * @return Vector
+     */
+    public static Vector parseVector(final String text)
+    {
+        String[] split = text.split(" ", 3);
+
+        return new Vector(Double.valueOf(split[0]), Double.valueOf(split[1]), Double.valueOf(split[2]));
     }
 }
