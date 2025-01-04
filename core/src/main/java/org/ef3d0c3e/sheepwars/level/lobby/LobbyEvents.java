@@ -75,6 +75,14 @@ public class LobbyEvents implements Listener
             ev.getPlayer().getHandle().getInventory().setItem(7, replace);
     }
 
+    @EventHandler
+    public void onVote(final MapVoteEvent ev)
+    {
+        final ItemStack replace = VoteItem.getItem(ev.getPlayer());
+        if (!IItem.replace(ev.getPlayer().getHandle().getInventory(), VoteItem.ITEM, replace))
+            ev.getPlayer().getHandle().getInventory().setItem(1, replace);
+    }
+
     // Cancel all unwanted events
     @EventHandler
     public void onEntityInteract(final EntityInteractEvent ev)

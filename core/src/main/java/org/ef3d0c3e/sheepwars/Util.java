@@ -27,7 +27,8 @@ public class Util {
         }
         return colored;
     }
-    //static private UUID PROFILE_UUID = UUID.randomUUID();
+
+
     /**
      * Gets a game profile associated with a texture (unsigned)
      * @param texture Profile's texture

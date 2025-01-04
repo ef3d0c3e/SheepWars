@@ -48,6 +48,8 @@ public class VoteMenu extends ScrollableGui {
                 meta.setDisplayName("§d" + map.getDisplayName());
             meta.setLore(List.of("§7" + MessageFormat.format(getPlayer().getLocale().ITEMS_VOTEDESC, votes.get(map))));
             item.setItemMeta(meta);
+            int count = Math.min(Math.max(votes.get(map), 1), 64);
+            item.setAmount(count);
             items.add(item);
         });
         return items;

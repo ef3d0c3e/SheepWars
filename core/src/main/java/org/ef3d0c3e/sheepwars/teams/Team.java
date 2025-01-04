@@ -44,6 +44,14 @@ public abstract class Team {
 
     public abstract String getName(final CPlayer cp);
 
+    public String getItemColoredName(final CPlayer cp) {
+        if (this == RED)
+            return chatColor + cp.getLocale().TEAM_RED;
+        else if (this == BLUE)
+            return chatColor + cp.getLocale().TEAM_BLUE;
+        return null;
+    }
+
     public Component getColoredName(final CPlayer cp)
     {
         return Component.text(getName(cp))

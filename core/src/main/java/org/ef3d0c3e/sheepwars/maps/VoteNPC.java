@@ -42,7 +42,6 @@ public class VoteNPC extends PlayerNPC {
     @Override
     protected @NonNull List<Component> getNametag(@NonNull CPlayer cp) {
         var vote = MapManager.getPlayerVote(cp);
-        cp.getHandle().sendMessage(MessageFormat.format("vote={0}", vote));
         if (vote == null)
             return Lists.newArrayList(
                     Component.text(cp.getLocale().VOTE_NPCNAME)
@@ -111,5 +110,4 @@ public class VoteNPC extends PlayerNPC {
             ((VoteNPC) NPCFactory.get(NETWORK_ID)).update(ev.getPlayer());
         }
     }
-
 }
