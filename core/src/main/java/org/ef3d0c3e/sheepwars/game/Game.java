@@ -1,6 +1,9 @@
 package org.ef3d0c3e.sheepwars.game;
 
 import lombok.Getter;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.ef3d0c3e.sheepwars.SheepWars;
 import org.ef3d0c3e.sheepwars.events.EventListenerFactory;
@@ -28,10 +31,10 @@ public class Game {
     private static WantsListen.Target phase;
 
     @Getter
-    private static LobbyLevel lobby;
+    private static LobbyLevel lobby = null;
 
     @Getter
-    private static GameLevel level;
+    private static GameLevel level = null;
 
     private static final Random random = new Random();
     public static int nextInt()
@@ -63,10 +66,8 @@ public class Game {
         // Register levels
         lobby = new LobbyLevel();
         LevelFactory.add(lobby);
-        //level = new GameLevel();
-        //LevelFactory.add(level);
 
-        // Load maps
+        // Load maps from disk
         MapManager.reloadMaps();
 
         // Create lobby world
@@ -84,6 +85,30 @@ public class Game {
                 }
             }
         }.runTask(SheepWars.getPlugin());
+    }
+
+    /**
+     * @brief Terminates the game
+     *
+     * This function will perform cleanup and delete temporary game world
+     */
+    static public void finish()
+    {
+        // Delete map
+        if (level != null && level.getHandle() != null)
+        {
+            var world = level.getHandle();
+            // Teleports all players...
+            for (final Player p : world.getPlayers())
+                p.teleport(lobby.getSpawn());
+
+            Bukkit.unloadWorld(world.getName(), false);
+
+            if (!world.getWorldFolder().delete())
+            {
+                Bukkit.getConsoleSender().sendMessage("§cFailed to delete game world! Please delete it manually");
+            }
+        }
     }
 
 }

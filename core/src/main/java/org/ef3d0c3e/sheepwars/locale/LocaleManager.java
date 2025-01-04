@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -64,5 +65,20 @@ public class LocaleManager
     }
 
     public int size() { return locales.size(); }
+
+    /**
+     * @brief Gets a locale by name, ignoring case
+     * @param name The (config) name of the locale to get
+     * @return The locale or null if not found
+     */
+    public @Nullable Locale getByName(final String name)
+    {
+        for (final Locale loc : this.locales)
+        {
+            if (loc.CONFIG_NAME.equalsIgnoreCase(name))
+                return loc;
+        }
+        return null;
+    }
 }
 

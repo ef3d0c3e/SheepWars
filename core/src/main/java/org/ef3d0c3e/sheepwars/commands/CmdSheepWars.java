@@ -58,7 +58,7 @@ public class CmdSheepWars extends Command {
     }
 
     @Override
-    public @Nullable List<String> tabComplete(final @NotNull CommandSender sender, final @NotNull String label, final @NotNull String[] args)
+    public List<String> tabComplete(final @NotNull CommandSender sender, final @NotNull String label, final @NotNull String[] args)
     {
         if (args.length == 0) return null;
         else if (args.length == 1)
@@ -74,7 +74,7 @@ public class CmdSheepWars extends Command {
             if (args.length == 2) return Lists.newArrayList("<map>");
         }
 
-        return null;
+        return List.of();
     }
 
 }

@@ -20,6 +20,7 @@ import org.ef3d0c3e.sheepwars.hologram.HologramFactory;
 import org.ef3d0c3e.sheepwars.level.Level;
 import org.ef3d0c3e.sheepwars.level.VoidBiomeProvider;
 import org.ef3d0c3e.sheepwars.level.VoidChunkGenerator;
+import org.ef3d0c3e.sheepwars.maps.VoteNPC;
 import org.ef3d0c3e.sheepwars.npc.NPCFactory;
 import org.ef3d0c3e.sheepwars.player.skin.SkinNPC;
 import org.ef3d0c3e.sheepwars.teams.TeamNPC;
@@ -37,6 +38,7 @@ public class LobbyLevel extends Level
     private LobbyHologram hologram;
     private SkinNPC skinNpc;
     private TeamNPC teamNpc;
+    private VoteNPC voteNpc;
     //private KitNPC kitNpc;
 
     /**
@@ -61,6 +63,9 @@ public class LobbyLevel extends Level
 
         teamNpc = new TeamNPC(config.TEAM.getLocation(getHandle()));
         NPCFactory.register(teamNpc);
+
+        voteNpc = new VoteNPC(config.VOTE.getLocation(getHandle()));
+        NPCFactory.register(voteNpc);
 
         /*
         kitNpc = new KitNPC(config.KIT.getLocation(getHandle()));

@@ -143,6 +143,7 @@ public final class SheepWars extends JavaPlugin
     @Override
     public void onDisable() {
         PacketEvents.getAPI().terminate();
+        Game.finish();
         consoleMessage("Plugin Disabled!");
     }
 

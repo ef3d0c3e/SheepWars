@@ -45,6 +45,9 @@ public class Locale
     public String ITEMS_ROCKET;
     public String ITEMS_TEAM;
     public List<String> ITEMS_TEAMLORE;
+    public String ITEMS_VOTE;
+    public List<String> ITEMS_VOTELORE;
+    public String ITEMS_VOTEDESC;
     public String ITEMS_SKIN;
     public List<String> ITEMS_SKINLORE;
     public String ITEMS_KIT;
@@ -76,6 +79,11 @@ public class Locale
     public String KIT_PICKER;
     public String KIT_NPCNAME;
     public String KIT_NPCCURRENT;
+
+    // Vote
+    public String VOTE_PICKER;
+    public String VOTE_NPCNAME;
+    public String VOTE_NPCCURRENT;
 
     /**
      * Constructor

@@ -26,6 +26,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.ef3d0c3e.sheepwars.events.*;
 import org.ef3d0c3e.sheepwars.game.Game;
 import org.ef3d0c3e.sheepwars.items.IItem;
+import org.ef3d0c3e.sheepwars.maps.VoteItem;
 import org.ef3d0c3e.sheepwars.player.skin.SkinItem;
 import org.ef3d0c3e.sheepwars.teams.TeamItem;
 
@@ -43,6 +44,7 @@ public class LobbyEvents implements Listener
         final PlayerInventory inv = ev.getPlayer().getHandle().getInventory();
         inv.clear();
         inv.setItem(0, TeamItem.getItem(ev.getPlayer()));
+        inv.setItem(1, VoteItem.getItem(ev.getPlayer()));
         //inv.setItem(1, KitItem.getItem(ev.getPlayer()));
         inv.setItem(4, RocketItem.getItem(ev.getPlayer()));
         inv.setItem(7, SkinItem.getItem(ev.getPlayer()));

@@ -2,6 +2,7 @@ package org.ef3d0c3e.sheepwars.player;
 
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -101,8 +102,8 @@ public class CPlayer {
     /**
      * The locale configured for the player
      */
-    @Getter
-    private Locale locale;
+    @Getter @Setter
+    private @NonNull Locale locale;
     /**
      * The player's cosmetics
      */
@@ -128,7 +129,7 @@ public class CPlayer {
     {
         this.handle = handle;
         this.offlinePlayer = Bukkit.getOfflinePlayer(handle.getUniqueId());
-        this.locale = SheepWars.getLocaleManager().getDefaultLocale();
+        setLocale(SheepWars.getLocaleManager().getDefaultLocale());
     }
 
 

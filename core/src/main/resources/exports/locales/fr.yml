@@ -28,6 +28,11 @@ items:
   teamlore:
     - "Utilisez cet item pour"
     - "changer d'équipe"
+  vote: "Vote"
+  votelore:
+    - "Votez pour une carte"
+    - "avec cet item"
+  votedesc: "{0} vote(s)"
   skin: "Skin"
   skinlore:
     - "Utilisez cet item pour"
@@ -61,3 +66,7 @@ kit:
   picker: "Choisissez un kit"
   npcname: "Choisissez un kit"
   npccurrent: "Votre kit:"
+vote:
+  picker: "Votez pour une carte"
+  npcname: "Votez pour une carte"
+  npccurrent: "Votre vote:"

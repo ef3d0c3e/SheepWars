@@ -31,8 +31,7 @@ public class CommandFactory implements CommandExecutor, TabCompleter
         {
             try
             {
-                final Command cmd;
-                cmd = (Command)(C.getDeclaredConstructor().newInstance());
+                final Command cmd = (Command)(C.getDeclaredConstructor().newInstance());
                 COMMANDS.put(cmd.getName(), cmd);
             }
             catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
