@@ -39,9 +39,6 @@ public class Map {
     protected Clipboard mapContent; /// Map's schematic contnet
 
     @Getter
-    protected int nbVote; /// Number of votes for this map
-
-    @Getter
     protected Vector offset;
     @Getter
     protected Vector lowestPoint;

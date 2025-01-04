@@ -47,9 +47,9 @@ public class TeamItem extends IItem {
         final ItemStack item = new ItemStack(cp.getTeam().getBanner());
         final ItemMeta meta = item.getItemMeta();
         if (cp.getTeam() == null)
-            meta.setDisplayName(MessageFormat.format("§a{0} §7{1}", cp.getLocale().ITEMS_TEAM, cp.getLocale().ITEMS_RIGHTCLICK));
+            meta.setDisplayName(MessageFormat.format("§b{0} §7{1}", cp.getLocale().ITEMS_TEAM, cp.getLocale().ITEMS_RIGHTCLICK));
         else
-            meta.setDisplayName(MessageFormat.format("§a{0}§8 : {1} §7{2}", cp.getLocale().ITEMS_TEAM, cp.getTeam().getItemColoredName(cp), cp.getLocale().ITEMS_RIGHTCLICK));
+            meta.setDisplayName(MessageFormat.format("§b{0}§8 : {1} §7{2}", cp.getLocale().ITEMS_TEAM, cp.getTeam().getItemColoredName(cp), cp.getLocale().ITEMS_RIGHTCLICK));
         meta.setLore(Util.coloredLore("§7", cp.getLocale().ITEMS_TEAMLORE));
         item.setItemMeta(meta);
 

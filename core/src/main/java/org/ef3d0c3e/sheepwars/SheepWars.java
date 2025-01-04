@@ -2,6 +2,8 @@ package org.ef3d0c3e.sheepwars;
 
 import com.github.retrooper.packetevents.PacketEvents;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
+import org.apache.commons.io.FileUtils;
+import org.bukkit.World;
 import org.ef3d0c3e.sheepwars.commands.CommandFactory;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -137,13 +139,32 @@ public final class SheepWars extends JavaPlugin
         PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
         PacketEvents.getAPI().load();
 
+        // Delete world
+        final World erase = Bukkit.getWorld("sheepwars");
+        if (erase != null)
+        {
+            Bukkit.getServer().unloadWorld(erase, false);
+        }
+
+        try
+        {
+            File path = new File("sheepwars");
+            if (path.exists()) {
+                Bukkit.getConsoleSender().sendMessage("§8[§9SheepWars§8] Deleting world 'sheepwars'");
+                FileUtils.deleteDirectory(path);
+            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
         consoleMessage("--[ Setup done ]--");
     }
 
     @Override
     public void onDisable() {
         PacketEvents.getAPI().terminate();
-        Game.finish();
         consoleMessage("Plugin Disabled!");
     }
 

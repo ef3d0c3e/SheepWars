@@ -2,6 +2,7 @@ package org.ef3d0c3e.sheepwars.game;
 
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -14,7 +15,9 @@ import org.ef3d0c3e.sheepwars.level.lobby.LobbyLevel;
 import org.ef3d0c3e.sheepwars.maps.Map;
 import org.ef3d0c3e.sheepwars.maps.MapManager;
 import org.ef3d0c3e.sheepwars.packets.PacketListenerFactory;
+import org.ef3d0c3e.sheepwars.player.CPlayer;
 
+import java.text.MessageFormat;
 import java.util.Random;
 
 public class Game {
@@ -37,9 +40,10 @@ public class Game {
     private static GameLevel level = null;
 
     private static final Random random = new Random();
-    public static int nextInt()
+
+    public static int nextInt(final int bound)
     {
-        return random.nextInt();
+        return random.nextInt(bound);
     }
 
     public static void start(final Map map)
@@ -49,8 +53,33 @@ public class Game {
         level = new GameLevel(map);
         LevelFactory.add(level);
 
+        // Notify players
+        CPlayer.forEachOnline(cp -> {
+            cp.getHandle().sendMessage(MessageFormat.format("§7" + cp.getLocale().GAME_MAPSTART, "§a" + map.getDisplayName()));
+        });
+
         try {
             level.create();
+
+            CPlayer.forEachOnline(cp -> {
+                cp.getHandle().getInventory().clear();
+                cp.getHandle().closeInventory();
+            });
+
+            new BukkitRunnable()
+            {
+                @Override
+                public void run ()
+                {
+                    CPlayer.forEachOnline(cp -> {
+                        cp.getHandle().getInventory().clear();
+                        cp.getHandle().closeInventory();
+
+                        cp.getHandle().teleport(
+                        level.getSpawnLocation(cp));
+                    });
+                }
+            }.runTaskLater(SheepWars.getPlugin(), 1);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -86,29 +115,4 @@ public class Game {
             }
         }.runTask(SheepWars.getPlugin());
     }
-
-    /**
-     * @brief Terminates the game
-     *
-     * This function will perform cleanup and delete temporary game world
-     */
-    static public void finish()
-    {
-        // Delete map
-        if (level != null && level.getHandle() != null)
-        {
-            var world = level.getHandle();
-            // Teleports all players...
-            for (final Player p : world.getPlayers())
-                p.teleport(lobby.getSpawn());
-
-            Bukkit.unloadWorld(world.getName(), false);
-
-            if (!world.getWorldFolder().delete())
-            {
-                Bukkit.getConsoleSender().sendMessage("§cFailed to delete game world! Please delete it manually");
-            }
-        }
-    }
-
 }

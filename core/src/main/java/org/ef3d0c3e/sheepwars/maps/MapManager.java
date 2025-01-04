@@ -10,11 +10,13 @@ import org.ef3d0c3e.sheepwars.SheepWars;
 import org.ef3d0c3e.sheepwars.Util;
 import org.ef3d0c3e.sheepwars.events.CPlayerQuitEvent;
 import org.ef3d0c3e.sheepwars.events.MapVoteEvent;
+import org.ef3d0c3e.sheepwars.game.Game;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -184,5 +186,23 @@ public class MapManager {
         }
 
         return votes;
+    }
+
+    /**
+     * Gets the map most voted for by players, will choose at random if multiple maps have the maximum number of votes
+     * @return The map
+     */
+    public static @NonNull Map getVoteWinner()
+    {
+        final var votes = getVotes();
+
+        final int max = votes.values().stream().mapToInt(value -> value).filter(value -> value >= -1).max().orElse(-1);
+
+        ArrayList<Map> list = new ArrayList<>();
+        votes.forEach((map, count) -> {
+            if (count == max)
+                list.add(map);
+        });
+        return list.get(Game.nextInt(list.size()));
     }
 }

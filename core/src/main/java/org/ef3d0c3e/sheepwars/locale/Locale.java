@@ -33,8 +33,7 @@ public class Locale
     public String SYSTEM_JOIN;
 
     // Game
-    public String GAME_SETTINGS_RADIUSCHANGE;
-    public String GAME_SETTINGS_DURATIONCHANGE;
+    public String GAME_MAPSTART;
 
     // GUIs
     public String GUI_NEXT;

@@ -1,6 +1,7 @@
 package org.ef3d0c3e.sheepwars.commands;
 
 import com.google.common.collect.Lists;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -41,17 +42,13 @@ public class CmdSheepWars extends Command {
         }
         else if (category.equals("debug"))
         {
-            final Map map = MapManager.getMap("blimp");
-            Game.start(map);
+            sender.sendMessage(String.valueOf(Game.nextInt(10)));
+        }
+        else if (category.equals("start"))
+        {
+            final var map = MapManager.getVoteWinner();
 
-            new BukkitRunnable()
-            {
-                @Override
-                public void run ()
-                {
-                    p.teleport(new Location(Game.getLevel().getHandle(), 0, 64, 0));
-                }
-            }.runTaskLater(SheepWars.getPlugin(), 1);
+            Game.start(map);
         }
 
         return true;

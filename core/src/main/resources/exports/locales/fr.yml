@@ -41,10 +41,8 @@ items:
   kitlore:
     - "Utilisez cet item pour"
     - "changer de kit"
-lobby:
-  info:
-    radius: "Taille de la map"
-    duration: "Durée de la partie"
+game:
+  mapstart: "La partie va commencer sur {0}"
 scoreboard:
   kit: "Kit"
   team: "Équipe"

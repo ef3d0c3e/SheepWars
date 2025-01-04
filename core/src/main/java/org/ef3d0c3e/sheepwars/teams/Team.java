@@ -127,7 +127,7 @@ public abstract class Team {
             }
             // Random team
             else {
-                Team.setPlayerTeam(ev.getPlayer(), Game.nextInt() % 2 == 0 ? RED : BLUE);
+                Team.setPlayerTeam(ev.getPlayer(), Game.nextInt(2) == 0 ? RED : BLUE);
             }
         }
     }
