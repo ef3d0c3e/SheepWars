@@ -45,7 +45,11 @@ game:
   mapstart: "La partie va commencer sur {0}"
 scoreboard:
   kit: "Kit"
+  kitnone: "Choisissez un kit"
   team: "Équipe"
+  vote: "Vote"
+  votenone: "Votez pour une carte"
+  footer: "pundalik.org"
 skin:
   picker: "Choisissez un skin"
   npcname: "Choisissez un skin"
@@ -64,6 +68,11 @@ kit:
   picker: "Choisissez un kit"
   npcname: "Choisissez un kit"
   npccurrent: "Votre kit:"
+  mage:
+    name: "Mage"
+    desc:
+      - " - Vous avez un bâton magique"
+      - " - Vous obtenez plus de moutons de destruction"
 vote:
   picker: "Votez pour une carte"
   npcname: "Votez pour une carte"

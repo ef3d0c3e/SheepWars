@@ -57,8 +57,12 @@ public class Locale
     public String LOBBY_INFO_DURATION;
 
     // Scoreboard
-    public String SCOREBOARD_TEAM;
     public String SCOREBOARD_KIT;
+    public String SCOREBOARD_KITNONE;
+    public String SCOREBOARD_TEAM;
+    public String SCOREBOARD_VOTE;
+    public String SCOREBOARD_VOTENONE;
+    public String SCOREBOARD_FOOTER;
 
     // Skin
     public String SKIN_PICKER;
@@ -78,6 +82,10 @@ public class Locale
     public String KIT_PICKER;
     public String KIT_NPCNAME;
     public String KIT_NPCCURRENT;
+
+    // Mage kit
+    public String KIT_MAGE_NAME;
+    public List<String> KIT_MAGE_DESC;
 
     // Vote
     public String VOTE_PICKER;

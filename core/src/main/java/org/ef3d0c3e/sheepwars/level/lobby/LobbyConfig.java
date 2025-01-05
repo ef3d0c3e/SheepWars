@@ -21,5 +21,6 @@ public class LobbyConfig extends BaseConfig
     public AnyLocation SKIN;
     public AnyLocation TEAM;
     public AnyLocation VOTE;
+    public AnyLocation KIT;
 }
 

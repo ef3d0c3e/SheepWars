@@ -1,4 +1,4 @@
-package org.ef3d0c3e.sheepwars.maps;
+package org.ef3d0c3e.sheepwars.kits;
 
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.google.common.collect.Lists;
@@ -12,7 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.ef3d0c3e.sheepwars.SheepWars;
-import org.ef3d0c3e.sheepwars.events.MapVoteEvent;
+import org.ef3d0c3e.sheepwars.events.KitChangeEvent;
 import org.ef3d0c3e.sheepwars.events.WantsListen;
 import org.ef3d0c3e.sheepwars.npc.NPCFactory;
 import org.ef3d0c3e.sheepwars.npc.PlayerNPC;
@@ -20,11 +20,11 @@ import org.ef3d0c3e.sheepwars.player.CPlayer;
 
 import java.util.List;
 
-public class VoteNPC extends PlayerNPC {
-    private static final int NETWORK_ID = 0xFF777730;
+public class KitNPC extends PlayerNPC {
+    private static final int NETWORK_ID = 0xFF777740;
     private final Location location;
 
-    public VoteNPC(Location location)
+    public KitNPC(Location location)
     {
         super(NETWORK_ID);
         this.location = location;
@@ -32,34 +32,33 @@ public class VoteNPC extends PlayerNPC {
 
     @Override
     protected @NonNull String getName() {
-        return "vote";
+        return "kit";
     }
 
     @Override
     protected @NonNull List<Component> getNametag(@NonNull CPlayer cp) {
-        final var vote = MapManager.getPlayerVote(cp);
-        if (vote == null)
+        if (cp.getKit() == null)
             return Lists.newArrayList(
-                    Component.text(cp.getLocale().VOTE_NPCNAME)
-                            .color(TextColor.color(100, 80, 220))
+                    Component.text(cp.getLocale().KIT_NPCNAME)
+                            .color(TextColor.color(140, 240, 40))
                             .decorate(TextDecoration.BOLD));
         return Lists.newArrayList(
-                Component.text(cp.getLocale().VOTE_NPCNAME)
-                        .color(TextColor.color(100, 80, 220))
+                Component.text(cp.getLocale().KIT_NPCNAME)
+                        .color(TextColor.color(140, 240, 40))
                         .decorate(TextDecoration.BOLD),
-                Component.text(cp.getLocale().VOTE_NPCCURRENT)
+                Component.text(cp.getLocale().KIT_NPCCURRENT)
                         .color(TextColor.color(85, 85, 127))
                         .decorate(TextDecoration.UNDERLINED),
-                Component.text(vote.getDisplayName())
-                        .color(TextColor.color(70, 185, 100))
+                cp.getKit().getColoredName(cp)
         );
+
     }
 
     @Override
     protected @NonNull Property getTextures(@NonNull CPlayer cp) {
         return new Property("textures",
-                "ewogICJ0aW1lc3RhbXAiIDogMTcxOTAxMDI4Mzc1MiwKICAicHJvZmlsZUlkIiA6ICJkOTcwYzEzZTM4YWI0NzlhOTY1OGM1ZDQ1MjZkMTM0YiIsCiAgInByb2ZpbGVOYW1lIiA6ICJDcmltcHlMYWNlODUxMjciLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDJmNTExMDNjOGE0NTJiYTI2YTZkYjljMzMxNmE2NzFiY2JkMTlhZDQ2MTJiOTYwNmI3YzMwYzMwMGIxMjkyZiIKICAgIH0KICB9Cn0=",
-                "rAVdU0APvsYwlA5SFTflwseqBgj6MvJMuBd+FER4DJKQm3OSq6olRSDBGCJCQNvo6mm7xP0EAaat66+lgXLS3dtCgIbnjfIjexvWhlFUrIYpL88yfMXSNuv/Ba+797LNonenA2vzDcko4HNdx6AdUu6BwAQgQrzW7oa2A8g8GRvUZW1pFwSIxCRbIckT4TsQKNiC/pZerJuv2eDPtLTu9YItea67+7XxN3bpGFz6BQLFkIqpkjD3UCWUdq2JcT+5wJAG6hJoF/7r53YcwcASPo+0Yap6DTiL7BVkFDDXB+d9417mv083hFT7Jb2T+BdgcnVRsBRA2KMzOPKp7nY0k6P1fSC6krZWe8/x+0jhVDurMdmuFWVgKBapkdMw3MvbIUZLZ7JD5jV5aM6C934N6tTTXRTpnKjRa+3nucC3WyB59UYN1yBNADoO9/itf17m9Hw1EeyqMFIyNaN+m+uCyDMNDsRM2oC+PZtuK4U4VKFVADf5FEgaQlLypdP7/By3T6/g6zFRbDGp0szzt2xeHnRyfnCfdIfSPmxp6H5cdwmtFgQoe9EWtHWJ8lqIKV71EDxuO6auNu325DurZVVpxZtGtdNw50nvUh2nRrIKu6jZf/gptkbA+ISHRW6TCHZHRBlpG9X2Lk3YbjHqSla3yB1Thhw8epL5EPaTA+C9z+8=");
+                "ewogICJ0aW1lc3RhbXAiIDogMTY4MTQ2NTc2NTg5NiwKICAicHJvZmlsZUlkIiA6ICJkOGNkMTNjZGRmNGU0Y2IzODJmYWZiYWIwOGIyNzQ4OSIsCiAgInByb2ZpbGVOYW1lIiA6ICJaYWNoeVphY2giLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGU1YTUyNTU4ZWU1ZDUyYzk2YmI0ZmUyOTZkNDNjMTEzMDExNWI5MmIxYWI1Y2RmNmJjZDhhMDdmZTRkZjljYSIKICAgIH0KICB9Cn0=",
+                "nFM67iyF1oFEApe6/cjsYRgbf1rx0WKsQILYQxCZ6uGGhNp/leVo2Ew68m2Cygkt27io4pXFIe1zlCdXYh+lqWojCnwwzzXbyUvuHqm1TdRri86jgsm0p53NQyNVduC7AbETqHUvvD8dyk4R6iGsq1hlmQAnmmxkZIRDlIWngKaRoqpBwE8I6d94TqqLVWOSLDsjKoM0vPUkvDtghPE586nr07xZ4MSFaLn8Y8nBRJYKtaGekOk/L1gYhJm5mkLN9lrrzBzs5Qp2YIxTY0uvIZr5kASQdk2ShiPHV0SpT1ngkNPae5fysdJLZaK71iS7ulzhnThfYNRKUiMrLVpD7ks+iEmtY8o3Mfd/80uyqfBXWXrjWe0xFM8WWIU1YXt97XXwhCUBZgYQg9xRwG3cZnrkuey4UZUrPAY6/yxoDFaOaFeFjzx9/ZbhIqA1ohJGd0SbcIS+IZkAz7C5pGDDHG8+arksIF6Z2fZkv+l4n2q6oCYtYa2UjyUrhSLtSGlzlHi1sSzxlz6f9ANTEeh0103bnZIelwZwT1Z5tWMoBF8jy/oo5K8fbB1OgE428sZ+3ZHNYzMbsFP8GsMFa1O04fqC2ZeQ8ViVRhAZsn2AbAEdRVh04qg5p3iBJfnjmqZPmi4vDW2a93i/asWAmpA+fUM9q6cGII4UFFHE1nExVgo=");
     }
 
     @Override
@@ -80,7 +79,7 @@ public class VoteNPC extends PlayerNPC {
             public void run()
             {
                 if (!cp.isOnline()) return;
-                cp.getHandle().openInventory(new VoteMenu(cp).getInventory());
+                cp.getHandle().openInventory(new KitMenu(cp).getInventory());
             }
         }.runTask(SheepWars.getPlugin());
     }
@@ -100,9 +99,9 @@ public class VoteNPC extends PlayerNPC {
     public static class Events implements Listener
     {
         @EventHandler
-        public void onVote(final MapVoteEvent ev)
+        public void onKitChange(final KitChangeEvent ev)
         {
-            ((VoteNPC) NPCFactory.get(NETWORK_ID)).update(ev.getPlayer());
+            ((KitNPC)NPCFactory.get(NETWORK_ID)).update(ev.getPlayer());
         }
     }
 }

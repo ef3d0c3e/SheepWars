@@ -9,6 +9,7 @@ import com.github.retrooper.packetevents.protocol.world.Location;
 import com.github.retrooper.packetevents.util.Vector3d;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.*;
@@ -26,6 +27,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.ef3d0c3e.sheepwars.events.*;
 import org.ef3d0c3e.sheepwars.game.Game;
 import org.ef3d0c3e.sheepwars.items.IItem;
+import org.ef3d0c3e.sheepwars.kits.KitItem;
 import org.ef3d0c3e.sheepwars.maps.VoteItem;
 import org.ef3d0c3e.sheepwars.player.skin.SkinItem;
 import org.ef3d0c3e.sheepwars.teams.TeamItem;
@@ -35,7 +37,7 @@ import java.util.UUID;
 @WantsListen(phase = WantsListen.Target.Lobby)
 public class LobbyEvents implements Listener
 {
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerJoin(final CPlayerJoinEvent ev)
     {
         if (Game.getLobby().getSpawn() != null) // For /reload only since lobby won't be null after server restart
@@ -45,7 +47,7 @@ public class LobbyEvents implements Listener
         inv.clear();
         inv.setItem(0, TeamItem.getItem(ev.getPlayer()));
         inv.setItem(1, VoteItem.getItem(ev.getPlayer()));
-        //inv.setItem(1, KitItem.getItem(ev.getPlayer()));
+        inv.setItem(2, KitItem.getItem(ev.getPlayer()));
         inv.setItem(4, RocketItem.getItem(ev.getPlayer()));
         inv.setItem(7, SkinItem.getItem(ev.getPlayer()));
     }
@@ -58,14 +60,21 @@ public class LobbyEvents implements Listener
             ev.getPlayer().getHandle().getInventory().setItem(0, replace);
     }
 
-    /*
+    @EventHandler
+    public void onVote(final MapVoteEvent ev)
+    {
+        final ItemStack replace = VoteItem.getItem(ev.getPlayer());
+        if (!IItem.replace(ev.getPlayer().getHandle().getInventory(), VoteItem.ITEM, replace))
+            ev.getPlayer().getHandle().getInventory().setItem(1, replace);
+    }
+
     @EventHandler
     public void onKitChange(final KitChangeEvent ev)
     {
         final ItemStack replace = KitItem.getItem(ev.getPlayer());
-        if (!ItemBase.replace(ev.getPlayer().getHandle().getInventory(), KitItem.ITEM, replace))
-            ev.getPlayer().getHandle().getInventory().setItem(1, replace);
-    }*/
+        if (!IItem.replace(ev.getPlayer().getHandle().getInventory(), KitItem.ITEM, replace))
+            ev.getPlayer().getHandle().getInventory().setItem(2, replace);
+    }
 
     @EventHandler
     public void onSkinChange(final SkinChangeEvent ev)
@@ -73,14 +82,6 @@ public class LobbyEvents implements Listener
         final ItemStack replace = SkinItem.getItem(ev.getPlayer());
         if (!IItem.replace(ev.getPlayer().getHandle().getInventory(), SkinItem.ITEM, replace))
             ev.getPlayer().getHandle().getInventory().setItem(7, replace);
-    }
-
-    @EventHandler
-    public void onVote(final MapVoteEvent ev)
-    {
-        final ItemStack replace = VoteItem.getItem(ev.getPlayer());
-        if (!IItem.replace(ev.getPlayer().getHandle().getInventory(), VoteItem.ITEM, replace))
-            ev.getPlayer().getHandle().getInventory().setItem(1, replace);
     }
 
     // Cancel all unwanted events

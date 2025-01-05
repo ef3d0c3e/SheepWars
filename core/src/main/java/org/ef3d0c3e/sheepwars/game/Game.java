@@ -9,6 +9,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.ef3d0c3e.sheepwars.SheepWars;
 import org.ef3d0c3e.sheepwars.events.EventListenerFactory;
 import org.ef3d0c3e.sheepwars.events.WantsListen;
+import org.ef3d0c3e.sheepwars.kits.KitManager;
+import org.ef3d0c3e.sheepwars.kits.kit.KitMage;
 import org.ef3d0c3e.sheepwars.level.LevelFactory;
 import org.ef3d0c3e.sheepwars.level.game.GameLevel;
 import org.ef3d0c3e.sheepwars.level.lobby.LobbyLevel;
@@ -95,6 +97,9 @@ public class Game {
         // Register levels
         lobby = new LobbyLevel();
         LevelFactory.add(lobby);
+
+        // Load all kits
+        KitManager.init();
 
         // Load maps from disk
         MapManager.reloadMaps();

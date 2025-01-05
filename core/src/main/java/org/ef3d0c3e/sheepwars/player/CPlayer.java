@@ -12,6 +12,7 @@ import org.checkerframework.checker.units.qual.C;
 import org.ef3d0c3e.sheepwars.SheepWars;
 import org.ef3d0c3e.sheepwars.events.CPlayerJoinEvent;
 import org.ef3d0c3e.sheepwars.events.CPlayerQuitEvent;
+import org.ef3d0c3e.sheepwars.events.KitChangeEvent;
 import org.ef3d0c3e.sheepwars.events.WantsListen;
 import org.ef3d0c3e.sheepwars.kits.Kit;
 import org.ef3d0c3e.sheepwars.kits.KitData;
@@ -167,6 +168,17 @@ public class CPlayer {
      */
     @Getter
     private Kit kit = null;
+
+    /**
+     * Sets the player's kit and fires a {@link KitChangeEvent}
+     * @param kit The player's new kit
+     */
+    public void setKit(final @Nullable Kit kit) {
+        final var oldKit = this.kit;
+        this.kit = kit;
+        Bukkit.getPluginManager().callEvent(new KitChangeEvent(this, oldKit, kit));
+    }
+
     /**
      * Data for the player's kit
      * May not be null if kit is not null!

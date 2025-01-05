@@ -1,26 +1,28 @@
 package org.ef3d0c3e.sheepwars.player;
 
-import io.papermc.paper.chat.ChatRenderer;
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.protocol.player.GameMode;
+import com.github.retrooper.packetevents.protocol.player.UserProfile;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPlayerInfo;
+import fr.mrmicky.fastboard.FastBoard;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.ef3d0c3e.sheepwars.events.CPlayerJoinEvent;
-import org.ef3d0c3e.sheepwars.events.SkinChangeEvent;
-import org.ef3d0c3e.sheepwars.events.WantsListen;
+import org.ef3d0c3e.sheepwars.events.*;
+import org.ef3d0c3e.sheepwars.game.Game;
+import org.ef3d0c3e.sheepwars.maps.MapManager;
 import org.ef3d0c3e.sheepwars.player.skin.Skin;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.text.MessageFormat;
+import java.util.ArrayList;
 
 /**
  * Manages cosmetics for the player
@@ -32,6 +34,8 @@ public class CosmeticManager {
     private Skin originalSkin = null;
     @Getter
     private Skin currentSkin = null;
+
+    private FastBoard board = null;
 
     protected CosmeticManager(final @NonNull CPlayer cp)
     {
@@ -53,6 +57,88 @@ public class CosmeticManager {
         }
 
         Bukkit.getServer().getPluginManager().callEvent(new SkinChangeEvent(cp, currentSkin, skin));
+    }
+
+    /**
+     * Updates the scoreboard of a player
+     */
+    public void updateScoreboard()
+    {
+        board = new FastBoard(cp.getHandle());
+
+        if (Game.getPhase() == WantsListen.Target.Lobby)
+        {
+            final var ser = LegacyComponentSerializer.legacy('§');
+            board.updateTitle(ser.serialize(Component.text("SheepWars").color(TextColor.color(127, 200, 80))));
+            final ArrayList<String> lines = new ArrayList<>();
+            lines.add("");
+
+            // Team
+            lines.add(ser.serialize(
+                    Component.text(" * ").color(TextColor.color(180, 180, 255))
+                            .append(Component.text(cp.getLocale().SCOREBOARD_TEAM + ": ")
+                            .color(TextColor.color(200, 200, 220)))
+                .append(cp.getTeam().getColoredName(cp))
+            ));
+            // Kit
+            if (cp.getKit() != null)
+                lines.add(ser.serialize(
+                        Component.text(" * ").color(TextColor.color(180, 180, 255))
+                                .append(Component.text(cp.getLocale().SCOREBOARD_KIT + ": ")
+                                .color(TextColor.color(200, 200, 210)))
+                                .append(cp.getKit().getColoredName(cp))
+                ));
+            else
+                lines.add(ser.serialize(
+                        Component.text(" * ").color(TextColor.color(180, 180, 255))
+                                .append(Component.text(cp.getLocale().SCOREBOARD_KITNONE)
+                                .color(TextColor.color(200, 200, 210)))
+                ));
+            // Vote
+            final var map = MapManager.getPlayerVote(cp);
+            if (map != null)
+                lines.add(ser.serialize(
+                        Component.text(" * ").color(TextColor.color(180, 180, 255))
+                                .append(Component.text(cp.getLocale().SCOREBOARD_VOTE + ": ")
+                                .color(TextColor.color(200, 200, 200)))
+                                .append(Component.text(map.getDisplayName()).color(TextColor.color(80, 200, 110)))
+                ));
+            else
+                lines.add(ser.serialize(
+                        Component.text(" * ").color(TextColor.color(180, 180, 255))
+                                .append(Component.text(cp.getLocale().SCOREBOARD_VOTENONE)
+                                .color(TextColor.color(200, 200, 200)))
+                ));
+
+            lines.add("");
+            lines.add(ser.serialize(
+                    Component.text(cp.getLocale().SCOREBOARD_FOOTER).color(TextColor.color(200, 120, 60))
+            ));
+
+            board.updateLines(lines);
+        }
+        else
+        {
+
+        }
+    }
+
+    /**
+     * @brief Updates tab name for a player (and send it to other players)
+     */
+    public void updateTabNames()
+    {
+        final var data = new WrapperPlayServerPlayerInfo.PlayerData(
+            Component.text("aaa"),
+                new UserProfile(cp.getHandle().getUniqueId(), cp.getHandle().getName()),
+            null,
+            cp.getHandle().getPing()
+        );
+        final WrapperPlayServerPlayerInfo info = new WrapperPlayServerPlayerInfo(WrapperPlayServerPlayerInfo.Action.UPDATE_DISPLAY_NAME, data);
+
+        CPlayer.forEachOnline((o) -> {
+            PacketEvents.getAPI().getPlayerManager().sendPacket(o.getHandle(), info);
+        });
     }
 
     @WantsListen(phase = WantsListen.Target.Always)
@@ -94,7 +180,7 @@ public class CosmeticManager {
             */
         }
 
-        @EventHandler(priority = EventPriority.LOW)
+        @EventHandler(priority = EventPriority.HIGH)
         public void onPlayerJoin(final CPlayerJoinEvent ev)
         {
             final CPlayer cp = ev.getPlayer();
@@ -102,39 +188,39 @@ public class CosmeticManager {
             if (cosmetics.getOriginalSkin() == null) cosmetics.setOriginalSkin(Skin.fromPlayer(cp));
             if (cosmetics.getCurrentSkin() != null) Skin.updateSkin(cp);
 
-            /*
-            CPlayer.forEachOnline(o -> {
-                o.getCosmetics().updateTabNames();
-                o.getCosmetics().updateNametags();
-                o.getCosmetics().updateScoreboard();
-            });
-            */
+            cp.getCosmetics().updateScoreboard();
+            cp.getCosmetics().updateTabNames();
+            //cp.getCosmetics().updateNametags();
         }
 
-        /*
+        /**
+         * Removes player's board
+         * @param ev Event
+         */
+        @EventHandler(priority = EventPriority.HIGH)
+        public void onPlayerQuit(final CPlayerQuitEvent ev) {
+            final CPlayer cp = ev.getPlayer();
+            cp.getCosmetics().board = null;
+        }
+
         @EventHandler
         public void onTeamChange(final TeamChangeEvent ev)
         {
-            CPlayer.forEachOnline(cp ->
-            {
-                cp.getCosmetics().updateTabNames();
-                cp.getCosmetics().updateNametags();
-            });
+            ev.getPlayer().getCosmetics().updateScoreboard();
+            ev.getPlayer().getCosmetics().updateTabNames();
+        }
 
+        @EventHandler
+        public void onVote(final MapVoteEvent ev)
+        {
             ev.getPlayer().getCosmetics().updateScoreboard();
         }
 
         @EventHandler
         public void onKitChange(final KitChangeEvent ev)
         {
-            CPlayer.forEachOnline(cp ->
-            {
-                cp.getCosmetics().updateTabNames();
-                cp.getCosmetics().updateNametags();
-            });
-
             ev.getPlayer().getCosmetics().updateScoreboard();
+            ev.getPlayer().getCosmetics().updateTabNames();
         }
-         */
     }
 }

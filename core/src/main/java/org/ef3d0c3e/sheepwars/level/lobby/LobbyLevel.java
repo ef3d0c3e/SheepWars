@@ -17,6 +17,7 @@ import lombok.NonNull;
 import org.bukkit.*;
 import org.ef3d0c3e.sheepwars.SheepWars;
 import org.ef3d0c3e.sheepwars.hologram.HologramFactory;
+import org.ef3d0c3e.sheepwars.kits.KitNPC;
 import org.ef3d0c3e.sheepwars.level.Level;
 import org.ef3d0c3e.sheepwars.level.VoidBiomeProvider;
 import org.ef3d0c3e.sheepwars.level.VoidChunkGenerator;
@@ -39,7 +40,7 @@ public class LobbyLevel extends Level
     private SkinNPC skinNpc;
     private TeamNPC teamNpc;
     private VoteNPC voteNpc;
-    //private KitNPC kitNpc;
+    private KitNPC kitNpc;
 
     /**
      * Constructor
@@ -66,6 +67,9 @@ public class LobbyLevel extends Level
 
         voteNpc = new VoteNPC(config.VOTE.getLocation(getHandle()));
         NPCFactory.register(voteNpc);
+
+        kitNpc = new KitNPC(config.KIT.getLocation(getHandle()));
+        NPCFactory.register(kitNpc);
 
         /*
         kitNpc = new KitNPC(config.KIT.getLocation(getHandle()));
