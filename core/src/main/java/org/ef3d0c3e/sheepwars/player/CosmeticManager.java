@@ -1,17 +1,16 @@
 package org.ef3d0c3e.sheepwars.player;
 
 import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.protocol.player.GameMode;
 import com.github.retrooper.packetevents.protocol.player.UserProfile;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPlayerInfo;
 import fr.mrmicky.fastboard.FastBoard;
+import io.github.retrooper.packetevents.adventure.serializer.legacy.LegacyComponentSerializer;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,6 +21,7 @@ import org.ef3d0c3e.sheepwars.maps.MapManager;
 import org.ef3d0c3e.sheepwars.player.skin.Skin;
 
 import javax.annotation.Nullable;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 
 /**
@@ -66,11 +66,12 @@ public class CosmeticManager {
     {
         board = new FastBoard(cp.getHandle());
 
+        final var ser = LegacyComponentSerializer.legacy('§');
+        final ArrayList<String> lines = new ArrayList<>();
+
         if (Game.getPhase() == WantsListen.Target.Lobby)
         {
-            final var ser = LegacyComponentSerializer.legacy('§');
             board.updateTitle(ser.serialize(Component.text("SheepWars").color(TextColor.color(127, 200, 80))));
-            final ArrayList<String> lines = new ArrayList<>();
             lines.add("");
 
             // Team
@@ -115,12 +116,19 @@ public class CosmeticManager {
                     Component.text(cp.getLocale().SCOREBOARD_FOOTER).color(TextColor.color(200, 120, 60))
             ));
 
-            board.updateLines(lines);
         }
         else
         {
+            board.updateTitle(ser.serialize(Component.text("SheepWars").color(TextColor.color(127, 200, 80))));
 
+            lines.add("");
+            lines.add(ser.serialize(
+                    Component.text(String.format("%d:%02d",
+                        Game.getTimer().getMinutes(), Game.getTimer().getSeconds() % 60
+                    ))
+                            .color(TextColor.color(220, 200, 60))));
         }
+        board.updateLines(lines);
     }
 
     /**

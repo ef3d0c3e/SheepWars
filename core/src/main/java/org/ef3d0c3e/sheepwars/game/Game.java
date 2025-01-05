@@ -2,15 +2,12 @@ package org.ef3d0c3e.sheepwars.game;
 
 import lombok.Getter;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.ef3d0c3e.sheepwars.SheepWars;
+import org.ef3d0c3e.sheepwars.events.PhaseChangeEvent;
 import org.ef3d0c3e.sheepwars.events.EventListenerFactory;
 import org.ef3d0c3e.sheepwars.events.WantsListen;
 import org.ef3d0c3e.sheepwars.kits.KitManager;
-import org.ef3d0c3e.sheepwars.kits.kit.KitMage;
 import org.ef3d0c3e.sheepwars.level.LevelFactory;
 import org.ef3d0c3e.sheepwars.level.game.GameLevel;
 import org.ef3d0c3e.sheepwars.level.lobby.LobbyLevel;
@@ -25,15 +22,23 @@ import java.util.Random;
 public class Game {
     private static void changePhase(WantsListen.Target phase)
     {
+        final var oldPhase = Game.phase;
         Game.phase = phase;
 
         EventListenerFactory.update(phase);
-        //TimedListenerFactory.update(phase);
         PacketListenerFactory.update(phase);
+        Bukkit.getPluginManager().callEvent(new PhaseChangeEvent(oldPhase, phase));
     }
 
     @Getter
     private static WantsListen.Target phase;
+
+    /**
+     * Whether the game has started (after the countdown, this is updated in GameStart)
+     */
+    protected static boolean started = false;
+
+    public static boolean hasStarted() { return started; }
 
     @Getter
     private static LobbyLevel lobby = null;
@@ -41,13 +46,49 @@ public class Game {
     @Getter
     private static GameLevel level = null;
 
+    public static class Timer extends BukkitRunnable
+    {
+        @Getter
+        int elapsed = 0;
+
+        public int getMinutes() {
+            return elapsed / 1200;
+        }
+        public int getSeconds() { return elapsed / 20; }
+
+        @Override
+        public void run()
+        {
+            // Update scoreboard
+            if (elapsed % 20 == 0)
+            {
+                CPlayer.forEachOnline(cp -> {
+                    cp.getCosmetics().updateScoreboard();
+                });
+            }
+            ++elapsed;
+        }
+    }
+
+    @Getter
+    private static final Timer timer = new Timer();
+
     private static final Random random = new Random();
 
+    /**
+     * Generates a random integer
+     * @param bound The bound of the random value
+     * @return A random integer within [0, bound-1]
+     */
     public static int nextInt(final int bound)
     {
         return random.nextInt(bound);
     }
 
+    /**
+     * Starts the game
+     * @param map The map to start the game on
+     */
     public static void start(final Map map)
     {
         changePhase(WantsListen.Target.Game);
@@ -80,6 +121,8 @@ public class Game {
                         cp.getHandle().teleport(
                         level.getSpawnLocation(cp));
                     });
+                    // Start timer
+                    timer.runTaskTimer(SheepWars.getPlugin(), 0, 1);
                 }
             }.runTaskLater(SheepWars.getPlugin(), 1);
         } catch (Exception e) {

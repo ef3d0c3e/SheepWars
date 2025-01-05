@@ -10,10 +10,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.checkerframework.checker.units.qual.C;
 import org.ef3d0c3e.sheepwars.SheepWars;
-import org.ef3d0c3e.sheepwars.events.CPlayerJoinEvent;
-import org.ef3d0c3e.sheepwars.events.CPlayerQuitEvent;
-import org.ef3d0c3e.sheepwars.events.KitChangeEvent;
-import org.ef3d0c3e.sheepwars.events.WantsListen;
+import org.ef3d0c3e.sheepwars.events.*;
+import org.ef3d0c3e.sheepwars.game.Combat;
+import org.ef3d0c3e.sheepwars.game.Game;
 import org.ef3d0c3e.sheepwars.kits.Kit;
 import org.ef3d0c3e.sheepwars.kits.KitData;
 import org.ef3d0c3e.sheepwars.locale.Locale;
@@ -123,6 +122,12 @@ public class CPlayer {
     private OfflinePlayer offlinePlayer;
 
     /**
+     * Whether the player is alive
+     */
+    @Getter
+    private boolean alive = false;
+
+    /**
      * Updates the player handle
      * @param handle New handle
      */
@@ -187,6 +192,12 @@ public class CPlayer {
     private KitData kitData = null;
 
     /**
+     * Combat data for the player
+     */
+    @Getter
+    private Combat.Data combatData = new Combat.Data();
+
+    /**
      * Events for the player wrapper
      * When a player joins or quits
      */
@@ -210,6 +221,18 @@ public class CPlayer {
             CPlayer.forEachOnline(cp ->
                     cp.getHandle().sendMessage(MessageFormat.format(cp.getLocale().SYSTEM_QUIT, ev.getPlayer().getHandle().getName()))
             );
+        }
+
+        /**
+         * Sets players as alive when the game starts
+         * @param ev Event
+         */
+        @EventHandler
+        public void onPhaseChange(final PhaseChangeEvent ev)
+        {
+            if (ev.getNewPhase() != WantsListen.Target.Game) return;
+
+            CPlayer.forEachOnline(cp -> cp.alive = true);
         }
     }
 

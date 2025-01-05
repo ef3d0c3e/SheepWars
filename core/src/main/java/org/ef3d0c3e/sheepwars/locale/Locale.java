@@ -92,6 +92,15 @@ public class Locale
     public String VOTE_NPCNAME;
     public String VOTE_NPCCURRENT;
 
+    // Game
+    public String GAME_COUNTDOWN_WAITTITLE;
+    public String GAME_COUNTDOWN_WAITSUBTITLE;
+    public String GAME_COUNTDOWN_STARTTITLE;
+    public String GAME_COUNTDOWN_STARTSUBTITLE;
+
+    public String GAME_KILL_DIED;
+    public String GAME_KILL_KILLED;
+
     /**
      * Constructor
      */
