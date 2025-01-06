@@ -10,7 +10,9 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -117,16 +119,36 @@ public class CosmeticManager {
             ));
 
         }
-        else
+        else if (cp.isAlive())
         {
-            board.updateTitle(ser.serialize(Component.text("SheepWars").color(TextColor.color(127, 200, 80))));
+            board.updateTitle(ser.serialize(Component.text("SheepWars").color(TextColor.color(200, 80, 120)).decorate(TextDecoration.BOLD)));
 
+            // Alive count
             lines.add("");
+            lines.add(ser.serialize(
+                    Component.text("| ").color(TextColor.color(250, 110, 210)).decorate(TextDecoration.BOLD)
+                            .append(Component.text(cp.getLocale().GAME_SCOREBOARD_ALIVE + ": ").color(TextColor.color(250, 110, 210)))
+            ));
+            lines.add(ser.serialize(
+                    Component.text(String.valueOf(cp.getTeam().getAliveCount()))
+                            .color(TextColor.color(215, 170, 55))));
+
+            // Timer
+            lines.add("");
+            lines.add(ser.serialize(
+                    Component.text("| ").color(TextColor.color(110, 120, 250)).decorate(TextDecoration.BOLD)
+                    .append(Component.text(cp.getLocale().GAME_SCOREBOARD_TIMER + ": ").color(TextColor.color(110, 120, 250)))
+            ));
             lines.add(ser.serialize(
                     Component.text(String.format("%d:%02d",
                         Game.getTimer().getMinutes(), Game.getTimer().getSeconds() % 60
                     ))
-                            .color(TextColor.color(220, 200, 60))));
+                            .color(TextColor.color(240, 230, 30))));
+        }
+        else
+        {
+            board.updateTitle(ser.serialize(Component.text("SheepWars").color(TextColor.color(200, 80, 120)).decorate(TextDecoration.BOLD)));
+            //TODO
         }
         board.updateLines(lines);
     }

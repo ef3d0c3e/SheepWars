@@ -10,6 +10,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.ef3d0c3e.sheepwars.SheepWars;
 import org.ef3d0c3e.sheepwars.maps.Map;
 import org.ef3d0c3e.sheepwars.maps.MapManager;
+import org.ef3d0c3e.sheepwars.player.CPlayer;
+import org.ef3d0c3e.sheepwars.sheeps.ExplodingSheep;
 import org.jetbrains.annotations.NotNull;
 import org.ef3d0c3e.sheepwars.game.Game;
 
@@ -42,7 +44,9 @@ public class CmdSheepWars extends Command {
         }
         else if (category.equals("debug"))
         {
-            sender.sendMessage(String.valueOf(Game.nextInt(10)));
+            final var sh = new ExplodingSheep(CPlayer.get(p));
+            sh.spawn(p.getLocation());
+
         }
         else if (category.equals("start"))
         {

@@ -1,8 +1,8 @@
 displayname: Machines Volantes
 offset: 0 20 0
 icon: OAK_PLANKS
-limbo-begin: 63
-limbo-end: 60
+limbo-begin: 50
+limbo-end: 40
 world-time: 6000
 bonus-lowest: -12 83 -6
 bonus-highest: 12 93 8

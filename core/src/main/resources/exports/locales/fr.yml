@@ -51,6 +51,9 @@ game:
   kill:
     died: "est mort"
     killed: "a été tué par "
+  scoreboard:
+    alive: "En vie"
+    timer: "Timer"
 scoreboard:
   kit: "Kit"
   kitnone: "Choisissez un kit"

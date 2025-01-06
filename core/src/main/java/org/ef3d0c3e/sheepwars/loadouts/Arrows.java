@@ -3,7 +3,6 @@ package org.ef3d0c3e.sheepwars.loadouts;
 import lombok.NonNull;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.ef3d0c3e.sheepwars.kits.kit.KitArcher;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 
 public class Arrows extends RefillResource{

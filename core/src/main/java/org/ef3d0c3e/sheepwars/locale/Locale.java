@@ -102,8 +102,12 @@ public class Locale
     public String GAME_COUNTDOWN_STARTTITLE;
     public String GAME_COUNTDOWN_STARTSUBTITLE;
 
+    public String GAME_SCOREBOARD_ALIVE;
+    public String GAME_SCOREBOARD_TIMER;
+
     public String GAME_KILL_DIED;
     public String GAME_KILL_KILLED;
+
 
     // Loadouts
     public String LOADOUT_SWORD;
