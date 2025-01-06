@@ -81,6 +81,11 @@ kit:
     desc:
       - " - Vous avez un bâton magique"
       - " - Vous obtenez plus de moutons de destruction"
+  archer:
+    name: "Archer"
+    desc:
+      - " - Vous avez un arc plus fort"
+      - " - Vous avez plus de fleches"
 vote:
   picker: "Votez pour une carte"
   npcname: "Votez pour une carte"

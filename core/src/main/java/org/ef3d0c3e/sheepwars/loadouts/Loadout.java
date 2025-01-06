@@ -118,5 +118,8 @@ public abstract class Loadout {
         return item;
     }
 
+    public int arrowCount() { return 3; }
+
     public @NonNull List<ItemStack> items() { return List.of(); };
+
 }

@@ -87,6 +87,10 @@ public class Locale
     public String KIT_MAGE_NAME;
     public List<String> KIT_MAGE_DESC;
 
+    // Archer kit
+    public String KIT_ARCHER_NAME;
+    public List<String> KIT_ARCHER_DESC;
+
     // Vote
     public String VOTE_PICKER;
     public String VOTE_NPCNAME;
