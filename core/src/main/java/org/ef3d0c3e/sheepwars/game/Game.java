@@ -19,6 +19,12 @@ import org.ef3d0c3e.sheepwars.player.CPlayer;
 import java.text.MessageFormat;
 import java.util.Random;
 
+/*
+Small TODO list
+ - When a player disconnects from a game, they'll become dead after 30 seconds
+ - Make a revive system, and all that implies, like what happens if player gets revived after game ends etc..
+ */
+
 public class Game {
     private static void changePhase(WantsListen.Target phase)
     {

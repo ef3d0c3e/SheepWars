@@ -27,6 +27,14 @@ public class GameStart implements Listener {
     @EventHandler
     public void onPhaseChange(final PhaseChangeEvent e)
     {
+        // Update team counts
+        CPlayer.forEachOnline(cp -> {
+            final var team = cp.getTeam();
+            cp.setAlive(true);
+            team.setAliveCount(team.getAliveCount() + 1);
+        });
+
+        // Start countdown
         new BukkitRunnable() {
             /**
              * Elapsed seconds
@@ -48,6 +56,12 @@ public class GameStart implements Listener {
                                 20,
                                 10
                                 );
+                    });
+
+                    // Give loadouts to players
+                    CPlayer.forEachOnline(cp -> {
+                        final var loadout = cp.getKit().loadout(cp);
+                        loadout.apply(cp);
                     });
                     this.cancel();
                 }

@@ -124,7 +124,7 @@ public class CPlayer {
     /**
      * Whether the player is alive
      */
-    @Getter
+    @Getter @Setter
     private boolean alive = false;
 
     /**

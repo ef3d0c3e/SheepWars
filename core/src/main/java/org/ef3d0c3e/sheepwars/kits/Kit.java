@@ -3,6 +3,7 @@ package org.ef3d0c3e.sheepwars.kits;
 import lombok.NonNull;
 import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.ItemStack;
+import org.ef3d0c3e.sheepwars.loadouts.Loadout;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 
 public abstract class Kit {
@@ -39,5 +40,12 @@ public abstract class Kit {
      * @return Data
      */
     public abstract @NonNull KitData createData(final @NonNull CPlayer cp);
+
+    /**
+     * Gets the loadout for the kit
+     * @param cp The player
+     * @return The loadout
+     */
+    public abstract @NonNull Loadout loadout(final @NonNull CPlayer cp);
 
 }

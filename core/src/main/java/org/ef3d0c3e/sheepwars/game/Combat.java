@@ -3,6 +3,7 @@ package org.ef3d0c3e.sheepwars.game;
 import io.github.retrooper.packetevents.adventure.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.GameMode;
 import org.bukkit.Particle;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -168,7 +169,7 @@ public class Combat implements Listener {
     }
 
     /**
-     * Regenerate part of fall damage
+     * Regenerate part of fall damage and prevent death
      */
     @EventHandler
     public void onFallDamage(final EntityDamageEvent ev)
@@ -182,19 +183,17 @@ public class Combat implements Listener {
         if (!cp.isAlive())
             return;
         if (ev.getDamage()+1 >= cp.getHandle().getHealth())
-            ev.setDamage(cp.getHandle().getHealth());
+            ev.setDamage(cp.getHandle().getHealth() - 1);
         cp.getCombatData().regenQueue = (int)(ev.getFinalDamage() * 0.40);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerDamage(final EntityDamageEvent ev)
     {
-        if (!(ev.getEntity() instanceof Player))
+        if (ev.isCancelled() || !(ev.getEntity() instanceof Player))
             return;
-        Bukkit.getConsoleSender().sendMessage("HERE1");
         if (!Game.hasStarted())
         {
-            Bukkit.getConsoleSender().sendMessage("HERE");
             ev.setCancelled(true);
             return;
         }
@@ -241,32 +240,6 @@ public class Combat implements Listener {
 
         ev.setCancelled(true);
         final CPlayer killer = victim.getCombatData().getKiller();
-        final var ser = LegacyComponentSerializer.legacy('§');
-        if (killer == null)
-            CPlayer.forEachOnline(cp -> {
-                cp.getHandle().sendMessage(ser.serialize(
-                        Component.text("{").color(TextColor.color(90, 90, 90))
-                                .append(Component.text("☠").color(TextColor.color(220, 30, 20)))
-                                .append(Component.text("} ").color(TextColor.color(90, 90, 90)))
-                                .append(Component.text(victim.getHandle().getName()).color(victim.getTeam().getColor()))
-                                .append(Component.text(" "))
-                                .append(Component.text(cp.getLocale().GAME_KILL_DIED).color(TextColor.color(190, 190, 190))
-                                )));
-            });
-        else
-            CPlayer.forEachOnline(cp -> {
-                cp.getHandle().sendMessage(ser.serialize(
-                        Component.text("{").color(TextColor.color(90, 90, 90))
-                                .append(Component.text("☠").color(TextColor.color(220, 30, 20)))
-                                .append(Component.text("} ").color(TextColor.color(90, 90, 90)))
-                                .append(Component.text(victim.getHandle().getName()).color(victim.getTeam().getColor()))
-                                .append(Component.text(" "))
-                                .append(Component.text(cp.getLocale().GAME_KILL_KILLED).color(TextColor.color(190, 190, 190))
-                                .append(Component.text(" "))
-                                .append(Component.text(killer.getHandle().getName()).color(killer.getTeam().getColor()))
-                                )));
-            });
-
         Bukkit.getPluginManager().callEvent(new CPlayerDamageEvent(victim, killer, ev, true));
         Bukkit.getPluginManager().callEvent(new CPlayerDeathEvent(victim, killer));
     }

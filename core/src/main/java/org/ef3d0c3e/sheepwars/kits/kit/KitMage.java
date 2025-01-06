@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.ef3d0c3e.sheepwars.Util;
 import org.ef3d0c3e.sheepwars.kits.Kit;
 import org.ef3d0c3e.sheepwars.kits.KitData;
+import org.ef3d0c3e.sheepwars.loadouts.Loadout;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 
 public class KitMage extends Kit {
@@ -46,5 +47,10 @@ public class KitMage extends Kit {
     @Override
     public @NonNull KitData createData(@NonNull CPlayer cp) {
         return new Data();
+    }
+
+    @Override
+    public @NonNull Loadout loadout(@NonNull CPlayer cp) {
+        return new Loadout(cp) {};
     }
 }

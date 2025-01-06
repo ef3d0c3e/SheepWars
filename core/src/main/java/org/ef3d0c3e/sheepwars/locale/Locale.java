@@ -101,6 +101,14 @@ public class Locale
     public String GAME_KILL_DIED;
     public String GAME_KILL_KILLED;
 
+    // Loadouts
+    public String LOADOUT_SWORD;
+    public String LOADOUT_BOW;
+    public String LOADOUT_ARMOR_HEAD;
+    public String LOADOUT_ARMOR_BODY;
+    public String LOADOUT_ARMOR_LEGGINGS;
+    public String LOADOUT_ARMOR_BOOTS;
+
     /**
      * Constructor
      */

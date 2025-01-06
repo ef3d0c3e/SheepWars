@@ -85,3 +85,11 @@ vote:
   picker: "Votez pour une carte"
   npcname: "Votez pour une carte"
   npccurrent: "Votre vote:"
+loadout:
+  sword: "Épée"
+  bow: "Arc"
+  armor:
+    head: "Casque"
+    body: "Plastron"
+    leggings: "Jambières"
+    boots: "Bottes"

@@ -6,6 +6,7 @@ import jline.internal.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
@@ -32,6 +33,9 @@ public abstract class Team {
     private final Material banner;
 
     private HashSet<CPlayer> players;
+
+    @Getter @Setter
+    private int aliveCount = 0;
 
     private Team(final ChatColor chatColor, final TextColor color, final Material banner)
     {

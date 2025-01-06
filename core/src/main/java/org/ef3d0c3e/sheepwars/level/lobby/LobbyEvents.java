@@ -7,6 +7,7 @@ import com.github.retrooper.packetevents.protocol.player.User;
 import com.github.retrooper.packetevents.protocol.player.UserProfile;
 import com.github.retrooper.packetevents.protocol.world.Location;
 import com.github.retrooper.packetevents.util.Vector3d;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -42,6 +43,10 @@ public class LobbyEvents implements Listener
     {
         if (Game.getLobby().getSpawn() != null) // For /reload only since lobby won't be null after server restart
             ev.getPlayer().getHandle().teleport(Game.getLobby().getSpawn());
+
+        ev.getPlayer().getHandle().setHealth(20);
+        ev.getPlayer().getHandle().setFoodLevel(20);
+        ev.getPlayer().getHandle().setRemainingAir(20);
 
         final PlayerInventory inv = ev.getPlayer().getHandle().getInventory();
         inv.clear();

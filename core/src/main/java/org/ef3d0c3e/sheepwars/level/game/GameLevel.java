@@ -36,7 +36,7 @@ public class GameLevel extends Level {
      */
     public @NonNull Location getSpawnLocation(final @NonNull CPlayer cp)
     {
-        if (cp.getTeam() == null)
+        if (cp.getTeam() == null || !cp.isAlive())
             return this.getHandle().getSpawnLocation();
         final var spawns = cp.getTeam() == BLUE ? map.getBlueSpawns() : map.getRedSpawns();
         final var yaw = cp.getTeam() == BLUE ? map.getBlueYaw() : map.getRedYaw();
@@ -44,6 +44,22 @@ public class GameLevel extends Level {
 
         return new Location(getHandle(), loc.getX(), loc.getY(), loc.getZ(), yaw, 0.f);
     }
+
+    /**
+     * Gets strength of limbo effect
+     * @param y Entity height
+     * @return Strength [0,1]
+     */
+    public float getLimboStrength(double y)
+    {
+        if (y >= map.getLimboBegin())
+            return 0.f;
+        if (y <= map.getLimboEnd())
+            return 1.f;
+
+        return 1.f-((float)(y-map.getLimboEnd())) / ((float)(map.getLimboBegin()-map.getLimboEnd()));
+    }
+
 
     @Override
     protected void onLoad(Chunk chunk, boolean newChunk) {
