@@ -17,7 +17,7 @@ public class Arrows extends RefillResource{
 
         // If player still has arrow, increment their amount
         for (final ItemStack item : inv) {
-            if (item.getType() == Material.ARROW)
+            if (item != null && item.getType() == Material.ARROW)
             {
                 item.setAmount(item.getAmount() + 1);
                 return;

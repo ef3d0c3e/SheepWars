@@ -28,7 +28,7 @@ public abstract class RefillResource {
         final var inv = cp.getHandle().getInventory();
         AtomicInteger count = new AtomicInteger();
         inv.forEach(item -> {
-            if (item.getType() == mat) {
+            if (item != null && item.getType() == mat) {
                 count.set(count.get() + item.getAmount());
             }
         });
@@ -69,7 +69,7 @@ public abstract class RefillResource {
         for (final @NonNull RefillResource resource : RESOURCES) {
             if (tick % resource.delay != 0) continue;
 
-            CPlayer.forEachOnline(cp -> {
+            CPlayer.forEach(cp -> cp.isOnline() && cp.isAlive(), cp -> {
                 if (resource.refillPredicate(cp)) {
                     resource.refillItem(cp);
                 }

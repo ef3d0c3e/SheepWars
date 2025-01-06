@@ -12,6 +12,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.ef3d0c3e.sheepwars.SheepWars;
 import org.ef3d0c3e.sheepwars.events.PhaseChangeEvent;
 import org.ef3d0c3e.sheepwars.events.WantsListen;
+import org.ef3d0c3e.sheepwars.loadouts.Arrows;
+import org.ef3d0c3e.sheepwars.loadouts.RefillResource;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 
 import java.text.MessageFormat;
@@ -63,6 +65,9 @@ public class GameStart implements Listener {
                         final var loadout = cp.getKit().loadout(cp);
                         loadout.apply(cp);
                     });
+
+                    // Register resources
+                    RefillResource.addResource(new Arrows());
                     this.cancel();
                 }
                 else

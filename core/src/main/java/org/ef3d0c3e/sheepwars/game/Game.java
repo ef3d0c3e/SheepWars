@@ -11,6 +11,7 @@ import org.ef3d0c3e.sheepwars.kits.KitManager;
 import org.ef3d0c3e.sheepwars.level.LevelFactory;
 import org.ef3d0c3e.sheepwars.level.game.GameLevel;
 import org.ef3d0c3e.sheepwars.level.lobby.LobbyLevel;
+import org.ef3d0c3e.sheepwars.loadouts.RefillResource;
 import org.ef3d0c3e.sheepwars.maps.Map;
 import org.ef3d0c3e.sheepwars.maps.MapManager;
 import org.ef3d0c3e.sheepwars.packets.PacketListenerFactory;
@@ -72,6 +73,9 @@ public class Game {
                     cp.getCosmetics().updateScoreboard();
                 });
             }
+
+            // Tick Resources
+            RefillResource.tick(elapsed);
             ++elapsed;
         }
     }
