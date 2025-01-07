@@ -1,9 +1,8 @@
-package org.ef3d0c3e.sheepwars.versions;
+package org.ef3d0c3e.sheepwars.player.skin;
 
 import com.mojang.authlib.properties.PropertyMap;
 import lombok.NonNull;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
-import org.ef3d0c3e.sheepwars.player.skin.Skin;
 
 public interface SkinVersionWrapper
 {

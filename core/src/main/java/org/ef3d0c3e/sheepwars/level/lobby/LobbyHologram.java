@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.util.Vector;
 import org.bukkit.inventory.ItemStack;
+import org.ef3d0c3e.sheepwars.SheepWars;
 import org.ef3d0c3e.sheepwars.events.WantsListen;
 import org.ef3d0c3e.sheepwars.hologram.Hologram;
 import org.ef3d0c3e.sheepwars.hologram.HologramComponent;
@@ -18,12 +19,11 @@ import org.ef3d0c3e.sheepwars.hologram.HologramTextComponent;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 
 public class LobbyHologram  extends Hologram {
-    private static final int NETWORK_ID = 0xFF877710;
     private final Location location;
 
     public LobbyHologram(final Location location)
     {
-        super(NETWORK_ID);
+        super();
         this.location = location;
 
         // Center item

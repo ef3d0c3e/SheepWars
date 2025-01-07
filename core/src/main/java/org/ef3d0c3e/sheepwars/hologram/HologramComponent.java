@@ -31,9 +31,9 @@ public abstract class HologramComponent
     /**
      * Builds hologram packets
      *
-     * @param networkId Base network id
+     * @param networkIds Available network ids
      * @param cp        Player to build hologram component for
      * @return Packets to display component
      */
-    protected abstract @NonNull List<PacketWrapper<?>> build(final @NonNull Location location, final int networkId, final @NonNull CPlayer cp);
+    protected abstract @NonNull List<PacketWrapper<?>> build(final @NonNull Location location, final @NonNull List<Integer> networkIds, final @NonNull CPlayer cp);
 }

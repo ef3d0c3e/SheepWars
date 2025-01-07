@@ -32,14 +32,16 @@ public abstract class HologramTextComponent extends HologramComponent
 
     protected abstract @NonNull Component getText(final @NonNull CPlayer cp);
 
+    @Override
     protected int getNetworkOffset() { return 1; }
 
-    protected @NonNull List<PacketWrapper<?>> build(final @NonNull Location location, final int networkId, final @NonNull CPlayer cp)
+    @Override
+    protected @NonNull List<PacketWrapper<?>> build(final @NonNull Location location, final @NonNull List<Integer> networkIds, final @NonNull CPlayer cp)
     {
         // Spawn
         final Location loc = location.clone().add(getOffset());
         final WrapperPlayServerSpawnEntity spawn = new WrapperPlayServerSpawnEntity(
-                networkId, Optional.of(UUID.randomUUID()),
+                networkIds.get(0), Optional.of(UUID.randomUUID()),
                 EntityTypes.ARMOR_STAND,
                 new Vector3d(loc.getX(), loc.getY(), loc.getZ()),
                 loc.getYaw(), 0.f, loc.getPitch(),
@@ -48,7 +50,7 @@ public abstract class HologramTextComponent extends HologramComponent
         );
         // Metadata
         final WrapperPlayServerEntityMetadata meta = new WrapperPlayServerEntityMetadata(
-                networkId,
+                networkIds.get(0),
                 Arrays.asList(
                         new EntityMetadata.Status()
                                 .isInvisible(true)

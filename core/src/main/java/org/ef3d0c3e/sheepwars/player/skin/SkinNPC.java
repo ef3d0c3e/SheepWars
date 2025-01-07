@@ -24,7 +24,7 @@ import org.ef3d0c3e.sheepwars.player.CPlayer;
 import java.util.List;
 
 public class SkinNPC extends PlayerNPC {
-    private static final int NETWORK_ID = 0xFF777710;
+    private static final int NETWORK_ID = SheepWars.getNextEntityId();
     private final Location location;
 
     public SkinNPC(Location location)

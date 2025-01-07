@@ -101,3 +101,8 @@ loadout:
     body: "Plastron"
     leggings: "Jambières"
     boots: "Bottes"
+sheeps:
+  explosive:
+    name: "Explosif"
+    desc:
+      - "Ce mouton crée une explosion après un délai"

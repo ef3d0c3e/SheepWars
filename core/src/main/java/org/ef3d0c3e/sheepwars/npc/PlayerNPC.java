@@ -14,12 +14,15 @@ import lombok.Getter;
 import lombok.NonNull;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.ef3d0c3e.sheepwars.SheepWars;
 import org.ef3d0c3e.sheepwars.packets.ArmorStandMetadata;
 import org.ef3d0c3e.sheepwars.packets.EntityMetadata;
 import org.ef3d0c3e.sheepwars.packets.PlayerMetadata;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 
+import java.text.MessageFormat;
 import java.util.*;
 
 public abstract class PlayerNPC
@@ -33,6 +36,18 @@ public abstract class PlayerNPC
 	private final int networkId;
 	@Getter
 	private final HashMap<CPlayer, Long> lastInteracted;
+	@Getter
+	private final ArrayList<Integer> availableNetworkIds = new ArrayList<>();
+
+	/**
+	 * Reserves network ids for later use
+	 * @param amount Amount to reserve
+	 */
+	private void reserveNetworkIds(int amount)
+	{
+		while (availableNetworkIds.size() < amount)
+			availableNetworkIds.add(SheepWars.getNextEntityId());
+	}
 
 	public long lastInteracted(@NonNull CPlayer cp) {
 		final Object last = lastInteracted.get(cp);
@@ -133,11 +148,8 @@ public abstract class PlayerNPC
 	 */
 	protected void removeNametag(final @NonNull CPlayer cp, int number)
 	{
-		final int eids[] = new int[number];
-		for (int i = 0; i < number; ++i) eids[i] = getNetworkId() + i + 1;
-
 		final WrapperPlayServerDestroyEntities remove = new WrapperPlayServerDestroyEntities();
-		remove.setEntityIds(eids);
+		remove.setEntityIds(availableNetworkIds.stream().mapToInt(Integer::intValue).toArray());
 
 		PacketEvents.getAPI().getPlayerManager().sendPacket(cp.getHandle(), remove);
 	}
@@ -148,10 +160,14 @@ public abstract class PlayerNPC
 		int i = 0;
 		for (final Component tag : tags)
 		{
+			// Reserve a new network id
+			reserveNetworkIds(i + 1);
+
 			// Spawn
 			final Location loc = getLocation(cp);
 			final WrapperPlayServerSpawnEntity spawn = new WrapperPlayServerSpawnEntity(
-					networkId+i+1, Optional.of(UUID.randomUUID()),
+                    availableNetworkIds.get(i),
+					Optional.of(UUID.randomUUID()),
 					EntityTypes.ARMOR_STAND,
 					new Vector3d(loc.getX(), loc.getY()+(tags.size()-i-1)*0.3+1.80, loc.getZ()),
 					0.f, 0.f, 0.f,
@@ -160,7 +176,7 @@ public abstract class PlayerNPC
 			);
 			// Metadata
 			final WrapperPlayServerEntityMetadata meta = new WrapperPlayServerEntityMetadata(
-					networkId+i+1,
+                    availableNetworkIds.get(i),
 					Arrays.asList(
 							new EntityMetadata.Status()
 									.isInvisible(true)

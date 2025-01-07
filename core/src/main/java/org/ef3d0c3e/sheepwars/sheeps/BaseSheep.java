@@ -3,13 +3,25 @@ package org.ef3d0c3e.sheepwars.sheeps;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import net.kyori.adventure.text.Component;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Sheep;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerLevelChangeEvent;
 import org.bukkit.util.Vector;
+import org.ef3d0c3e.sheepwars.SheepWars;
+import org.ef3d0c3e.sheepwars.events.CPlayerJoinEvent;
+import org.ef3d0c3e.sheepwars.events.WantsListen;
 import org.ef3d0c3e.sheepwars.game.Game;
+import org.ef3d0c3e.sheepwars.hologram.Hologram;
+import org.ef3d0c3e.sheepwars.hologram.HologramTextComponent;
+import org.ef3d0c3e.sheepwars.hologram.PassengerHologram;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 import org.ef3d0c3e.sheepwars.versions.AutoWrapper;
+
+import java.awt.*;
 
 public abstract class BaseSheep {
     @AutoWrapper(name = "Sheep")
@@ -28,6 +40,12 @@ public abstract class BaseSheep {
     private final @NonNull CPlayer owner;
 
     /**
+     * The sheep's nametag
+     */
+    @Getter
+    private PassengerHologram nametag = null;
+
+    /**
      * Handle to the custom sheep class
      */
     @Getter @Setter
@@ -44,9 +62,26 @@ public abstract class BaseSheep {
     /**
      * Spawns the sheep and sets the handle to the custom wrapper class
      * @param location The location to spawn the sheep at
+     * @param baby Whether to create a baby sheep
      */
-    public final void spawn(final @NonNull Location location) {
-        WRAPPER.spawn(this, location);
+    public final void spawn(final @NonNull Location location, final boolean baby) {
+        WRAPPER.spawn(this, location, baby);
+
+        nametag = new PassengerHologram(getNetworkId()) {
+            @Override
+            public @NonNull Location getLocation(@NonNull CPlayer cp) {
+                return cp.getHandle().getLocation();
+            }
+        };
+        nametag.addComponent(new HologramTextComponent(new Vector(0, 0, 0)) {
+            @Override
+            protected @NonNull Component getText(@NonNull CPlayer cp) {
+                return getName(cp);
+            }
+        });
+
+        // Send nametag
+        CPlayer.forEachOnline(nametag::send);
     }
 
     /**
@@ -87,6 +122,11 @@ public abstract class BaseSheep {
         WRAPPER.setColor(this, color);
     }
 
+    public final int getNetworkId()
+    {
+        return WRAPPER.getNetworkId(this);
+    }
+
     /**
      * Gets the height at which the sheep should despawn
      * @return The despawn height of the sheep
@@ -101,6 +141,8 @@ public abstract class BaseSheep {
             return 0;
     }
 
+    public abstract @NonNull Component getName(final @NonNull CPlayer cp);
+
     /**
      * Spawns launch particle trail
      * @param time The duration since launch (in ticks)
@@ -111,10 +153,54 @@ public abstract class BaseSheep {
      * Gets the dye color of the sheep
      * @return The dye color
      */
-    public abstract DyeColor getColor();
+    public abstract DyeColor getDyeColor();
 
     /**
      * Performs logic for the sheep every ticks
      */
     public abstract void tick();
+
+    /**
+     * Method called when the sheep is removed (killed, dispawns, ...)
+     */
+    public void onRemove() {
+        // Unsend nametag
+        CPlayer.forEachOnline(nametag::unsend);
+    }
+
+    @WantsListen(phase = WantsListen.Target.Always)
+    public static class Events implements Listener
+    {
+        /**
+         * Resend hologram to the player
+         * @param ev Event
+         */
+        @EventHandler
+        public void onJoin(final CPlayerJoinEvent ev) {
+            final var world = ev.getPlayer().getHandle().getWorld();
+
+            world.getLivingEntities().forEach((ent) -> {
+                final var sheep = WRAPPER.getInstance(ent);
+                if (sheep == null) return;
+                sheep.nametag.send(ev.getPlayer());
+            });
+        }
+
+        /**
+         * Resend hologram to the player
+         * @param ev Event
+         */
+        @EventHandler
+        public void onWorldChange(final PlayerLevelChangeEvent ev)
+        {
+            final var world = ev.getPlayer().getWorld();
+            final var cp = CPlayer.get(ev.getPlayer());
+
+            world.getLivingEntities().forEach((ent) -> {
+                final var sheep = WRAPPER.getInstance(ent);
+                if (sheep == null) return;
+                sheep.nametag.send(cp);
+            });
+        }
+    }
 }

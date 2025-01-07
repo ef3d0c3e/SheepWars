@@ -10,6 +10,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftLivingEntity;
 import org.bukkit.util.Vector;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_21_R1.CraftWorld;
@@ -35,9 +36,10 @@ public class Sheep implements SheepVersionWrapper {
         private Vec3 launchDir = null;
 
 
-        public CustomSheep(final @NonNull BaseSheep base, final @NonNull Location loc)
+        public CustomSheep(final @NonNull BaseSheep base, final @NonNull Location loc, final boolean baby)
         {
             super(EntityType.SHEEP, ((CraftWorld)loc.getWorld()).getHandle());
+            this.setBaby(baby);
             this.base = base;
             this.absMoveTo(loc.getX(), loc.getY(), loc.getZ());
         }
@@ -64,7 +66,7 @@ public class Sheep implements SheepVersionWrapper {
 
         @Override
         public DyeColor getColor() {
-            return DyeColor.byId((byte)base.getColor().ordinal());
+            return DyeColor.byId((byte)base.getDyeColor().ordinal());
         }
 
 
@@ -113,11 +115,26 @@ public class Sheep implements SheepVersionWrapper {
         protected void customServerAiStep()
         {
         }
+
+        @Override
+        public void remove(RemovalReason reason)
+        {
+            base.onRemove();
+            super.remove(reason);
+        }
     }
 
     @Override
-    public void spawn(final @NonNull BaseSheep sheep, @NonNull Location location) {
-        final var handle = new CustomSheep(sheep, location);
+    public @Nullable BaseSheep getInstance(final @NonNull org.bukkit.entity.LivingEntity entity) {
+        if (!(((CraftLivingEntity) entity).getHandle() instanceof CustomSheep handle))
+            return null;
+
+        return handle.base;
+    }
+
+    @Override
+    public void spawn(final @NonNull BaseSheep sheep, final @NonNull Location location, final boolean baby) {
+        final var handle = new CustomSheep(sheep, location, baby);
         sheep.setHandle(handle);
         handle.spawn();
     }
@@ -149,5 +166,12 @@ public class Sheep implements SheepVersionWrapper {
     public void setColor(final @NonNull BaseSheep sheep, final @NonNull org.bukkit.DyeColor color) {
         final var handle = (CustomSheep)sheep.getHandle();
         handle.setColor(DyeColor.byId(color.ordinal()));
+    }
+
+    @Override
+    public int getNetworkId(final @NonNull BaseSheep sheep)
+    {
+        final var handle = (CustomSheep)sheep.getHandle();
+        return handle.getId();
     }
 }

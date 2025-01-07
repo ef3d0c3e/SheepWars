@@ -117,6 +117,10 @@ public class Locale
     public String LOADOUT_ARMOR_LEGGINGS;
     public String LOADOUT_ARMOR_BOOTS;
 
+    // Sheeps
+    public String SHEEPS_EXPLOSIVE_NAME;
+    public List<String> SHEEPS_EXPLOSIVE_DESC;
+
     /**
      * Constructor
      */

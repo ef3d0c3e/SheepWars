@@ -127,7 +127,7 @@ public class CosmeticManager {
             lines.add("");
             lines.add(ser.serialize(
                     Component.text("| ").color(TextColor.color(250, 110, 210)).decorate(TextDecoration.BOLD)
-                            .append(Component.text(cp.getLocale().GAME_SCOREBOARD_ALIVE + ": ").color(TextColor.color(250, 110, 210)))
+                            .append(Component.text(cp.getLocale().GAME_SCOREBOARD_ALIVE + ": ").color(TextColor.color(250, 110, 210)).decoration(TextDecoration.BOLD, false))
             ));
             lines.add(ser.serialize(
                     Component.text(String.valueOf(cp.getTeam().getAliveCount()))
@@ -137,7 +137,7 @@ public class CosmeticManager {
             lines.add("");
             lines.add(ser.serialize(
                     Component.text("| ").color(TextColor.color(110, 120, 250)).decorate(TextDecoration.BOLD)
-                    .append(Component.text(cp.getLocale().GAME_SCOREBOARD_TIMER + ": ").color(TextColor.color(110, 120, 250)))
+                    .append(Component.text(cp.getLocale().GAME_SCOREBOARD_TIMER + ": ").color(TextColor.color(110, 120, 250)).decoration(TextDecoration.BOLD, false))
             ));
             lines.add(ser.serialize(
                     Component.text(String.format("%d:%02d",

@@ -30,14 +30,16 @@ public abstract class HologramItemComponent extends HologramComponent
 
     protected abstract @NonNull ItemStack getItem(final @NonNull CPlayer cp);
 
+    @Override
     protected int getNetworkOffset() { return 1; }
 
-    protected @NonNull List<PacketWrapper<?>> build(final @NonNull Location location, final int networkId, final @NonNull CPlayer cp)
+    @Override
+    protected @NonNull List<PacketWrapper<?>> build(final @NonNull Location location, final @NonNull List<Integer> networkIds, final @NonNull CPlayer cp)
     {
         // Spawn
         final Location loc = location.clone().add(getOffset());
         final WrapperPlayServerSpawnEntity spawn = new WrapperPlayServerSpawnEntity(
-                networkId, Optional.of(UUID.randomUUID()),
+                networkIds.get(0), Optional.of(UUID.randomUUID()),
                 EntityTypes.ITEM,
                 new Vector3d(loc.getX(), loc.getY(), loc.getZ()),
                 loc.getYaw(), 0.f, loc.getPitch(),
@@ -47,7 +49,7 @@ public abstract class HologramItemComponent extends HologramComponent
 
         // Metadata
         final WrapperPlayServerEntityMetadata meta = new WrapperPlayServerEntityMetadata(
-                networkId,
+                networkIds.get(0),
                 Arrays.asList(
                         new EntityMetadata.NoGravity(true).into(),
                         new EntityMetadata.Silent(true).into(),

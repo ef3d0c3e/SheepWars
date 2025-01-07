@@ -31,6 +31,19 @@ import java.util.jar.JarFile;
 
 public final class SheepWars extends JavaPlugin
 {
+    /**
+     * Counter for network IDs
+     */
+    private static int entityCounter = 0;
+
+    /**
+     * Gets the next entity network ID
+     * @return The next entity network id
+     */
+    public static int getNextEntityId() {
+        return --entityCounter;
+    }
+
     @Getter
     private static Plugin plugin;
     @Getter

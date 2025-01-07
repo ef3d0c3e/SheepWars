@@ -9,7 +9,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 import org.ef3d0c3e.sheepwars.versions.AutoWrapper;
-import org.ef3d0c3e.sheepwars.versions.SkinVersionWrapper;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

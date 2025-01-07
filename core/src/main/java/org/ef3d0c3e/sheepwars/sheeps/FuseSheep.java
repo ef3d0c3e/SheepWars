@@ -9,7 +9,12 @@ public abstract class FuseSheep extends BaseSheep{
     private int fuse = 0;
     private final int fuseTime;
 
-    public FuseSheep(final @NonNull CPlayer owner, int fuseTime) {
+    /**
+     * Creates a fuse sheep that flashes between it's color and white
+     * @param owner Owner of the sheep
+     * @param fuseTime Duration of the fuse, after which {@ref onFuseEnd} is called
+     */
+    public FuseSheep(final @NonNull CPlayer owner, final int fuseTime) {
         super(owner);
         this.fuseTime = fuseTime;
     }
@@ -30,7 +35,7 @@ public abstract class FuseSheep extends BaseSheep{
             if ((fuse / 8) % 2 == 0)
                 setColor(DyeColor.WHITE);
             else
-                setColor(getColor());
+                setColor(getDyeColor());
 
             if (fuse == fuseTime)
             {

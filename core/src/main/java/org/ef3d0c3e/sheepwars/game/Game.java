@@ -87,6 +87,15 @@ public class Game {
 
     /**
      * Generates a random integer
+     * @return A random integer
+     */
+    public static int nextInt()
+    {
+        return random.nextInt();
+    }
+
+    /**
+     * Generates a random integer
      * @param bound The bound of the random value
      * @return A random integer within [0, bound-1]
      */

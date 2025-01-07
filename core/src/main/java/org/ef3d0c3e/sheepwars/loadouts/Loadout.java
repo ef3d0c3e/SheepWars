@@ -9,6 +9,7 @@ import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
@@ -57,6 +58,7 @@ public abstract class Loadout {
             meta.setColor(color);
             meta.setDisplayName(ser.serialize(Component.text(player.getLocale().LOADOUT_ARMOR_BOOTS).color(player.getTeam().getColor())));
             meta.addEnchant(Enchantment.BINDING_CURSE, 1, true);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             item.setItemMeta(meta);
             armor.add(item);
         }
@@ -69,6 +71,7 @@ public abstract class Loadout {
             meta.setColor(color);
             meta.setDisplayName(ser.serialize(Component.text(player.getLocale().LOADOUT_ARMOR_LEGGINGS).color(player.getTeam().getColor())));
             meta.addEnchant(Enchantment.BINDING_CURSE, 1, true);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             item.setItemMeta(meta);
             armor.add(item);
         }
@@ -81,6 +84,7 @@ public abstract class Loadout {
             meta.setColor(color);
             meta.setDisplayName(ser.serialize(Component.text(player.getLocale().LOADOUT_ARMOR_BODY).color(player.getTeam().getColor())));
             meta.addEnchant(Enchantment.BINDING_CURSE, 1, true);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             item.setItemMeta(meta);
             armor.add(item);
         }
@@ -93,6 +97,7 @@ public abstract class Loadout {
             meta.setColor(color);
             meta.setDisplayName(ser.serialize(Component.text(player.getLocale().LOADOUT_ARMOR_HEAD).color(player.getTeam().getColor())));
             meta.addEnchant(Enchantment.BINDING_CURSE, 1, true);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             item.setItemMeta(meta);
             armor.add(item);
         }
@@ -119,7 +124,6 @@ public abstract class Loadout {
         final var meta = item.getItemMeta();
         meta.setUnbreakable(true);
         meta.setDisplayName(ser.serialize(Component.text(player.getLocale().LOADOUT_BOW).color(TextColor.color(180, 60, 100))));
-        meta.addEnchant(Enchantment.BINDING_CURSE, 1, true);
         item.setItemMeta(meta);
 
         return item;
