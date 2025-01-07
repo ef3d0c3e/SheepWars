@@ -1,26 +1,29 @@
 package org.ef3d0c3e.sheepwars.maps;
 
 import lombok.NonNull;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.ef3d0c3e.sheepwars.gui.ScrollableGui;
+import org.ef3d0c3e.sheepwars.locale.LocalePath;
+import org.ef3d0c3e.sheepwars.locale.Localized;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
+@LocalePath("vote.menu")
 public class VoteMenu extends ScrollableGui {
+    private static Localized<String> NAME;
+    private static Localized<String> DESC;
+
     /**
      * Constructor
      *
      * @param player Player the gui is shown to
      */
     public VoteMenu(@NonNull CPlayer player) {
-        super(2, player.getLocale().VOTE_PICKER, player);
+        super(2, NAME.localize(player), player);
     }
 
     @Override
@@ -46,7 +49,7 @@ public class VoteMenu extends ScrollableGui {
                 meta.setDisplayName("§8» §d" + map.getDisplayName() + " §8«");
             else
                 meta.setDisplayName("§d" + map.getDisplayName());
-            meta.setLore(List.of("§7" + MessageFormat.format(getPlayer().getLocale().ITEMS_VOTEDESC, votes.get(map))));
+            meta.setLore(List.of("§7" + MessageFormat.format(DESC.localize(getPlayer()), votes.get(map))));
             item.setItemMeta(meta);
             int count = Math.min(Math.max(votes.get(map), 1), 64);
             item.setAmount(count);

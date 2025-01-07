@@ -1,17 +1,20 @@
 package org.ef3d0c3e.sheepwars.kits;
 
 import lombok.NonNull;
-import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
-import org.ef3d0c3e.sheepwars.events.KitChangeEvent;
 import org.ef3d0c3e.sheepwars.gui.ScrollableGui;
+import org.ef3d0c3e.sheepwars.locale.LocalePath;
+import org.ef3d0c3e.sheepwars.locale.Localized;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 
 import java.util.ArrayList;
 
+@LocalePath("kit.menu")
 public class KitMenu extends ScrollableGui {
+    private static Localized<String> NAME;
+
     public KitMenu(@NonNull CPlayer player) {
-        super(2, player.getLocale().KIT_PICKER, player);
+        super(2, NAME.localize(player), player);
     }
 
     @Override

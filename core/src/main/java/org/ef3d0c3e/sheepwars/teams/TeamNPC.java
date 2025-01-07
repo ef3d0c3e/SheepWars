@@ -14,13 +14,19 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.ef3d0c3e.sheepwars.SheepWars;
 import org.ef3d0c3e.sheepwars.events.TeamChangeEvent;
 import org.ef3d0c3e.sheepwars.events.WantsListen;
+import org.ef3d0c3e.sheepwars.locale.LocalePath;
+import org.ef3d0c3e.sheepwars.locale.Localized;
 import org.ef3d0c3e.sheepwars.npc.NPCFactory;
 import org.ef3d0c3e.sheepwars.npc.PlayerNPC;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 
 import java.util.List;
 
+@LocalePath("team.npc")
 public class TeamNPC extends PlayerNPC {
+    private static Localized<String> NAME;
+    private static Localized<String> CURRENT;
+
     private static final int NETWORK_ID = SheepWars.getNextEntityId();
     private final Location location;
 
@@ -38,15 +44,15 @@ public class TeamNPC extends PlayerNPC {
     protected @NonNull List<Component> getNametag(@NonNull CPlayer cp) {
         if (cp.getTeam() == null) // May not happen in lobby mode
             return Lists.newArrayList(
-                    Component.text(cp.getLocale().TEAM_NPCNAME)
+                    Component.text(NAME.localize(cp))
                             .color(TextColor.color(207, 50, 200))
                             .decorate(TextDecoration.BOLD));
         else
             return Lists.newArrayList(
-                    Component.text(cp.getLocale().TEAM_NPCNAME)
+                    Component.text(NAME.localize(cp))
                             .color(TextColor.color(207, 50, 200))
                             .decorate(TextDecoration.BOLD),
-                    Component.text(cp.getLocale().TEAM_NPCCURRENT)
+                    Component.text(CURRENT.localize(cp))
                             .color(TextColor.color(85, 85, 127))
                             .decorate(TextDecoration.UNDERLINED),
                     cp.getTeam().getColoredName(cp)

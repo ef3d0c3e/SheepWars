@@ -7,14 +7,21 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.ef3d0c3e.sheepwars.Util;
 import org.ef3d0c3e.sheepwars.gui.ScrollableGui;
+import org.ef3d0c3e.sheepwars.locale.LocalePath;
+import org.ef3d0c3e.sheepwars.locale.Localized;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+@LocalePath("skin.menu")
 public class SkinMenu extends ScrollableGui
 {
+    private static Localized<String> NAME;
+    private static Localized<String> INFO_NAME;
+    private static Localized<List<String>> INFO_LORE;
+
     @Override
     public void onClick(int id, @NonNull ItemStack item)
     {
@@ -50,8 +57,8 @@ public class SkinMenu extends ScrollableGui
 
         final ItemStack item = new ItemStack(Material.NETHER_STAR);
         final ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("§6" + MessageFormat.format(getPlayer().getLocale().SKIN_MENU, "§a" + getPlayer().getCosmetics().getCurrentSkin().getName()));
-        meta.setLore(Util.coloredLore("§7", getPlayer().getLocale().SKIN_MENULORE));
+        meta.setDisplayName("§6" + MessageFormat.format(INFO_NAME.localize(getPlayer()), "§a" + getPlayer().getCosmetics().getCurrentSkin().getName()));
+        meta.setLore(Util.coloredLore("§7", INFO_LORE.localize(getPlayer())));
         item.setItemMeta(meta);
 
         return Lists.newArrayList(null, null, null, item, null, null, null);
@@ -59,7 +66,7 @@ public class SkinMenu extends ScrollableGui
 
     public SkinMenu(final CPlayer cp)
     {
-        super(4, cp.getLocale().SKIN_PICKER, cp);
+        super(4, NAME.localize(cp), cp);
     }
 }
 

@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
@@ -19,17 +18,45 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.ef3d0c3e.sheepwars.events.*;
 import org.ef3d0c3e.sheepwars.game.Game;
+import org.ef3d0c3e.sheepwars.locale.LocalePath;
+import org.ef3d0c3e.sheepwars.locale.LocalizeAs;
+import org.ef3d0c3e.sheepwars.locale.Localized;
 import org.ef3d0c3e.sheepwars.maps.MapManager;
 import org.ef3d0c3e.sheepwars.player.skin.Skin;
 
 import javax.annotation.Nullable;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 
 /**
  * Manages cosmetics for the player
  */
 public class CosmeticManager {
+    @LocalePath("cosmetic.scoreboard.lobby")
+    private static class LobbyScoreboard {
+        static Localized<String> FOOTER;
+
+        @LocalizeAs("team.name")
+        static Localized<String> TEAM_NAME;
+
+        @LocalizeAs("kit.name")
+        static Localized<String> KIT_NAME;
+        @LocalizeAs("kit.none")
+        static Localized<String> KIT_NONE;
+
+
+        @LocalizeAs("vote.name")
+        static Localized<String> VOTE_NAME;
+        @LocalizeAs("vote.none")
+        static Localized<String> VOTE_NONE;
+    }
+
+    @LocalePath("cosmetic.scoreboard.game")
+    private static class GameScoreboard {
+        static Localized<String> ALIVE;
+        static Localized<String> TIMER;
+    }
+
+
     private final CPlayer cp;
 
     @Getter @Setter
@@ -79,7 +106,7 @@ public class CosmeticManager {
             // Team
             lines.add(ser.serialize(
                     Component.text(" * ").color(TextColor.color(180, 180, 255))
-                            .append(Component.text(cp.getLocale().SCOREBOARD_TEAM + ": ")
+                            .append(Component.text(LobbyScoreboard.TEAM_NAME.localize(cp) + ": ")
                             .color(TextColor.color(200, 200, 220)))
                 .append(cp.getTeam().getColoredName(cp))
             ));
@@ -87,14 +114,14 @@ public class CosmeticManager {
             if (cp.getKit() != null)
                 lines.add(ser.serialize(
                         Component.text(" * ").color(TextColor.color(180, 180, 255))
-                                .append(Component.text(cp.getLocale().SCOREBOARD_KIT + ": ")
+                                .append(Component.text(LobbyScoreboard.KIT_NAME.localize(cp) + ": ")
                                 .color(TextColor.color(200, 200, 210)))
                                 .append(cp.getKit().getColoredName(cp))
                 ));
             else
                 lines.add(ser.serialize(
                         Component.text(" * ").color(TextColor.color(180, 180, 255))
-                                .append(Component.text(cp.getLocale().SCOREBOARD_KITNONE)
+                                .append(Component.text(LobbyScoreboard.KIT_NONE.localize(cp))
                                 .color(TextColor.color(200, 200, 210)))
                 ));
             // Vote
@@ -102,20 +129,20 @@ public class CosmeticManager {
             if (map != null)
                 lines.add(ser.serialize(
                         Component.text(" * ").color(TextColor.color(180, 180, 255))
-                                .append(Component.text(cp.getLocale().SCOREBOARD_VOTE + ": ")
+                                .append(Component.text(LobbyScoreboard.VOTE_NAME.localize(cp) + ": ")
                                 .color(TextColor.color(200, 200, 200)))
                                 .append(Component.text(map.getDisplayName()).color(TextColor.color(80, 200, 110)))
                 ));
             else
                 lines.add(ser.serialize(
                         Component.text(" * ").color(TextColor.color(180, 180, 255))
-                                .append(Component.text(cp.getLocale().SCOREBOARD_VOTENONE)
+                                .append(Component.text(LobbyScoreboard.VOTE_NONE.localize(cp))
                                 .color(TextColor.color(200, 200, 200)))
                 ));
 
             lines.add("");
             lines.add(ser.serialize(
-                    Component.text(cp.getLocale().SCOREBOARD_FOOTER).color(TextColor.color(200, 120, 60))
+                    Component.text(LobbyScoreboard.FOOTER.localize(cp)).color(TextColor.color(200, 120, 60))
             ));
 
         }
@@ -127,7 +154,7 @@ public class CosmeticManager {
             lines.add("");
             lines.add(ser.serialize(
                     Component.text("| ").color(TextColor.color(250, 110, 210)).decorate(TextDecoration.BOLD)
-                            .append(Component.text(cp.getLocale().GAME_SCOREBOARD_ALIVE + ": ").color(TextColor.color(250, 110, 210)).decoration(TextDecoration.BOLD, false))
+                            .append(Component.text(GameScoreboard.ALIVE.localize(cp) + ": ").color(TextColor.color(250, 110, 210)).decoration(TextDecoration.BOLD, false))
             ));
             lines.add(ser.serialize(
                     Component.text(String.valueOf(cp.getTeam().getAliveCount()))
@@ -137,7 +164,7 @@ public class CosmeticManager {
             lines.add("");
             lines.add(ser.serialize(
                     Component.text("| ").color(TextColor.color(110, 120, 250)).decorate(TextDecoration.BOLD)
-                    .append(Component.text(cp.getLocale().GAME_SCOREBOARD_TIMER + ": ").color(TextColor.color(110, 120, 250)).decoration(TextDecoration.BOLD, false))
+                    .append(Component.text(GameScoreboard.TIMER.localize(cp) + ": ").color(TextColor.color(110, 120, 250)).decoration(TextDecoration.BOLD, false))
             ));
             lines.add(ser.serialize(
                     Component.text(String.format("%d:%02d",

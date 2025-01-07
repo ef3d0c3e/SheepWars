@@ -1,6 +1,6 @@
 config:
   name: "french"
-  displayname: "Français"
+  displayName: "Français"
   banner:
     ==: org.bukkit.inventory.ItemStack
     v: 3578
@@ -21,64 +21,83 @@ system:
 gui:
   next: "Suivant"
   previous: "Précédent"
-items:
-  rightclick: "(Click-Droit)"
-  rocket: "Roquette"
-  team: "Équipe"
-  teamlore:
-    - "Utilisez cet item pour"
-    - "changer d'équipe"
-  vote: "Vote"
-  votelore:
-    - "Votez pour une carte"
-    - "avec cet item"
-  votedesc: "{0} vote(s)"
-  skin: "Skin"
-  skinlore:
-    - "Utilisez cet item pour"
-    - "changer de skin"
-  kit: "Kit"
-  kitlore:
-    - "Utilisez cet item pour"
-    - "changer de kit"
-game:
-  mapstart: "La partie va commencer sur {0}"
-  countdown:
-    waittitle: "La partie va commencer"
-    waitsubtitle: "Dans {0} seconde(s)..."
-    starttitle: "La partie commence"
-    startsubtitle: "Bonne chance à vous!"
-  kill:
-    died: "est mort"
-    killed: "a été tué par "
-  scoreboard:
-    alive: "En vie"
-    timer: "Timer"
-scoreboard:
-  kit: "Kit"
-  kitnone: "Choisissez un kit"
-  team: "Équipe"
-  vote: "Vote"
-  votenone: "Votez pour une carte"
-  footer: "pundalik.org"
-skin:
-  picker: "Choisissez un skin"
-  npcname: "Choisissez un skin"
-  npccurrent: "Skin actuel:"
-  menu: "Skin actuel: {0}"
-  menulore:
-    - ""
-    - "Remettre à zéro"
+vote:
+  npc:
+    name: "Votez pour une carte"
+    current: "Votre vote:"
+  menu:
+    name: "Votez pour une carte"
+    desc: "{0} vote(s)"
+  item:
+    name: "Vote"
+    lore:
+      - "Votez pour une carte"
+      - "avec cet item"
 team:
-  picker: "Choisissez une équipe"
-  npcname: "Choisissez une équipe"
-  npccurrent: "Votre équipe:"
   red: "Rouge"
-  blue: "Bleue"
+  blue: "Bleu"
+  npc:
+    name: "Choisissez une équipe"
+    current: "Votre équipe:"
+  item:
+    name: "Équipe"
+    lore:
+      - "Utilisez cet item pour"
+      - "changer d'équipe"
+skin:
+  npc:
+    name: "Choisissez un skin"
+    current: "Skin actuel:"
+  menu:
+    name: "Choisissez un skin"
+    infoName: "Skin actuel: {0}"
+    infoLore:
+      - ""
+      - "Remettre à zéro"
+  item:
+    name: "Skin"
+    lore:
+      - "Utilisez cet item pour"
+      - "changer de skin"
 kit:
-  picker: "Choisissez un kit"
-  npcname: "Choisissez un kit"
-  npccurrent: "Votre kit:"
+  npc:
+    name: "Choisissez un kit"
+    current: "Votre kit:"
+  menu:
+    name: "Choisissez un kit"
+  item:
+    name: "Kit"
+    lore:
+      - "Utilisez cet item pour"
+      - "changer de kit"
+cosmetic:
+  scoreboard:
+    lobby:
+      footer: "pundalik.org"
+      team:
+        name: "Team"
+      kit:
+        name: "Kit"
+        none: "Choisissez un kit"
+      vote:
+        name: "Vote"
+        none: "Votez pour une carte"
+    game:
+      alive: "En vie"
+      timer: "Timer"
+game:
+  start:
+    map: "La partie va commencer sur {0}"
+    wait:
+      title: "La partie va commencer"
+      subtitle: "Dans {0} seconde(s)..."
+    start:
+      title: "La partie commence"
+      subtitle: "Bonne chance à vous!"
+  kill:
+    player: "a été tué par "
+    died: "est mort"
+kits:
   mage:
     name: "Mage"
     desc:
@@ -89,18 +108,13 @@ kit:
     desc:
       - " - Vous avez un arc plus fort"
       - " - Vous avez plus de fleches"
-vote:
-  picker: "Votez pour une carte"
-  npcname: "Votez pour une carte"
-  npccurrent: "Votre vote:"
 loadout:
   sword: "Épée"
   bow: "Arc"
-  armor:
-    head: "Casque"
-    body: "Plastron"
-    leggings: "Jambières"
-    boots: "Bottes"
+  armorHead: "Casque"
+  armorBody: "Plastron"
+  armorLeggings: "Jambières"
+  armorBoots: "Bottes"
 sheeps:
   explosive:
     name: "Explosif"
@@ -118,3 +132,12 @@ sheeps:
     name: "Glacé"
     desc:
       - "Ce mouton gèle tous sur son chemin"
+
+items:
+  rightClick: "(Click-Droit)"
+  rocket:
+    name: "Roquette"
+    lore:
+      - "Utilisez cet item pour"
+      - "s'en voler"
+  team:

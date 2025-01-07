@@ -2,7 +2,6 @@ package org.ef3d0c3e.sheepwars.game;
 
 import com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent;
 import com.destroystokyo.paper.event.player.PlayerReadyArrowEvent;
-import io.papermc.paper.event.player.PrePlayerAttackEntityEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -14,6 +13,9 @@ import org.ef3d0c3e.sheepwars.events.PhaseChangeEvent;
 import org.ef3d0c3e.sheepwars.events.WantsListen;
 import org.ef3d0c3e.sheepwars.loadouts.Arrows;
 import org.ef3d0c3e.sheepwars.loadouts.RefillResource;
+import org.ef3d0c3e.sheepwars.locale.LocalePath;
+import org.ef3d0c3e.sheepwars.locale.LocalizeAs;
+import org.ef3d0c3e.sheepwars.locale.Localized;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 
 import java.text.MessageFormat;
@@ -22,7 +24,17 @@ import java.text.MessageFormat;
  * Events triggered when the game starts
  */
 @WantsListen(phase = WantsListen.Target.Game)
+@LocalePath("game.start")
 public class GameStart implements Listener {
+    @LocalizeAs("wait.title")
+    private static Localized<String> WAIT_TITLE;
+    @LocalizeAs("wait.subtitle")
+    private static Localized<String> WAIT_SUBTITLE;
+    @LocalizeAs("start.title")
+    private static Localized<String> START_TITLE;
+    @LocalizeAs("start.subtitle")
+    private static Localized<String> START_SUBTITLE;
+
     /**
      * Starts the countdown until players can move
      */
@@ -52,8 +64,8 @@ public class GameStart implements Listener {
                     Game.started = true;
                     CPlayer.forEachOnline(cp -> {
                         cp.getHandle().sendTitle(
-                                "§d" + cp.getLocale().GAME_COUNTDOWN_STARTTITLE,
-                                "§e" + cp.getLocale().GAME_COUNTDOWN_STARTSUBTITLE,
+                                "§d" + START_TITLE.localize(cp),
+                                "§e" + START_SUBTITLE.localize(cp),
                                 0,
                                 20,
                                 10
@@ -74,9 +86,9 @@ public class GameStart implements Listener {
                 {
                     CPlayer.forEachOnline(cp -> {
                         cp.getHandle().sendTitle(
-                                "§d" + cp.getLocale().GAME_COUNTDOWN_WAITTITLE,
+                                "§d" + WAIT_TITLE.localize(cp),
                                 MessageFormat.format(
-                                "§e" + cp.getLocale().GAME_COUNTDOWN_WAITSUBTITLE,
+                                "§e" + WAIT_SUBTITLE.localize(cp),
                                         8 - elapsed),
                                 0,
                                 30,

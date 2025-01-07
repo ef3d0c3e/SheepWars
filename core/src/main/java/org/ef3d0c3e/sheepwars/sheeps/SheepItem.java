@@ -18,6 +18,7 @@ public class SheepItem extends IItem {
     final Class<? extends BaseSheep> sheepClass;
 
     public SheepItem(Class<? extends BaseSheep> sheepClass) {
+        super();
         this.sheepClass = sheepClass;
     }
 

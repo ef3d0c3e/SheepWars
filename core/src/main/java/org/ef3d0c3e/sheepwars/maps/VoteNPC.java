@@ -14,13 +14,19 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.ef3d0c3e.sheepwars.SheepWars;
 import org.ef3d0c3e.sheepwars.events.MapVoteEvent;
 import org.ef3d0c3e.sheepwars.events.WantsListen;
+import org.ef3d0c3e.sheepwars.locale.LocalePath;
+import org.ef3d0c3e.sheepwars.locale.Localized;
 import org.ef3d0c3e.sheepwars.npc.NPCFactory;
 import org.ef3d0c3e.sheepwars.npc.PlayerNPC;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 
 import java.util.List;
 
+@LocalePath("vote.npc")
 public class VoteNPC extends PlayerNPC {
+    private static Localized<String> NAME;
+    private static Localized<String> CURRENT;
+
     private static final int NETWORK_ID = SheepWars.getNextEntityId();
     private final Location location;
 
@@ -40,14 +46,14 @@ public class VoteNPC extends PlayerNPC {
         final var vote = MapManager.getPlayerVote(cp);
         if (vote == null)
             return Lists.newArrayList(
-                    Component.text(cp.getLocale().VOTE_NPCNAME)
+                    Component.text(NAME.localize(cp))
                             .color(TextColor.color(100, 80, 220))
                             .decorate(TextDecoration.BOLD));
         return Lists.newArrayList(
-                Component.text(cp.getLocale().VOTE_NPCNAME)
+                Component.text(NAME.localize(cp))
                         .color(TextColor.color(100, 80, 220))
                         .decorate(TextDecoration.BOLD),
-                Component.text(cp.getLocale().VOTE_NPCCURRENT)
+                Component.text(CURRENT.localize(cp))
                         .color(TextColor.color(85, 85, 127))
                         .decorate(TextDecoration.UNDERLINED),
                 Component.text(vote.getDisplayName())

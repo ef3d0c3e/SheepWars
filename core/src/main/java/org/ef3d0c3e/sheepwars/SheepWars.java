@@ -24,6 +24,7 @@ import org.ef3d0c3e.sheepwars.versions.WrapperFactory;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
@@ -53,6 +54,8 @@ public final class SheepWars extends JavaPlugin
 
     @Override
     public void onLoad() {
+        plugin = this;
+
         consoleMessage("--[ Setting up... ]--");
         // Extract resources
         if (!saveResources())
@@ -60,7 +63,11 @@ public final class SheepWars extends JavaPlugin
 
         // Load configurations
         sheepWarsConfig = new Config(new File(getDataFolder() + "/config.yml"));
-        localeManager = new LocaleManager(new File(getDataFolder() + "/locales"));
+        try {
+            localeManager = new LocaleManager(new File(getDataFolder() + "/locales").toPath());
+        } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException | InstantiationException e) {
+            throw new RuntimeException(e);
+        }
 
         // Modify the server's config
         boolean needRestart = false;
@@ -183,8 +190,6 @@ public final class SheepWars extends JavaPlugin
 
     @Override
     public void onEnable() {
-        plugin = this;
-
         PacketEvents.getAPI().getSettings()
                 .debug(true)
                 .reEncodeByDefault(true);

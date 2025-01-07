@@ -10,7 +10,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
@@ -24,15 +23,22 @@ import org.ef3d0c3e.sheepwars.events.CPlayerDeathEvent;
 import org.ef3d0c3e.sheepwars.events.CPlayerJoinEvent;
 import org.ef3d0c3e.sheepwars.events.GameEndEvent;
 import org.ef3d0c3e.sheepwars.events.WantsListen;
+import org.ef3d0c3e.sheepwars.locale.LocalePath;
+import org.ef3d0c3e.sheepwars.locale.LocalizeAs;
+import org.ef3d0c3e.sheepwars.locale.Localized;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
-
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.ef3d0c3e.sheepwars.teams.Team.BLUE;
 import static org.ef3d0c3e.sheepwars.teams.Team.RED;
 
 @WantsListen(phase = WantsListen.Target.Game)
+@LocalePath("game")
 public class GameEvents implements Listener {
+
+    @LocalizeAs("kill.player")
+    private static Localized<String> KILL_PLAYER;
+    @LocalizeAs("kill.died")
+    private static Localized<String> KILL_DIED;
 
     /**
      * Registers timed events
@@ -94,7 +100,7 @@ public class GameEvents implements Listener {
                                 .append(Component.text("} ").color(TextColor.color(90, 90, 90)))
                                 .append(Component.text(victim.getHandle().getName()).color(victim.getTeam().getColor()))
                                 .append(Component.text(" "))
-                                .append(Component.text(cp.getLocale().GAME_KILL_DIED).color(TextColor.color(190, 190, 190))
+                                .append(Component.text(KILL_DIED.localize(cp)).color(TextColor.color(190, 190, 190))
                                 )));
             });
         else
@@ -105,7 +111,7 @@ public class GameEvents implements Listener {
                                 .append(Component.text("} ").color(TextColor.color(90, 90, 90)))
                                 .append(Component.text(victim.getHandle().getName()).color(victim.getTeam().getColor()))
                                 .append(Component.text(" "))
-                                .append(Component.text(cp.getLocale().GAME_KILL_KILLED).color(TextColor.color(190, 190, 190))
+                                .append(Component.text(KILL_PLAYER.localize(cp)).color(TextColor.color(190, 190, 190))
                                         .append(Component.text(" "))
                                         .append(Component.text(killer.getHandle().getName()).color(killer.getTeam().getColor()))
                                 )));

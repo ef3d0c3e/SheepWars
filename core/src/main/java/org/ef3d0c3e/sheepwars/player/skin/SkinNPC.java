@@ -6,8 +6,6 @@ import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import lombok.NonNull;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentBuilder;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Location;
@@ -17,13 +15,19 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.ef3d0c3e.sheepwars.SheepWars;
 import org.ef3d0c3e.sheepwars.events.SkinChangeEvent;
 import org.ef3d0c3e.sheepwars.events.WantsListen;
+import org.ef3d0c3e.sheepwars.locale.LocalePath;
+import org.ef3d0c3e.sheepwars.locale.Localized;
 import org.ef3d0c3e.sheepwars.npc.NPCFactory;
 import org.ef3d0c3e.sheepwars.npc.PlayerNPC;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 
 import java.util.List;
 
+@LocalePath("skin.npc")
 public class SkinNPC extends PlayerNPC {
+    private static Localized<String> NAME;
+    private static Localized<String> CURRENT;
+
     private static final int NETWORK_ID = SheepWars.getNextEntityId();
     private final Location location;
 
@@ -42,15 +46,15 @@ public class SkinNPC extends PlayerNPC {
     protected @NonNull List<Component> getNametag(@NonNull CPlayer cp) {
         if (cp.getCosmetics().getCurrentSkin() == null)
             return Lists.newArrayList(
-                    Component.text(cp.getLocale().SKIN_NPCNAME)
+                    Component.text(NAME.localize(cp))
                             .color(TextColor.color(240, 127, 0))
                             .decorate(TextDecoration.BOLD));
         else
             return Lists.newArrayList(
-                    Component.text(cp.getLocale().SKIN_NPCNAME)
+                    Component.text(NAME.localize(cp))
                             .color(TextColor.color(240, 127, 0))
                             .decorate(TextDecoration.BOLD),
-                    Component.text(cp.getLocale().SKIN_NPCCURRENT)
+                    Component.text(CURRENT.localize(cp))
                             .color(TextColor.color(85, 85, 127))
                             .decorate(TextDecoration.UNDERLINED),
                     Component.text(cp.getCosmetics().getCurrentSkin().getName())

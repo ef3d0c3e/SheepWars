@@ -10,6 +10,8 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.ef3d0c3e.sheepwars.Util;
+import org.ef3d0c3e.sheepwars.locale.LocalePath;
+import org.ef3d0c3e.sheepwars.locale.Localized;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 
 import javax.annotation.Nullable;
@@ -17,8 +19,12 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+@LocalePath("gui")
 public abstract class ScrollableGui implements IGui
 {
+    Localized<String> NEXT;
+    Localized<String> PREVIOUS;
+
     @Override
     public void onGuiClose(final Player p) {}
     @Override
@@ -101,7 +107,7 @@ public abstract class ScrollableGui implements IGui
      */
     public @NonNull ItemStack getNextArrow()
     {
-        return Util.createSkull("§8" + player.getLocale().GUI_NEXT, null, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODAwM2YyYzlmMDFkMmVkNThiOTAwMzE0ZDcyZmIyNTE1NmNhOWJmMTNiN2ZhZTMwOTMxMDRjZThmZTk2NGU5ZiJ9fX0=");
+        return Util.createSkull("§8" + NEXT.localize(player), null, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODAwM2YyYzlmMDFkMmVkNThiOTAwMzE0ZDcyZmIyNTE1NmNhOWJmMTNiN2ZhZTMwOTMxMDRjZThmZTk2NGU5ZiJ9fX0=");
     }
 
     /**
@@ -110,7 +116,7 @@ public abstract class ScrollableGui implements IGui
      */
     public @NonNull ItemStack getPreviousArrow()
     {
-        return Util.createSkull("§8" + player.getLocale().GUI_PREVIOUS, null, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjcyZDEwZTQxMGRmOGQ1MTVhYmYzNWI3NjY2NmYxMWI3NDYzOTUwMGNmMGVlYjZlNzBkNDVmMzhiZDRiYmEzYSJ9fX0=");
+        return Util.createSkull("§8" + PREVIOUS.localize(player), null, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjcyZDEwZTQxMGRmOGQ1MTVhYmYzNWI3NjY2NmYxMWI3NDYzOTUwMGNmMGVlYjZlNzBkNDVmMzhiZDRiYmEzYSJ9fX0=");
     }
 
     /**

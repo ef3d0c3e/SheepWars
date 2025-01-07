@@ -1,0 +1,32 @@
+package org.ef3d0c3e.sheepwars.locale;
+
+import lombok.NonNull;
+import org.ef3d0c3e.sheepwars.player.CPlayer;
+
+/**
+ * Represents a localized variable
+ * @param <T> Type of the localized value
+ */
+public class Localized<T> {
+    protected static LocaleDeserializer deserializer = LocaleDeserializer.STRING;
+
+    /**
+     * Unique identifier in the locale table
+     */
+    private final int id;
+
+    protected Localized(final int id)
+    {
+        this.id = id;
+    }
+
+    /**
+     * Gets a localized version of this value
+     * @param s
+     * @return
+     */
+    public @NonNull T localize(final @NonNull LocaleSubscriber s)
+    {
+        return s.getLocale().get(id);
+    }
+}

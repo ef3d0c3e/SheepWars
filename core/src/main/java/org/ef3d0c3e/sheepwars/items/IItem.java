@@ -26,13 +26,18 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.ef3d0c3e.sheepwars.SheepWars;
 import org.ef3d0c3e.sheepwars.events.WantsListen;
+import org.ef3d0c3e.sheepwars.locale.LocalePath;
+import org.ef3d0c3e.sheepwars.locale.Localized;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
 
 // TODO: Add option to prevent using the item in crafting recipes
+@LocalePath("items")
 public abstract class IItem
 {
+    public static Localized<String> RIGHT_CLICK;
+
     /**
      * UUID persistant tag
      */

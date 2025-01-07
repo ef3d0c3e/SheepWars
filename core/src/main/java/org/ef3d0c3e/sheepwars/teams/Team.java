@@ -1,7 +1,5 @@
 package org.ef3d0c3e.sheepwars.teams;
 
-import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import jline.internal.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,13 +16,22 @@ import org.bukkit.event.Listener;
 import org.ef3d0c3e.sheepwars.events.CPlayerJoinEvent;
 import org.ef3d0c3e.sheepwars.events.TeamChangeEvent;
 import org.ef3d0c3e.sheepwars.events.WantsListen;
+import org.ef3d0c3e.sheepwars.locale.LocalePath;
+import org.ef3d0c3e.sheepwars.locale.LocalizeAs;
+import org.ef3d0c3e.sheepwars.locale.Localized;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 import org.ef3d0c3e.sheepwars.game.Game;
 
 import java.util.HashSet;
 
 @AllArgsConstructor
+@LocalePath("team")
 public abstract class Team {
+    @LocalizeAs("red")
+    private static Localized<String> RED_NAME;
+    @LocalizeAs("blue")
+    private static Localized<String> BLUE_NAME;
+
     @Getter
     private final ChatColor chatColor;
     @Getter
@@ -47,14 +54,6 @@ public abstract class Team {
 
 
     public abstract String getName(final CPlayer cp);
-
-    public String getItemColoredName(final CPlayer cp) {
-        if (this == RED)
-            return chatColor + cp.getLocale().TEAM_RED;
-        else if (this == BLUE)
-            return chatColor + cp.getLocale().TEAM_BLUE;
-        return null;
-    }
 
     public Component getColoredName(final CPlayer cp)
     {
@@ -105,14 +104,14 @@ public abstract class Team {
     public static Team RED = new Team(ChatColor.RED, TextColor.color(255, 0, 0), Material.RED_BANNER) {
         @Override
         public String getName(CPlayer cp) {
-            return cp.getLocale().TEAM_RED;
+            return RED_NAME.localize(cp);
         }
     };
 
     public static Team BLUE = new Team(ChatColor.BLUE, TextColor.color(0, 0, 255), Material.BLUE_BANNER) {
         @Override
         public String getName(CPlayer cp) {
-            return cp.getLocale().TEAM_BLUE;
+            return RED_NAME.localize(cp);
         }
     };
 

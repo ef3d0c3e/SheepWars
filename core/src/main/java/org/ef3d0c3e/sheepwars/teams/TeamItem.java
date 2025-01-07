@@ -1,5 +1,6 @@
 package org.ef3d0c3e.sheepwars.teams;
 
+import io.github.retrooper.packetevents.adventure.serializer.legacy.LegacyComponentSerializer;
 import lombok.NonNull;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -11,11 +12,18 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.ef3d0c3e.sheepwars.Util;
 import org.ef3d0c3e.sheepwars.items.IItem;
 import org.ef3d0c3e.sheepwars.items.ItemFactory;
+import org.ef3d0c3e.sheepwars.locale.LocalePath;
+import org.ef3d0c3e.sheepwars.locale.Localized;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 
 import java.text.MessageFormat;
+import java.util.List;
 
+@LocalePath("team.item")
 public class TeamItem extends IItem {
+    private static Localized<String> NAME;
+    private static Localized<List<String>> LORE;
+
     public TeamItem()
     {
         super();
@@ -47,10 +55,12 @@ public class TeamItem extends IItem {
         final ItemStack item = new ItemStack(cp.getTeam().getBanner());
         final ItemMeta meta = item.getItemMeta();
         if (cp.getTeam() == null)
-            meta.setDisplayName(MessageFormat.format("§b{0} §7{1}", cp.getLocale().ITEMS_TEAM, cp.getLocale().ITEMS_RIGHTCLICK));
-        else
-            meta.setDisplayName(MessageFormat.format("§b{0}§8 : {1} §7{2}", cp.getLocale().ITEMS_TEAM, cp.getTeam().getItemColoredName(cp), cp.getLocale().ITEMS_RIGHTCLICK));
-        meta.setLore(Util.coloredLore("§7", cp.getLocale().ITEMS_TEAMLORE));
+            meta.setDisplayName(MessageFormat.format("§b{0} §7{1}", NAME.localize(cp), IItem.RIGHT_CLICK.localize(cp)));
+        else {
+            final var ser = LegacyComponentSerializer.legacy('§');
+            meta.setDisplayName(MessageFormat.format("§b{0}§8 : {1} §7{2}", NAME.localize(cp), ser.serialize(cp.getTeam().getColoredName(cp)), IItem.RIGHT_CLICK.localize(cp)));
+        }
+        meta.setLore(Util.coloredLore("§7", LORE.localize(cp)));
         item.setItemMeta(meta);
 
         ItemFactory.registerItem(ITEM);

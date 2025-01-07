@@ -6,16 +6,15 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Sheep;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.checkerframework.checker.units.qual.C;
 import org.ef3d0c3e.sheepwars.SheepWars;
 import org.ef3d0c3e.sheepwars.events.*;
 import org.ef3d0c3e.sheepwars.game.Combat;
-import org.ef3d0c3e.sheepwars.game.Game;
 import org.ef3d0c3e.sheepwars.kits.Kit;
 import org.ef3d0c3e.sheepwars.kits.KitData;
-import org.ef3d0c3e.sheepwars.locale.Locale;
+import org.ef3d0c3e.sheepwars.locale.*;
 import org.ef3d0c3e.sheepwars.teams.Team;
 
 import javax.annotation.Nullable;
@@ -25,7 +24,7 @@ import java.util.HashMap;
 /**
  * The wrapper class for the player
  */
-public class CPlayer {
+public class CPlayer implements LocaleSubscriber {
     /**
      * Holds a list of all players that have connected on this session
      */
@@ -99,11 +98,12 @@ public class CPlayer {
             if (cp.isOnline()) f.operation(cp);
     }
 
-    /**
+     /**
      * The locale configured for the player
      */
     @Getter @Setter
     private @NonNull Locale locale;
+
     /**
      * The player's cosmetics
      */
@@ -202,13 +202,17 @@ public class CPlayer {
      * When a player joins or quits
      */
     @WantsListen(phase = WantsListen.Target.Always)
+    @LocalePath("system")
     public static class Events implements Listener
     {
+        private static Localized<String> JOIN;
+        private static Localized<String> QUIT;
+
         @EventHandler
         public void onJoin(final CPlayerJoinEvent ev)
         {
             CPlayer.forEachOnline(cp ->
-                    cp.getHandle().sendMessage(MessageFormat.format(cp.getLocale().SYSTEM_JOIN, ev.getPlayer().getHandle().getName()))
+                    cp.getHandle().sendMessage(MessageFormat.format(JOIN.localize(cp), ev.getPlayer().getHandle().getName()))
             );
         }
 
@@ -219,7 +223,7 @@ public class CPlayer {
             // We need to set the handle to null to allow GC (and remove from the hashmap)
             // Send message
             CPlayer.forEachOnline(cp ->
-                    cp.getHandle().sendMessage(MessageFormat.format(cp.getLocale().SYSTEM_QUIT, ev.getPlayer().getHandle().getName()))
+                    cp.getHandle().sendMessage(MessageFormat.format(QUIT.localize(cp), ev.getPlayer().getHandle().getName()))
             );
         }
 

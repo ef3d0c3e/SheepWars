@@ -12,6 +12,9 @@ import org.ef3d0c3e.sheepwars.level.LevelFactory;
 import org.ef3d0c3e.sheepwars.level.game.GameLevel;
 import org.ef3d0c3e.sheepwars.level.lobby.LobbyLevel;
 import org.ef3d0c3e.sheepwars.loadouts.RefillResource;
+import org.ef3d0c3e.sheepwars.locale.LocalePath;
+import org.ef3d0c3e.sheepwars.locale.LocalizeAs;
+import org.ef3d0c3e.sheepwars.locale.Localized;
 import org.ef3d0c3e.sheepwars.maps.Map;
 import org.ef3d0c3e.sheepwars.maps.MapManager;
 import org.ef3d0c3e.sheepwars.packets.PacketListenerFactory;
@@ -26,6 +29,7 @@ Small TODO list
  - Make a revive system, and all that implies, like what happens if player gets revived after game ends etc..
  */
 
+@LocalePath("game")
 public class Game {
     private static void changePhase(WantsListen.Target phase)
     {
@@ -36,6 +40,9 @@ public class Game {
         PacketListenerFactory.update(phase);
         Bukkit.getPluginManager().callEvent(new PhaseChangeEvent(oldPhase, phase));
     }
+
+    @LocalizeAs("start.map")
+    private static Localized<String> MAP_START;
 
     @Getter
     private static WantsListen.Target phase;
@@ -117,7 +124,7 @@ public class Game {
 
         // Notify players
         CPlayer.forEachOnline(cp -> {
-            cp.getHandle().sendMessage(MessageFormat.format("§7" + cp.getLocale().GAME_MAPSTART, "§a" + map.getDisplayName()));
+            cp.getHandle().sendMessage(MessageFormat.format("§7" + MAP_START.localize(cp), "§a" + map.getDisplayName()));
         });
 
         try {

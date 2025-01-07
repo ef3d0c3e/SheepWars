@@ -11,14 +11,22 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
+import org.ef3d0c3e.sheepwars.Util;
 import org.ef3d0c3e.sheepwars.items.IItem;
 import org.ef3d0c3e.sheepwars.items.ItemFactory;
+import org.ef3d0c3e.sheepwars.locale.LocalePath;
+import org.ef3d0c3e.sheepwars.locale.Localized;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 
 import java.text.MessageFormat;
+import java.util.List;
 
+@LocalePath("items.rocket")
 public class RocketItem extends IItem
 {
+    public static Localized<String> NAME;
+    public static Localized<List<String>> LORE;
+
     public RocketItem()
     {
         super();
@@ -50,7 +58,8 @@ public class RocketItem extends IItem
     {
         final ItemStack item = new ItemStack(Material.FIREWORK_ROCKET);
         final ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(MessageFormat.format("§a{0} §7{1}", cp.getLocale().ITEMS_ROCKET, cp.getLocale().ITEMS_RIGHTCLICK));
+        meta.setDisplayName(MessageFormat.format("§a{0} §7{1}", NAME.localize(cp), IItem.RIGHT_CLICK.localize(cp)));
+        meta.setLore(Util.coloredLore("§7", LORE.localize(cp)));
         item.setItemMeta(meta);
 
         ItemFactory.registerItem(ITEM);

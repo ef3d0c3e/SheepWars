@@ -4,7 +4,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.ef3d0c3e.sheepwars.SheepWars;
-import org.ef3d0c3e.sheepwars.locale.Locale;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,14 +31,16 @@ public class CmdLocale extends Command {
             sender.sendMessage("USAGE: /locale <LOCALE NAME>");
         }
 
-        final Locale loc = SheepWars.getLocaleManager().getByName(args[0]);
+        /* TODO
+        final OldLocale loc = SheepWars.getOldLocaleManager().getByName(args[0]);
         if (loc == null)
         {
             sender.sendMessage("§cUnknown locale '" + args[0] + "'.");
             return false;
         }
         final CPlayer cp = CPlayer.get((Player)sender);
-        cp.setLocale(loc);
+        cp.setOldLocale(loc);
+         */
 
         return true;
     }

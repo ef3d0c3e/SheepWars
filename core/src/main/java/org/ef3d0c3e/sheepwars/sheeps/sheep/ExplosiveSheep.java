@@ -10,11 +10,19 @@ import org.bukkit.Particle;
 import org.bukkit.inventory.ItemStack;
 import org.ef3d0c3e.sheepwars.Util;
 import org.ef3d0c3e.sheepwars.items.ItemFactory;
+import org.ef3d0c3e.sheepwars.locale.LocalePath;
+import org.ef3d0c3e.sheepwars.locale.Localized;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 import org.ef3d0c3e.sheepwars.sheeps.FuseSheep;
 import org.ef3d0c3e.sheepwars.sheeps.SheepItem;
 
+import java.util.List;
+
+@LocalePath("sheeps.explosive")
 public class ExplosiveSheep extends FuseSheep {
+    static Localized<String> NAME;
+    static Localized<List<String>> DESC;
+
     final static SheepItem ITEM = new SheepItem(ExplosiveSheep.class);
     final static TextColor COLOR = TextColor.color(255, 0, 0);
 
@@ -23,9 +31,9 @@ public class ExplosiveSheep extends FuseSheep {
         final var item = new ItemStack(Material.RED_WOOL);
         final var meta = item.getItemMeta();
         meta.setDisplayName(ser.serialize(
-            Component.text(cp.getLocale().SHEEPS_EXPLOSIVE_NAME).color(COLOR)
+            Component.text(NAME.localize(cp)).color(COLOR)
         ));
-        meta.setLore(Util.coloredLore("§7", cp.getLocale().SHEEPS_EXPLOSIVE_DESC));
+        meta.setLore(Util.coloredLore("§7", DESC.localize(cp)));
         item.setItemMeta(meta);
 
         ItemFactory.registerItem(ITEM);
@@ -38,7 +46,7 @@ public class ExplosiveSheep extends FuseSheep {
 
     @Override
     public @NonNull Component getName(@NonNull CPlayer cp) {
-            return Component.text(cp.getLocale().SHEEPS_EXPLOSIVE_NAME).color(COLOR);
+        return Component.text(NAME.localize(cp)).color(COLOR);
     }
 
     @Override

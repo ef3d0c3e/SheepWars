@@ -7,11 +7,13 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.ef3d0c3e.sheepwars.locale.LocalePath;
+import org.ef3d0c3e.sheepwars.locale.LocalizeAs;
+import org.ef3d0c3e.sheepwars.locale.Localized;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 
 import java.util.ArrayList;
@@ -20,7 +22,15 @@ import java.util.List;
 /**
  * Loadout for players
  */
+@LocalePath("loadout")
 public abstract class Loadout {
+    private static Localized<String> SWORD;
+    private static Localized<String> BOW;
+    private static Localized<String> ARMOR_HEAD;
+    private static Localized<String> ARMOR_BODY;
+    private static Localized<String> ARMOR_LEGGINGS;
+    private static Localized<String> ARMOR_BOOTS;
+
     @Getter
     final private @NonNull CPlayer player;
 
@@ -56,7 +66,7 @@ public abstract class Loadout {
             final var meta = (LeatherArmorMeta)item.getItemMeta();
             meta.setUnbreakable(true);
             meta.setColor(color);
-            meta.setDisplayName(ser.serialize(Component.text(player.getLocale().LOADOUT_ARMOR_BOOTS).color(player.getTeam().getColor())));
+            meta.setDisplayName(ser.serialize(Component.text(ARMOR_BOOTS.localize(player)).color(player.getTeam().getColor())));
             meta.addEnchant(Enchantment.BINDING_CURSE, 1, true);
             meta.addEnchant(Enchantment.BLAST_PROTECTION, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -70,7 +80,7 @@ public abstract class Loadout {
             final var meta = (LeatherArmorMeta)item.getItemMeta();
             meta.setUnbreakable(true);
             meta.setColor(color);
-            meta.setDisplayName(ser.serialize(Component.text(player.getLocale().LOADOUT_ARMOR_LEGGINGS).color(player.getTeam().getColor())));
+            meta.setDisplayName(ser.serialize(Component.text(ARMOR_LEGGINGS.localize(player)).color(player.getTeam().getColor())));
             meta.addEnchant(Enchantment.BINDING_CURSE, 1, true);
             meta.addEnchant(Enchantment.BLAST_PROTECTION, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -84,7 +94,7 @@ public abstract class Loadout {
             final var meta = (LeatherArmorMeta)item.getItemMeta();
             meta.setUnbreakable(true);
             meta.setColor(color);
-            meta.setDisplayName(ser.serialize(Component.text(player.getLocale().LOADOUT_ARMOR_BODY).color(player.getTeam().getColor())));
+            meta.setDisplayName(ser.serialize(Component.text(ARMOR_BODY.localize(player)).color(player.getTeam().getColor())));
             meta.addEnchant(Enchantment.BINDING_CURSE, 1, true);
             meta.addEnchant(Enchantment.BLAST_PROTECTION, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -98,7 +108,7 @@ public abstract class Loadout {
             final var meta = (LeatherArmorMeta)item.getItemMeta();
             meta.setUnbreakable(true);
             meta.setColor(color);
-            meta.setDisplayName(ser.serialize(Component.text(player.getLocale().LOADOUT_ARMOR_HEAD).color(player.getTeam().getColor())));
+            meta.setDisplayName(ser.serialize(Component.text(ARMOR_BOOTS.localize(player)).color(player.getTeam().getColor())));
             meta.addEnchant(Enchantment.BINDING_CURSE, 1, true);
             meta.addEnchant(Enchantment.BLAST_PROTECTION, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -115,7 +125,7 @@ public abstract class Loadout {
         final var item = new ItemStack(Material.WOODEN_SWORD);
         final var meta = item.getItemMeta();
         meta.setUnbreakable(true);
-        meta.setDisplayName(ser.serialize(Component.text(player.getLocale().LOADOUT_SWORD).color(TextColor.color(120, 40, 200))));
+        meta.setDisplayName(ser.serialize(Component.text(SWORD.localize(player)).color(TextColor.color(120, 40, 200))));
         item.setItemMeta(meta);
 
         return item;
@@ -127,7 +137,7 @@ public abstract class Loadout {
         final var item = new ItemStack(Material.BOW);
         final var meta = item.getItemMeta();
         meta.setUnbreakable(true);
-        meta.setDisplayName(ser.serialize(Component.text(player.getLocale().LOADOUT_BOW).color(TextColor.color(180, 60, 100))));
+        meta.setDisplayName(ser.serialize(Component.text(SWORD.localize(player)).color(TextColor.color(180, 60, 100))));
         item.setItemMeta(meta);
 
         return item;

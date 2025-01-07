@@ -3,7 +3,6 @@ package org.ef3d0c3e.sheepwars.sheeps.sheep;
 import io.github.retrooper.packetevents.adventure.serializer.legacy.LegacyComponentSerializer;
 import lombok.NonNull;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
@@ -24,9 +23,9 @@ public class FragmentationSubSheep extends BaseSheep {
         final var item = new ItemStack(Material.GRAY_WOOL);
         final var meta = item.getItemMeta();
         meta.setDisplayName(ser.serialize(
-                Component.text(cp.getLocale().SHEEPS_FRAGMENTATION_NAME).color(COLOR)
+                Component.text(FragmentationSheep.NAME.localize(cp)).color(COLOR)
         ));
-        meta.setLore(Util.coloredLore("§7", cp.getLocale().SHEEPS_FRAGMENTATION_DESC));
+        meta.setLore(Util.coloredLore("§7", FragmentationSheep.DESC.localize(cp)));
         item.setItemMeta(meta);
 
         ItemFactory.registerItem(ITEM);
@@ -39,7 +38,7 @@ public class FragmentationSubSheep extends BaseSheep {
 
     @Override
     public @NonNull Component getName(@NonNull CPlayer cp) {
-        return Component.text(cp.getLocale().SHEEPS_FRAGMENTATION_NAME).color(COLOR);
+        return Component.text(FragmentationSheep.NAME.localize(cp)).color(COLOR);
     }
 
     @Override

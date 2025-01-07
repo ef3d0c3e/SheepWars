@@ -12,13 +12,18 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.ef3d0c3e.sheepwars.Util;
 import org.ef3d0c3e.sheepwars.items.IItem;
 import org.ef3d0c3e.sheepwars.items.ItemFactory;
+import org.ef3d0c3e.sheepwars.locale.LocalePath;
+import org.ef3d0c3e.sheepwars.locale.Localized;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
-import org.ef3d0c3e.sheepwars.player.skin.SkinItem;
-import org.ef3d0c3e.sheepwars.player.skin.SkinMenu;
 
 import java.text.MessageFormat;
+import java.util.List;
 
+@LocalePath("vote.item")
 public class VoteItem extends IItem {
+    private static Localized<String> NAME;
+    private static Localized<List<String>> LORE;
+
     public VoteItem()
     {
         super();
@@ -49,10 +54,10 @@ public class VoteItem extends IItem {
         final ItemMeta meta = item.getItemMeta();
         var map = MapManager.getPlayerVote(cp);
         if (map == null)
-            meta.setDisplayName(MessageFormat.format("§e{0} §7{1}", cp.getLocale().ITEMS_VOTE, cp.getLocale().ITEMS_RIGHTCLICK));
+            meta.setDisplayName(MessageFormat.format("§e{0} §7{1}", NAME.localize(cp), IItem.RIGHT_CLICK.localize(cp)));
         else
-            meta.setDisplayName(MessageFormat.format("§e{0} §8: §a{1} §7{2}", cp.getLocale().ITEMS_VOTE, map.getDisplayName(), cp.getLocale().ITEMS_RIGHTCLICK));
-        meta.setLore(Util.coloredLore("§7", cp.getLocale().ITEMS_VOTELORE));
+            meta.setDisplayName(MessageFormat.format("§e{0} §8: §a{1} §7{2}", NAME.localize(cp), map.getDisplayName(), IItem.RIGHT_CLICK.localize(cp)));
+        meta.setLore(Util.coloredLore("§7", LORE.localize(cp)));
         item.setItemMeta(meta);
 
         ItemFactory.registerItem(ITEM);
