@@ -7,8 +7,11 @@ import net.kyori.adventure.text.format.TextColor;
 import net.minecraft.world.entity.LivingEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
@@ -196,6 +199,12 @@ public class GameEvents implements Listener {
     @EventHandler
     public void onBlockMove(final BlockFromToEvent ev)
     {
+        ev.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onBlockFade(final BlockFadeEvent ev) {
+        ev.getBlock().setType(Material.AIR);
         ev.setCancelled(true);
     }
 }

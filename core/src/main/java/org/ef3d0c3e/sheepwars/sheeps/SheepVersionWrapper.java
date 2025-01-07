@@ -3,6 +3,7 @@ package org.ef3d0c3e.sheepwars.sheeps;
 import lombok.NonNull;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
@@ -11,7 +12,7 @@ import javax.annotation.Nullable;
 
 public interface SheepVersionWrapper {
     @Nullable
-    BaseSheep getInstance(final @NonNull LivingEntity ent);
+    BaseSheep getInstance(final @NonNull Entity ent);
     void spawn(final @NonNull BaseSheep sheep, final @NonNull Location location, final boolean baby);
     void remove(final @NonNull BaseSheep sheep);
     void launch(final @NonNull BaseSheep sheep, final Vector direction, final double strength, final int duration);

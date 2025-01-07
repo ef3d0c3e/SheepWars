@@ -24,6 +24,7 @@ import org.ef3d0c3e.sheepwars.events.CPlayerDeathEvent;
 import org.ef3d0c3e.sheepwars.events.CPlayerJoinEvent;
 import org.ef3d0c3e.sheepwars.events.WantsListen;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
+import org.ef3d0c3e.sheepwars.sheeps.BaseSheep;
 
 import javax.annotation.Nullable;
 
@@ -271,21 +272,12 @@ public class Combat implements Listener {
             else
                 return null;
         }
-        else if (ev.getDamager() instanceof Tameable)
-        {
-            final AnimalTamer owner = ((Tameable)ev.getDamager()).getOwner();
-            if (owner instanceof Player)
-                return CPlayer.get((Player)owner);
-            else
-                return null;
-        }
-        /* TODO
-        else if (((CraftEntity)ev.getDamager()).getHandle() instanceof BaseSheep)
-        {
-            return ((BaseSheep)((CraftEntity)ev.getDamager()).getHandle()).getOwner();
-        }
-        */
         else
-            return null;
+        {
+            final var sheep = BaseSheep.getInstance(ev.getDamager());
+            if (sheep == null) return null;
+
+            return sheep.getOwner();
+        }
     }
 }

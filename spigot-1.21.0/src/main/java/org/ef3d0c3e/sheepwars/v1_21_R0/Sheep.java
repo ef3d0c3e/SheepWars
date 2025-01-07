@@ -10,7 +10,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
-import org.bukkit.craftbukkit.v1_21_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftEntity;
 import org.bukkit.util.Vector;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_21_R1.CraftWorld;
@@ -125,8 +125,8 @@ public class Sheep implements SheepVersionWrapper {
     }
 
     @Override
-    public @Nullable BaseSheep getInstance(final @NonNull org.bukkit.entity.LivingEntity entity) {
-        if (!(((CraftLivingEntity) entity).getHandle() instanceof CustomSheep handle))
+    public @Nullable BaseSheep getInstance(final @NonNull org.bukkit.entity.Entity entity) {
+        if (!(((CraftEntity) entity).getHandle() instanceof CustomSheep handle))
             return null;
 
         return handle.base;
@@ -136,6 +136,7 @@ public class Sheep implements SheepVersionWrapper {
     public void spawn(final @NonNull BaseSheep sheep, final @NonNull Location location, final boolean baby) {
         final var handle = new CustomSheep(sheep, location, baby);
         sheep.setHandle(handle);
+        sheep.setBukkitHandle((org.bukkit.entity.LivingEntity) handle.getBukkitEntity());
         handle.spawn();
     }
 

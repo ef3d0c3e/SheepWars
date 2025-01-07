@@ -58,6 +58,7 @@ public abstract class Loadout {
             meta.setColor(color);
             meta.setDisplayName(ser.serialize(Component.text(player.getLocale().LOADOUT_ARMOR_BOOTS).color(player.getTeam().getColor())));
             meta.addEnchant(Enchantment.BINDING_CURSE, 1, true);
+            meta.addEnchant(Enchantment.BLAST_PROTECTION, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             item.setItemMeta(meta);
             armor.add(item);
@@ -71,6 +72,7 @@ public abstract class Loadout {
             meta.setColor(color);
             meta.setDisplayName(ser.serialize(Component.text(player.getLocale().LOADOUT_ARMOR_LEGGINGS).color(player.getTeam().getColor())));
             meta.addEnchant(Enchantment.BINDING_CURSE, 1, true);
+            meta.addEnchant(Enchantment.BLAST_PROTECTION, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             item.setItemMeta(meta);
             armor.add(item);
@@ -84,6 +86,7 @@ public abstract class Loadout {
             meta.setColor(color);
             meta.setDisplayName(ser.serialize(Component.text(player.getLocale().LOADOUT_ARMOR_BODY).color(player.getTeam().getColor())));
             meta.addEnchant(Enchantment.BINDING_CURSE, 1, true);
+            meta.addEnchant(Enchantment.BLAST_PROTECTION, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             item.setItemMeta(meta);
             armor.add(item);
@@ -97,6 +100,7 @@ public abstract class Loadout {
             meta.setColor(color);
             meta.setDisplayName(ser.serialize(Component.text(player.getLocale().LOADOUT_ARMOR_HEAD).color(player.getTeam().getColor())));
             meta.addEnchant(Enchantment.BINDING_CURSE, 1, true);
+            meta.addEnchant(Enchantment.BLAST_PROTECTION, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             item.setItemMeta(meta);
             armor.add(item);

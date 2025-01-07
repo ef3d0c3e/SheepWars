@@ -106,3 +106,15 @@ sheeps:
     name: "Explosif"
     desc:
       - "Ce mouton crée une explosion après un délai"
+  incendiary:
+    name: "Incendiaire"
+    desc:
+      - "Ce mouton brûle tout ce qu'il touche"
+  fragmentation:
+    name: "Fragmentation"
+    desc:
+      - "Ce mouton explose en petites sous-bombes"
+  frozen:
+    name: "Glacé"
+    desc:
+      - "Ce mouton gèle tous sur son chemin"

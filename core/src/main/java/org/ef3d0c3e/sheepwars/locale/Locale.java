@@ -121,6 +121,15 @@ public class Locale
     public String SHEEPS_EXPLOSIVE_NAME;
     public List<String> SHEEPS_EXPLOSIVE_DESC;
 
+    public String SHEEPS_INCENDIARY_NAME;
+    public List<String> SHEEPS_INCENDIARY_DESC;
+
+    public String SHEEPS_FRAGMENTATION_NAME;
+    public List<String> SHEEPS_FRAGMENTATION_DESC;
+
+    public String SHEEPS_FROZEN_NAME;
+    public List<String> SHEEPS_FROZEN_DESC;
+
     /**
      * Constructor
      */

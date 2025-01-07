@@ -1,6 +1,8 @@
 package org.ef3d0c3e.sheepwars.sheeps;
 
 import lombok.NonNull;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -34,15 +36,17 @@ public class SheepItem extends IItem {
     protected boolean onDrop(Player p, ItemStack item) {
         item.setAmount(item.getAmount() - 1);
         createSheep(p);
+        p.getWorld().playSound(p.getLocation(), Sound.ENTITY_CHICKEN_EGG, SoundCategory.MASTER, 1, 1.f);
         return true;
     }
 
     @Override
     protected boolean onInteract(Player p, ItemStack item, Action action, EquipmentSlot hand, Block clicked, BlockFace clickedFace) {
+        if (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK) return true;
         item.setAmount(item.getAmount() - 1);
         final var sheep = createSheep(p);
         sheep.launch(p.getLocation().getDirection(), 1.5, 30);
-
+        p.getWorld().playSound(p.getLocation(), Sound.ENTITY_CHICKEN_EGG, SoundCategory.MASTER, 1, 1.f);
         return true;
     }
 }

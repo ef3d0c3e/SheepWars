@@ -6,6 +6,8 @@ import lombok.Setter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Sheep;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,6 +23,7 @@ import org.ef3d0c3e.sheepwars.hologram.PassengerHologram;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 import org.ef3d0c3e.sheepwars.versions.AutoWrapper;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 
 public abstract class BaseSheep {
@@ -52,11 +55,26 @@ public abstract class BaseSheep {
     private Object handle;
 
     /**
+     * Bukkit handle to the sheep
+     */
+    @Getter @Setter
+    private LivingEntity bukkitHandle;
+
+    /**
      * Constructor
      * @param owner Owner of the sheep
      */
     public BaseSheep(final @NonNull CPlayer owner) {
         this.owner = owner;
+    }
+
+    /**
+     * Gets the base sheep instance from a Bukkit entity
+     * @param ent The entity to get the handle from
+     * @return The BaseSheep handle, or null
+     */
+    public static final @Nullable BaseSheep getInstance(final @NonNull Entity ent) {
+        return WRAPPER.getInstance(ent);
     }
 
     /**
@@ -82,6 +100,8 @@ public abstract class BaseSheep {
 
         // Send nametag
         CPlayer.forEachOnline(nametag::send);
+
+        onSpawn();
     }
 
     /**
@@ -159,6 +179,11 @@ public abstract class BaseSheep {
      * Performs logic for the sheep every ticks
      */
     public abstract void tick();
+
+    /**
+     * Method called when the sheep spawns
+     */
+    public void onSpawn() {}
 
     /**
      * Method called when the sheep is removed (killed, dispawns, ...)
