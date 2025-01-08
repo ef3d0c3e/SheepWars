@@ -132,6 +132,14 @@ sheeps:
     name: "Glacé"
     desc:
       - "Ce mouton gèle tous sur son chemin"
+  healer:
+    name: "Soigneur"
+    desc:
+      - "Ce mouton soigne vos alliés"
+  shield:
+    name: "Bouclier"
+    desc:
+      - "Ce protège vos alliés"
 
 items:
   rightClick: "(Click-Droit)"
@@ -140,4 +148,3 @@ items:
     lore:
       - "Utilisez cet item pour"
       - "s'en voler"
-  team:

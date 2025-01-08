@@ -123,8 +123,6 @@ public class LocaleManager {
             }
         }
 
-        keys.forEach((s) -> Bukkit.getConsoleSender().sendMessage(s.getA()));
-
         // Read locales
         for (final Path p : this.localeDir)
         {

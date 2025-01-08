@@ -14,7 +14,7 @@ public class SheepEvent implements Listener {
      */
     @EventHandler
     void onSheepDamage(final EntityDamageEvent ev) {
-        if (ev.getCause() == EntityDamageEvent.DamageCause.FALL) return;
+        if (ev.getCause() != EntityDamageEvent.DamageCause.FALL) return;
 
         final var sheep = BaseSheep.getInstance(ev.getEntity());
         if (sheep == null) return;

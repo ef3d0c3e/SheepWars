@@ -8,23 +8,21 @@ import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Sheep;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLevelChangeEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.ef3d0c3e.sheepwars.SheepWars;
 import org.ef3d0c3e.sheepwars.events.CPlayerJoinEvent;
 import org.ef3d0c3e.sheepwars.events.WantsListen;
 import org.ef3d0c3e.sheepwars.game.Game;
-import org.ef3d0c3e.sheepwars.hologram.Hologram;
 import org.ef3d0c3e.sheepwars.hologram.HologramTextComponent;
 import org.ef3d0c3e.sheepwars.hologram.PassengerHologram;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 import org.ef3d0c3e.sheepwars.versions.AutoWrapper;
 
 import javax.annotation.Nullable;
-import java.awt.*;
 
 public abstract class BaseSheep {
     @AutoWrapper(name = "Sheep")
@@ -202,13 +200,18 @@ public abstract class BaseSheep {
          */
         @EventHandler
         public void onJoin(final CPlayerJoinEvent ev) {
-            final var world = ev.getPlayer().getHandle().getWorld();
+            new BukkitRunnable() {
 
-            world.getLivingEntities().forEach((ent) -> {
-                final var sheep = WRAPPER.getInstance(ent);
-                if (sheep == null) return;
-                sheep.nametag.send(ev.getPlayer());
-            });
+                @Override
+                public void run() {
+                    final var world = ev.getPlayer().getHandle().getWorld();
+
+                    world.getLivingEntities().forEach((ent) -> {
+                        final var sheep = WRAPPER.getInstance(ent);
+                        if (sheep != null) sheep.nametag.send(ev.getPlayer());
+                    });
+                }
+            }.runTaskLater(SheepWars.getPlugin(), 20);
         }
 
         /**
@@ -223,8 +226,7 @@ public abstract class BaseSheep {
 
             world.getLivingEntities().forEach((ent) -> {
                 final var sheep = WRAPPER.getInstance(ent);
-                if (sheep == null) return;
-                sheep.nametag.send(cp);
+                if (sheep != null) sheep.nametag.send(cp);
             });
         }
     }

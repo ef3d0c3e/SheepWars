@@ -8,8 +8,11 @@ import org.bukkit.Location;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 
 import java.util.List;
-import java.util.stream.IntStream;
 
+
+/**
+ * Hologram as a passenger of another entity
+ */
 public abstract class PassengerHologram extends Hologram {
     private final int riderNetworkId;
 

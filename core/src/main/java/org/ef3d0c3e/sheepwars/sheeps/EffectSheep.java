@@ -1,9 +1,13 @@
 package org.ef3d0c3e.sheepwars.sheeps;
 
 import lombok.NonNull;
+import org.bukkit.DyeColor;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 
 
+/**
+ * A base class for sheeps that apply effects when activated
+ */
 public abstract class EffectSheep extends BaseSheep {
     private int groundedTime = 0;
     private final int maxLifeTime;
@@ -45,5 +49,12 @@ public abstract class EffectSheep extends BaseSheep {
 
         if (getLifetime() > maxLifeTime)
             remove();
+        else if (maxGroundTime - groundedTime <= 40) // Blink
+        {
+            if ((groundedTime / 8) % 2 == 0)
+                setColor(DyeColor.WHITE);
+            else
+                setColor(getDyeColor());
+        }
     }
 }

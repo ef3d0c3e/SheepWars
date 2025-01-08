@@ -5,12 +5,17 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.Vec3;
 import org.bukkit.craftbukkit.v1_21_R1.entity.CraftEntity;
+import org.bukkit.event.entity.EntityRemoveEvent;
 import org.bukkit.util.Vector;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_21_R1.CraftWorld;
@@ -122,6 +127,27 @@ public class Sheep implements SheepVersionWrapper {
             base.onRemove();
             super.remove(reason);
         }
+
+        @Override
+        public void remove(RemovalReason reason, EntityRemoveEvent.Cause cause)
+        {
+            base.onRemove();
+            super.remove(reason, cause);
+        }
+
+        @Override
+        public ResourceKey<LootTable> getDefaultLootTable() {
+            return BuiltInLootTables.EMPTY;
+        }
+
+        @Override
+        public void shear(SoundSource src)
+        {
+
+        }
+
+        @Override
+        public int getBaseExperienceReward() { return 0; }
     }
 
     @Override

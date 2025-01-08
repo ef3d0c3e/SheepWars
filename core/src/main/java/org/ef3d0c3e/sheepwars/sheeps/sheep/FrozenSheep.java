@@ -32,8 +32,6 @@ public class FrozenSheep extends EffectSheep {
     final static SheepItem ITEM = new SheepItem(FrozenSheep.class);
     final static TextColor COLOR = TextColor.color(110, 173, 231);
 
-
-
     public static @NonNull ItemStack getItem(final @NonNull CPlayer cp) {
         final var ser = LegacyComponentSerializer.legacy('§');
         final var item = new ItemStack(Material.LIGHT_BLUE_WOOL);
@@ -129,7 +127,5 @@ public class FrozenSheep extends EffectSheep {
                 }
             });
         }
-
-
     }
 }

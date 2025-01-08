@@ -8,8 +8,6 @@ import org.ef3d0c3e.sheepwars.player.CPlayer;
  * @param <T> Type of the localized value
  */
 public class Localized<T> {
-    protected static LocaleDeserializer deserializer = LocaleDeserializer.STRING;
-
     /**
      * Unique identifier in the locale table
      */
@@ -23,7 +21,7 @@ public class Localized<T> {
     /**
      * Gets a localized version of this value
      * @param s
-     * @return
+     * @return The localized version of this value
      */
     public @NonNull T localize(final @NonNull LocaleSubscriber s)
     {

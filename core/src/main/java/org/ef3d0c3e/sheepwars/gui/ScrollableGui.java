@@ -22,8 +22,8 @@ import java.util.List;
 @LocalePath("gui")
 public abstract class ScrollableGui implements IGui
 {
-    Localized<String> NEXT;
-    Localized<String> PREVIOUS;
+    private static Localized<String> NEXT;
+    private static Localized<String> PREVIOUS;
 
     @Override
     public void onGuiClose(final Player p) {}
