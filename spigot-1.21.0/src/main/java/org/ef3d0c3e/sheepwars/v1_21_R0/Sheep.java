@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
@@ -22,6 +23,9 @@ import org.bukkit.craftbukkit.v1_21_R1.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.ef3d0c3e.sheepwars.sheeps.BaseSheep;
 import org.ef3d0c3e.sheepwars.sheeps.SheepVersionWrapper;
+import org.ef3d0c3e.sheepwars.sheeps.ai.BaseGoal;
+import org.ef3d0c3e.sheepwars.sheeps.ai.SeekerGoal;
+import oshi.util.tuples.Pair;
 
 import javax.annotation.Nullable;
 
@@ -44,9 +48,10 @@ public class Sheep implements SheepVersionWrapper {
         public CustomSheep(final @NonNull BaseSheep base, final @NonNull Location loc, final boolean baby)
         {
             super(EntityType.SHEEP, ((CraftWorld)loc.getWorld()).getHandle());
-            this.setBaby(baby);
             this.base = base;
+            this.setBaby(baby);
             this.absMoveTo(loc.getX(), loc.getY(), loc.getZ());
+
         }
 
         public void spawn()
@@ -163,6 +168,13 @@ public class Sheep implements SheepVersionWrapper {
         final var handle = new CustomSheep(sheep, location, baby);
         sheep.setHandle(handle);
         sheep.setBukkitHandle((org.bukkit.entity.LivingEntity) handle.getBukkitEntity());
+        // Register goals
+        final var goals = sheep.getCustomGoals();
+        if (goals != null) {
+            goals.forEach(goal -> {
+                handle.goalSelector.addGoal(goal.getA(), (net.minecraft.world.entity.ai.goal.Goal) goal.getB().getHandle());
+            });
+        }
         handle.spawn();
     }
 

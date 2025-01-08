@@ -75,7 +75,7 @@ public class FrozenSheep extends EffectSheep {
             final var center = getLocation().add(0.0, 0.5, 0.0);
             Util.runInCircle(center, new Vector(0, 1, 0), 8.0, 32, (loc, t, i) ->
             {
-                center.getWorld().spawnParticle(Particle.SNOWFLAKE, center.getX(), center.getY(), center.getZ(), 1, 0.0, 0.0, 0.0, 0.0);
+                center.getWorld().spawnParticle(Particle.SNOWFLAKE, loc, 1, 0.0, 0.0, 0.0, 0.0);
             });
 
             // Effect

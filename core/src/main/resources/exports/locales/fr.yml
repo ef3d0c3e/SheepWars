@@ -119,27 +119,48 @@ sheeps:
   explosive:
     name: "Explosif"
     desc:
-      - "Ce mouton crée une explosion après un délai"
+      - "BOOM"
   incendiary:
     name: "Incendiaire"
     desc:
-      - "Ce mouton brûle tout ce qu'il touche"
+      - "Brûle tout sur son chemin"
   fragmentation:
     name: "Fragmentation"
     desc:
-      - "Ce mouton explose en petites sous-bombes"
+      - "Explose en petites sous-bombes"
   frozen:
     name: "Glacé"
     desc:
-      - "Ce mouton gèle tous sur son chemin"
+      - "Gèle tous sur son chemin"
   healer:
     name: "Soigneur"
     desc:
-      - "Ce mouton soigne vos alliés"
+      - "Soignez vos alliés"
   shield:
     name: "Bouclier"
     desc:
-      - "Ce protège vos alliés"
+      - "Protégez vos alliés"
+  dark:
+    name: "Sombre"
+    desc:
+      - "Aveuglez vos ennemis"
+  boarding:
+    name: "Abordage"
+    desc:
+      - "Abordez vos ennemis"
+  distortion:
+    name: "Distortion"
+    desc:
+      - "Distord la rélité"
+  earthquake:
+    name: "Tremblement de Terre"
+    desc:
+      - "Fait trembler le sol"
+  seeker:
+    name: "Tête Chercheuse"
+    desc:
+      - "Trouve vos ennemis et les fait exploser"
+
 
 items:
   rightClick: "(Click-Droit)"

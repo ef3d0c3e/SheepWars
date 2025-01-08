@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
+import net.minecraft.world.entity.animal.TropicalFish;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -20,9 +21,13 @@ import org.ef3d0c3e.sheepwars.game.Game;
 import org.ef3d0c3e.sheepwars.hologram.HologramTextComponent;
 import org.ef3d0c3e.sheepwars.hologram.PassengerHologram;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
+import org.ef3d0c3e.sheepwars.sheeps.ai.BaseGoal;
+import org.ef3d0c3e.sheepwars.sheeps.ai.SeekerGoal;
 import org.ef3d0c3e.sheepwars.versions.AutoWrapper;
+import oshi.util.tuples.Pair;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public abstract class BaseSheep {
     @AutoWrapper(name = "Sheep")
@@ -115,7 +120,7 @@ public abstract class BaseSheep {
      * @param strength Strenght of the launch
      * @param duration Duration of the launch
      */
-    public final void launch(final Vector direction, final double strength, final int duration)
+    public void launch(final Vector direction, final double strength, final int duration)
     {
         WRAPPER.launch(this, direction, strength, duration);
     }
@@ -144,6 +149,8 @@ public abstract class BaseSheep {
     {
         return WRAPPER.getNetworkId(this);
     }
+
+    public @Nullable List<Pair<Integer, ? extends BaseGoal>> getCustomGoals() { return null; }
 
     /**
      * Gets the height at which the sheep should despawn

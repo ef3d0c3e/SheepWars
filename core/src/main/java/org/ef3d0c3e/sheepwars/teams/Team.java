@@ -101,17 +101,17 @@ public abstract class Team {
             Bukkit.getPluginManager().callEvent(new TeamChangeEvent(cp, oldTeam, team));
     }
 
-    public static Team RED = new Team(ChatColor.RED, TextColor.color(255, 0, 0), Material.RED_BANNER) {
+    public static final Team RED = new Team(ChatColor.RED, TextColor.color(255, 0, 0), Material.RED_BANNER) {
         @Override
         public String getName(CPlayer cp) {
             return RED_NAME.localize(cp);
         }
     };
 
-    public static Team BLUE = new Team(ChatColor.BLUE, TextColor.color(0, 0, 255), Material.BLUE_BANNER) {
+    public static final Team BLUE = new Team(ChatColor.BLUE, TextColor.color(0, 0, 255), Material.BLUE_BANNER) {
         @Override
         public String getName(CPlayer cp) {
-            return RED_NAME.localize(cp);
+            return BLUE_NAME.localize(cp);
         }
     };
 
