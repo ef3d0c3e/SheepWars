@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.util.Vector;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,5 +36,5 @@ public abstract class HologramComponent
      * @param cp        Player to build hologram component for
      * @return Packets to display component
      */
-    protected abstract @NonNull List<PacketWrapper<?>> build(final @NonNull Location location, final @NonNull List<Integer> networkIds, final @NonNull CPlayer cp);
+    protected abstract @NonNull ArrayList<PacketWrapper<?>> build(final @NonNull Location location, final @NonNull List<Integer> networkIds, final @NonNull CPlayer cp);
 }

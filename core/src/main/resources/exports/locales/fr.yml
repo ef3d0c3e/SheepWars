@@ -157,9 +157,13 @@ sheeps:
     desc:
       - "Fait trembler le sol"
   seeker:
-    name: "Tête Chercheuse"
+    name: "Tête-Chercheuse"
     desc:
       - "Trouve vos ennemis et les fait exploser"
+  tsunami:
+    name: "Tsunami"
+    desc:
+      - "La mer et les poissons"
 
 
 items:

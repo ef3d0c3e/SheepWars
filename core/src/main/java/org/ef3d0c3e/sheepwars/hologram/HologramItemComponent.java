@@ -13,10 +13,7 @@ import org.ef3d0c3e.sheepwars.packets.EntityMetadata;
 import org.ef3d0c3e.sheepwars.packets.ItemProjectileMetadata;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Represent a text component
@@ -34,7 +31,7 @@ public abstract class HologramItemComponent extends HologramComponent
     protected int getNetworkOffset() { return 1; }
 
     @Override
-    protected @NonNull List<PacketWrapper<?>> build(final @NonNull Location location, final @NonNull List<Integer> networkIds, final @NonNull CPlayer cp)
+    protected @NonNull ArrayList<PacketWrapper<?>> build(final @NonNull Location location, final @NonNull List<Integer> networkIds, final @NonNull CPlayer cp)
     {
         // Spawn
         final Location loc = location.clone().add(getOffset());
@@ -58,6 +55,9 @@ public abstract class HologramItemComponent extends HologramComponent
         );
 
 
-        return List.of(spawn, meta);
+        final var list = new ArrayList<PacketWrapper<?>>(2);
+        list.add(spawn);
+        list.add(meta);
+        return list;
     }
 }

@@ -36,7 +36,7 @@ public abstract class HologramTextComponent extends HologramComponent
     protected int getNetworkOffset() { return 1; }
 
     @Override
-    protected @NonNull List<PacketWrapper<?>> build(final @NonNull Location location, final @NonNull List<Integer> networkIds, final @NonNull CPlayer cp)
+    protected @NonNull ArrayList<PacketWrapper<?>> build(final @NonNull Location location, final @NonNull List<Integer> networkIds, final @NonNull CPlayer cp)
     {
         // Spawn
         final Location loc = location.clone().add(getOffset());
@@ -64,7 +64,9 @@ public abstract class HologramTextComponent extends HologramComponent
                 )
         );
 
-
-        return List.of(spawn, meta);
+        final var list = new ArrayList<PacketWrapper<?>>(2);
+        list.add(spawn);
+        list.add(meta);
+        return list;
     }
 }

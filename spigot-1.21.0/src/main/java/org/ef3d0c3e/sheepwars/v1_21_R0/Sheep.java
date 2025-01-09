@@ -148,7 +148,6 @@ public class Sheep implements SheepVersionWrapper {
         @Override
         public void shear(SoundSource src)
         {
-
         }
 
         @Override

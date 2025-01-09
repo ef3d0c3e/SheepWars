@@ -20,11 +20,21 @@ public class Localized<T> {
 
     /**
      * Gets a localized version of this value
-     * @param s
+     * @param s The locale subscriber
      * @return The localized version of this value
      */
     public @NonNull T localize(final @NonNull LocaleSubscriber s)
     {
         return s.getLocale().get(id);
+    }
+
+    /**
+     * Gets a localized version of this value
+     * @param locale The locale
+     * @return The localized version of this value
+     */
+    public @NonNull T localize(final @NonNull Locale locale)
+    {
+        return locale.get(id);
     }
 }
