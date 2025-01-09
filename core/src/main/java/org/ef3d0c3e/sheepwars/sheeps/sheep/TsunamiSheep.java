@@ -86,7 +86,7 @@ public class TsunamiSheep extends BaseSheep {
         {
             final Vector pos = center.toVector().add(vel.clone().multiply(1.3 * ((double)l) / bpt));
 
-            for (int i = -3; i <= 3; ++i)
+            for (int i = -2; i <= 2; ++i)
             {
                 final var loc = new Location(center.getWorld(), pos.getX() + dir.getX() * i, pos.getY() + dir.getY() * i - 1, pos.getZ() + dir.getZ() * i);
                 final Block block = loc.getBlock();

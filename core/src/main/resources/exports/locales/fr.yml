@@ -97,6 +97,9 @@ game:
   kill:
     player: "a été tué par "
     died: "est mort"
+  end:
+    title: "L'équipe <team> a gagné!"
+    subtitle: "Bravo!"
 kits:
   mage:
     name: "Mage"
@@ -164,6 +167,10 @@ sheeps:
     name: "Tsunami"
     desc:
       - "La mer et les poissons"
+  swap:
+    name: "Échange"
+    desc:
+      - "Échangez de position avec un ennemi"
 
 
 items:

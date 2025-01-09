@@ -4,6 +4,8 @@ import io.github.retrooper.packetevents.adventure.serializer.legacy.LegacyCompon
 import io.papermc.paper.event.player.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.minecraft.world.entity.LivingEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -39,6 +41,11 @@ public class GameEvents implements Listener {
     private static Localized<String> KILL_PLAYER;
     @LocalizeAs("kill.died")
     private static Localized<String> KILL_DIED;
+
+    @LocalizeAs("end.title")
+    private static Localized<String> END_TITLE;
+    @LocalizeAs("end.subtitle")
+    private static Localized<String> END_SUBTITLE;
 
     /**
      * Registers timed events
@@ -126,6 +133,26 @@ public class GameEvents implements Listener {
         if (team.getAliveCount() != 0) return;
 
         Bukkit.getPluginManager().callEvent(new GameEndEvent(team == RED ? BLUE : RED));
+    }
+
+    @EventHandler
+    public void onGameEnd(final GameEndEvent ev) {
+        final var ser = LegacyComponentSerializer.legacy('§');
+        CPlayer.forEachOnline(cp -> {
+            cp.getHandle().sendTitle(
+                    ser.serialize(
+                        MiniMessage.miniMessage().deserialize("<#6c9f4a>" + END_TITLE.localize(cp), Placeholder.component("team", ev.getWinner().getColoredName(cp)))
+                    ),
+                    ser.serialize(
+                            Component.text(END_SUBTITLE.localize(cp)).color(TextColor.color(0x6c9f8a))
+                    ),
+                    100,
+                    10,
+                    10
+            );
+            cp.setAlive(false);
+            cp.getHandle().setGameMode(GameMode.SPECTATOR);
+        });
     }
 
     /**

@@ -20,6 +20,12 @@ public abstract class FuseSheep extends BaseSheep{
     }
 
     /**
+     * Method called when fusing
+     * @param fuseTime
+     */
+    public void onFuse(final int fuseTime) {}
+
+    /**
      * Method called when fuse timer reaches it's end
      */
     public abstract void onFuseEnd();
@@ -37,6 +43,7 @@ public abstract class FuseSheep extends BaseSheep{
             else
                 setColor(getDyeColor());
 
+            onFuse(fuse);
             if (fuse == fuseTime)
             {
                 remove();
