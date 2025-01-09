@@ -1,12 +1,20 @@
 package org.ef3d0c3e.sheepwars.commands;
 
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.protocol.player.GameMode;
+import com.github.retrooper.packetevents.protocol.player.UserProfile;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPlayerInfo;
 import com.google.common.collect.Lists;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Sheep;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.ef3d0c3e.sheepwars.SheepWars;
 import org.ef3d0c3e.sheepwars.events.WantsListen;
 import org.ef3d0c3e.sheepwars.maps.MapManager;
 import org.ef3d0c3e.sheepwars.player.CPlayer;
@@ -21,6 +29,7 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 public class CmdSheepWars extends Command {
     public CmdSheepWars()
@@ -48,9 +57,19 @@ public class CmdSheepWars extends Command {
         }
         else if (category.equals("debug"))
         {
-            final var sh = new ExplosiveSheep(CPlayer.get(p));
-            sh.spawn(p.getLocation(), true);
-
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    final var data = new WrapperPlayServerPlayerInfo.PlayerData(
+                            Component.text("aaa"),
+                            new UserProfile(p.getUniqueId(), p.getName()),
+                            GameMode.ADVENTURE,
+                            p.getPing()
+                    );
+                    final WrapperPlayServerPlayerInfo info = new WrapperPlayServerPlayerInfo(WrapperPlayServerPlayerInfo.Action.UPDATE_DISPLAY_NAME, List.of(data));
+                    PacketEvents.getAPI().getPlayerManager().sendPacket(p, info);
+                }
+            }.runTaskAsynchronously(SheepWars.getPlugin());
         }
         else if (category.equals("wools"))
         {

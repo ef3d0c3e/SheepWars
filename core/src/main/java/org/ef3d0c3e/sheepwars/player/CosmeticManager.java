@@ -26,6 +26,7 @@ import org.ef3d0c3e.sheepwars.player.skin.Skin;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Manages cosmetics for the player
@@ -191,7 +192,7 @@ public class CosmeticManager {
             null,
             cp.getHandle().getPing()
         );
-        final WrapperPlayServerPlayerInfo info = new WrapperPlayServerPlayerInfo(WrapperPlayServerPlayerInfo.Action.UPDATE_DISPLAY_NAME, data);
+        final WrapperPlayServerPlayerInfo info = new WrapperPlayServerPlayerInfo(WrapperPlayServerPlayerInfo.Action.UPDATE_DISPLAY_NAME, List.of(data));
 
         CPlayer.forEachOnline((o) -> {
             PacketEvents.getAPI().getPlayerManager().sendPacket(o.getHandle(), info);

@@ -106,6 +106,10 @@ kits:
     desc:
       - " - Vous avez un bâton magique"
       - " - Vous obtenez plus de moutons de destruction"
+    wand:
+      name: "Bâton Magique"
+      lore:
+        - "Fait tomber les blocks"
   archer:
     name: "Archer"
     desc:
